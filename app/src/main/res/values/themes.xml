@@ -1,0 +1,28 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.云音乐" parent="Theme.start">
+<!--        <item name="colorOnPrimary">@color/text</item>-->
+<!--        <item name="colorOnSecondary">@color/text</item>-->
+        <item name="android:windowLightStatusBar">true</item>
+
+    </style>
+
+    <style name="Theme.start" parent="Theme.Material3.DayNight">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+<!--        <item name="android:textColorTertiary">@color/text</item>-->
+<!--        <item name="android:textColorPrimary">@color/text</item>-->
+        <item name="android:statusBarColor">@color/tm</item>
+
+    </style>
+
+    <style name="fragment_dialog" parent="Theme.云音乐">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="Theme.main" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowBackground">@drawable/start</item>
+    </style>
+</resources>

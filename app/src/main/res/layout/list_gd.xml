@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@null">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardview"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            app:cardUseCompatPadding="true">
+
+            <ImageView
+                android:id="@+id/fh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY" />
+        </com.google.android.material.card.MaterialCardView>
+        <ImageView
+            android:id="@+id/kg"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignEnd="@id/cardview"
+            android:layout_alignBottom="@id/cardview"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="6dp"
+            android:src="@drawable/zt"
+            tools:ignore="RtlSymmetry" />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/wb1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:lines="2"
+        android:maxLines="2"
+        android:text="@string/name"
+        android:textColor="@color/text"/>
+</LinearLayout>

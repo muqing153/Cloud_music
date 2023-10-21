@@ -1,0 +1,83 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
+}
+android {
+    namespace 'com.muqingbfq'
+    compileSdk 33
+    defaultConfig {
+        applicationId "com.muqingbfq"
+        minSdk 23
+        //noinspection OldTargetApi
+        targetSdk 31
+        versionCode 1
+        versionName "1.5.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    android.applicationVariants.configureEach {
+        variant ->
+            variant.outputs.configureEach {
+                //在这里修改apk文件名
+                outputFileName = "Cloud_music-${variant.name}-v${variant.versionName}.apk"
+            }
+    }
+    signingConfigs {
+        signConfig {
+            storeFile file('F:/muqing.jks')
+//            证书存放位置和名字
+            storePassword 'muqing153'
+//            密码
+            keyAlias 'muqing'
+//            别名
+            keyPassword 'muqing153'
+//            别名对应的密码
+        }
+        release {
+            v1SigningEnabled true //正式版时对应的签名规则 true使用 false不适用
+            v2SigningEnabled true
+        }
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'com.google.code.gson:gson:2.9.1'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+
+    api "com.github.cy745:EaseView:e11c3208a9"
+    implementation "androidx.dynamicanimation:dynamicanimation-ktx:1.0.0-alpha03"
+}
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = 'com.github.Moriafly'
+                artifactId = 'LyricViewX'
+                version = '1.4.0-alpha02'
+            }
+        }
+    }
+}
