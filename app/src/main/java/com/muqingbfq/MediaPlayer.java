@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.muqingbfq.api.url;
+import com.muqingbfq.fragment.bfq_db;
 import com.muqingbfq.fragment.mp3;
 
 import java.io.IOException;
@@ -22,9 +23,9 @@ import java.util.TimerTask;
 public class MediaPlayer extends android.media.MediaPlayer {
     public MediaPlayer() {
         this.setOnCompletionListener(mediaPlayer -> {
-            if (!home.db.view.isShown()) {
+/*            if (!home.db.view.isShown()) {
                 home.db.view.setVisibility(View.VISIBLE);
-            }
+            }*/
             int i = bfqkz.getmti(bfqkz.ms);
             bfqkz.xm = bfqkz.list.get(i);
             new Thread() {
@@ -50,7 +51,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
             if (bfq.kg != null) {
                 bfq.kg.setImageResource(R.drawable.zt);
             }
-            home.db.txa.setImageResource(R.drawable.zt);
+            bfq_db.txa.setImageResource(R.drawable.zt);
             bfqkz.updateNotification();
         }
     }
@@ -88,7 +89,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
         if (bfq.kg != null) {
             bfq.kg.setImageResource(R.drawable.bf);
         }
-        home.db.txa.setImageResource(R.drawable.bf);
+        bfq_db.txa.setImageResource(R.drawable.bf);
         bfqkz.updateNotification();
     }
 
@@ -99,7 +100,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
         prepare();
         bfqkz.tdt_max = getDuration();
         bfqkz.tdt_wz = getCurrentPosition();
-        Glide.with(main.context)
+        Glide.with(home.appCompatActivity)
                 .asBitmap()
                 .load(bfqkz.xm.picurl)
                 .addListener(new RequestListener<Bitmap>() {
@@ -109,7 +110,6 @@ public class MediaPlayer extends android.media.MediaPlayer {
                         bfqkz.notify.setBitmap(null);
                         return false;
                     }
-
                     @Override
                     public boolean onResourceReady(@NonNull Bitmap bitmap, @NonNull Object model, Target<Bitmap> target,
                                                    @NonNull DataSource dataSource, boolean isFirstResource) {
@@ -128,8 +128,8 @@ public class MediaPlayer extends android.media.MediaPlayer {
                 bfq.zz.setText(bfqkz.xm.zz);
                 bfq_an.islike(bfq.like.getContext());
             }
-            home.db.name.setText(bfqkz.xm.name);
-            home.db.zz.setText(bfqkz.xm.zz);
+            bfq_db.name.setText(bfqkz.xm.name);
+            bfq_db.zz.setText(bfqkz.xm.zz);
             if (mp3.lbspq != null) {
                 mp3.lbspq.notifyDataSetChanged();
             }

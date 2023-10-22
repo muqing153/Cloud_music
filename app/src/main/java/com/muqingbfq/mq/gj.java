@@ -66,7 +66,7 @@ public class gj {
                 }
             }
         } catch (SocketException e) {
-            yc.start(main.context, e);
+            yc.start(e);
         }
         return false;  // 默认为流量网络
     }

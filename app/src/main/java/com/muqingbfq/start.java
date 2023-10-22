@@ -148,25 +148,24 @@ public class start extends AppCompatActivity {
         startApp();
     }
 
-    private void startApp() {
-
-        SharedPreferences theme = getSharedPreferences("theme", MODE_PRIVATE);
-        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor edit = theme.edit();
-        int i = theme.getInt("theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        if (i == -1) {
-            edit.putInt("theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        }
-        AppCompatDelegate.setDefaultNightMode(i);
-
-        wl.Cookie = main.sp.getString(main.Cookie, "");
-        if (wl.Cookie.equals("")) {
-            new visitor(this, home);
-        } else {
-            if (wj.filesdri == null) {
-                new wj(this);
+        private void startApp() {
+            SharedPreferences theme = getSharedPreferences("theme", MODE_PRIVATE);
+            @SuppressLint("CommitPrefEdits") SharedPreferences.Editor edit = theme.edit();
+            int i = theme.getInt("theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            if (i == -1) {
+                edit.putInt("theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
             }
-            startActivity(home);
-            finish();
+            AppCompatDelegate.setDefaultNightMode(i);
+
+            wl.Cookie = main.sp.getString(main.Cookie, "");
+            if (wl.Cookie.equals("")) {
+                new visitor(this, home);
+            } else {
+                if (wj.filesdri == null) {
+                    new wj(this);
+                }
+                startActivity(home);
+                finish();
+            }
         }
-    }
 }

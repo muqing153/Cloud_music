@@ -92,7 +92,7 @@ public class url extends Thread {
             return new JSONObject(hq).getJSONArray("songs").getJSONObject(0)
                     .getJSONObject("al").getString("picUrl");
         } catch (Exception e) {
-            yc.start(main.context, e);
+            yc.start(e);
         }
         return null;
     }

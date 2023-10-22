@@ -71,6 +71,7 @@ public class bfq extends AppCompatActivity {
             }
             inflate = inflater.inflate(R.layout.fragment_bfq, container, false);
             lrcView = inflate.findViewById(R.id.gc);
+            lrcView.setVisibility(View.GONE);
             Toolbar toolbar = inflate.findViewById(R.id.toolbar);
             name = inflate.findViewById(R.id.name);
             zz = inflate.findViewById(R.id.zz);
@@ -116,10 +117,6 @@ public class bfq extends AppCompatActivity {
                 return true;
             });
             lrcView.setOnSingerClickListener(() -> {
-                lrcView.setVisibility(View.GONE);
-                kp.setVisibility(View.VISIBLE);
-            });
-            inflate.findViewById(R.id.layout).setOnClickListener(view1 -> {
                 lrcView.setVisibility(View.GONE);
                 kp.setVisibility(View.VISIBLE);
             });

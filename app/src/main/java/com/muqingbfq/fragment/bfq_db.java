@@ -1,5 +1,6 @@
 package com.muqingbfq.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,9 +25,11 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class bfq_db extends Fragment {
-    public View view;
-    public TextView name, zz;
-    public ImageView txa;
+    @SuppressLint("StaticFieldLeak")
+    public static View view;
+    public static TextView name, zz;
+    public static ImageView txa;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

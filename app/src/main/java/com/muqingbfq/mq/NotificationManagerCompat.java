@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.core.app.ActivityCompat;
@@ -24,7 +25,11 @@ import androidx.media.session.MediaButtonReceiver;
 import com.muqingbfq.MyButtonClickReceiver;
 import com.muqingbfq.R;
 import com.muqingbfq.bfq;
+import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
+import com.muqingbfq.fragment.bfq_db;
+import com.muqingbfq.fragment.mp3;
+import com.muqingbfq.home;
 import com.muqingbfq.start;
 import com.muqingbfq.yc;
 
@@ -49,25 +54,21 @@ public class NotificationManagerCompat {
                 }
             }
             // 适配12.0及以上
-            int flag;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                flag = PendingIntent.FLAG_IMMUTABLE;
-            } else {
-                flag = PendingIntent.FLAG_UPDATE_CURRENT;
-            }
+
             // 设置启动的程序，如果存在则找出，否则新的启动
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.setComponent(new ComponentName(context, start.class));//用ComponentName得到class对象
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
-
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, flag);
-            pendingIntent_kg = pendingIntent(context, new Intent(context, MyButtonClickReceiver.class).
+            PendingIntent pendingIntent = getActivity(context, intent);
+//                    PendingIntent.getActivity(context, 0, intent, flag);
+            Intent my = new Intent(context, MyButtonClickReceiver.class);
+            pendingIntent_kg = getBroadcast(context, my.
                     setAction("kg"));
-            pendingIntent_syq = pendingIntent(context, new Intent(context, MyButtonClickReceiver.class).
+            pendingIntent_syq = getBroadcast(context, my.
                     setAction("syq"));
-            pendingIntent_xyq = pendingIntent(context, new Intent(context, MyButtonClickReceiver.class).
+            pendingIntent_xyq = getBroadcast(context, my.
                     setAction("xyq"));
             // 取消操作的PendingIntent
 // 取消操作的PendingIntent
@@ -79,7 +80,7 @@ public class NotificationManagerCompat {
                             .setMediaSession(bfqkz.mSession.getSessionToken())
                             .setShowCancelButton(true)
                             .setCancelButtonIntent(cancelIntent);
-//
+
             notificationBuilder = getNotificationBuilder(context)
                     .setSmallIcon(R.drawable.icon)
                     .setContentTitle(name).setContentText(zz)
@@ -124,7 +125,7 @@ public class NotificationManagerCompat {
         notificationManager.notify(1, notificationBuilder.build());
     }
 
-    @SuppressLint({"MissingPermission", "RestrictedApi"})
+    @SuppressLint({"MissingPermission", "RestrictedApi", "NotifyDataSetChanged"})
     public void setBitmap(Bitmap bitmap) {
         bfq.bitmap = bitmap;
         if (bitmap == null) {
@@ -140,6 +141,7 @@ public class NotificationManagerCompat {
         if (bfq.tx != null) {
             bfq.tx.setImageBitmap(bitmap);
         }
+
     }
 
     private NotificationCompat.Builder getNotificationBuilder(Context context) {
@@ -153,12 +155,29 @@ public class NotificationManagerCompat {
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
-    private PendingIntent pendingIntent(Context context, Intent intent) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+    private PendingIntent getBroadcast(Context context, Intent intent) {
+        int flag;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            flag = PendingIntent.FLAG_IMMUTABLE;
+        } else {
+            flag = PendingIntent.FLAG_UPDATE_CURRENT;
+        }
+        return PendingIntent.getBroadcast(context, 0, intent, flag);
+/*        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
         } else {
             return PendingIntent.getBroadcast(context, 0, intent, 0);
+        }*/
+    }
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private PendingIntent getActivity(Context context, Intent intent) {
+        int flag;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            flag = PendingIntent.FLAG_IMMUTABLE;
+        } else {
+            flag = PendingIntent.FLAG_UPDATE_CURRENT;
         }
+        return PendingIntent.getActivity(context, 0, intent, flag);
     }
 
 }

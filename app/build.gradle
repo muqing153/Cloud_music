@@ -12,7 +12,7 @@ android {
         //noinspection OldTargetApi
         targetSdk 31
         versionCode 1
-        versionName "1.5.0"
+        versionName "1.5.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -35,22 +35,6 @@ android {
                 //在这里修改apk文件名
                 outputFileName = "Cloud_music-${variant.name}-v${variant.versionName}.apk"
             }
-    }
-    signingConfigs {
-        signConfig {
-            storeFile file('F:/muqing.jks')
-//            证书存放位置和名字
-            storePassword 'muqing153'
-//            密码
-            keyAlias 'muqing'
-//            别名
-            keyPassword 'muqing153'
-//            别名对应的密码
-        }
-        release {
-            v1SigningEnabled true //正式版时对应的签名规则 true使用 false不适用
-            v2SigningEnabled true
-        }
     }
     kotlinOptions {
         jvmTarget = '1.8'

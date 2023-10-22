@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.media.MediaBrowserCompat;
@@ -28,10 +27,8 @@ import com.muqingbfq.fragment.bfq_db;
 import com.muqingbfq.mq.gj;
 
 public class home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    @SuppressLint("StaticFieldLeak")
-    public static Toolbar toolbar;
+    public Toolbar toolbar;
     public static AppCompatActivity appCompatActivity;
-
     @SuppressLint("CommitTransaction")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,21 +54,10 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
                 item.setTitle(spannableString);
             }
             new com.muqingbfq.fragment.sz(this, chb.getHeaderView(0));
-
-            db = new bfq_db();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.bfq_db, db).commit();
+                    .add(R.id.bfq_db, new bfq_db()).commit();
             mediaBrowser = new MediaBrowserCompat(this,
-                    new ComponentName(this, bfqkz.class), connectionCallbacks, null);
-            mediaBrowser.connect();
-        } catch (Exception e) {
-            gj.sc(e);
-        }
-    }
-
-    private MediaBrowserCompat mediaBrowser;
-    private final MediaBrowserCompat.ConnectionCallback connectionCallbacks =
-            new MediaBrowserCompat.ConnectionCallback() {
+                    new ComponentName(this, bfqkz.class), new MediaBrowserCompat.ConnectionCallback() {
                 @Override
                 public void onConnected() {
                     // 连接成功后执行的操作
@@ -97,10 +83,14 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
                     // 连接失败时执行的操作
 //                    gj.ts(home.this,"shibai");
                 }
-            };
+            }, null);
+            mediaBrowser.connect();
+        } catch (Exception e) {
+            gj.sc(e);
+        }
+    }
 
-    @SuppressLint("StaticFieldLeak")
-    public static bfq_db db;
+    MediaBrowserCompat mediaBrowser;
 
     @Override
     protected void onPause() {
@@ -117,24 +107,8 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mediaBrowser.disconnect();
+//        mediaBrowser.disconnect();
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        // (see "stay in sync with the MediaSession")
-        if (MediaControllerCompat.getMediaController(home.this) != null) {
-//            MediaControllerCompat.getMediaController(home.this).unregisterCallback(controllerCallback);
-        }
-        mediaBrowser.disconnect();
-    }
-
     private long time;
 
     @Override

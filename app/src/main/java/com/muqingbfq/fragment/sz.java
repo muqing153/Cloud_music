@@ -11,9 +11,11 @@ import android.widget.Toast;
 
 import com.muqingbfq.R;
 import com.muqingbfq.activity_about_software;
+import com.muqingbfq.home;
 import com.muqingbfq.login.user_logs;
 import com.muqingbfq.login.user_message;
 import com.muqingbfq.mq.gj;
+import com.muqingbfq.mq.wl;
 
 public class sz {
 
@@ -69,6 +71,9 @@ public class sz {
         } else if (id == R.id.f) {
             context.startActivity(new Intent(context, activity_about_software.class));
 //                    关于软件
+        } else if (id == R.id.g) {
+            new com.muqingbfq.login.visitor();
+            home.appCompatActivity.finish();
         }
     }
 }

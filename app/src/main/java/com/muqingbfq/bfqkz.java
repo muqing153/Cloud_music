@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +29,7 @@ public class bfqkz extends MediaBrowserServiceCompat {
     public static boolean like_bool;
     @SuppressLint("StaticFieldLeak")
     public static com.muqingbfq.mq.NotificationManagerCompat notify;
+
     public static int getmti(int s) {
         int i = bfqkz.list.indexOf(xm);
         if (s == 1) {
@@ -57,54 +58,55 @@ public class bfqkz extends MediaBrowserServiceCompat {
             gj.sc("bfqkz mp3(String id) :" + e);
         }
     }
+
     public static MediaSessionCompat mSession;
+    public static MediaMetadataCompat build;
+    public static PlaybackStateCompat playback;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mSession = new MediaSessionCompat(this,"MusicService");
+        mSession = new MediaSessionCompat(this, "MusicService");
+        playback=new PlaybackStateCompat.Builder()
+                .setState(PlaybackStateCompat.STATE_NONE,0,1.0f)
+                .build();
         mSession.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public void onPlay() {
                 mt.start();
-                // 处理播放音乐逻辑
             }
 
             @Override
             public void onPause() {
                 // 处理暂停音乐逻辑
                 mt.pause();
+                if(playback.getState() == PlaybackStateCompat.STATE_PLAYING){
+                    playback = new PlaybackStateCompat.Builder()
+                            .setState(PlaybackStateCompat.STATE_PAUSED,0,1.0f)
+                            .build();
+                    mSession.setPlaybackState(playback);
+                }
             }
 
             @Override
             public void onSkipToNext() {
                 // 处理切换到下一首音乐逻辑
             }
+
             @Override
             public void onSkipToPrevious() {
                 // 处理切换到上一首音乐逻辑
             }
         });//设置回调
-/*        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.setComponent(new ComponentName(this, start.class));//用ComponentName得到class对象
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
-        MediaButtonReceiver.handleIntent(mSession,intent);*/
-
-        MediaMetadataCompat build = new MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "歌手名称")
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, "专辑名称")
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "歌曲名称")
+        build = new MediaMetadataCompat.Builder()
                 .build();
         mSession.setMetadata(build);
+        mSession.setPlaybackState(playback);
+        mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         mSession.setActive(true);
         setSessionToken(mSession.getSessionToken());
         notify = new com.muqingbfq.mq.NotificationManagerCompat(this);
-/*        ;
-// 激活MediaSessionCompat
-        */
-        // 初始化通知栏
     }
 
     @Nullable

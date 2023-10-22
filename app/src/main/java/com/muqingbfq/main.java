@@ -7,13 +7,10 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.muqingbfq.mq.MyExceptionHandler;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
 
 public class main extends Application {
-    @SuppressLint("StaticFieldLeak")
-    public static Context context;
     public static Handler handler = new Handler(Looper.getMainLooper());
     public static String api = "http://139.196.224.229:3000";
     public static String http = "http://139.196.224.229/muqing";
@@ -27,7 +24,6 @@ public class main extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        context = this;
         new wj(this);
         sp = getSharedPreferences("Set_up", MODE_PRIVATE);
         edit = sp.edit();
@@ -61,6 +57,5 @@ public class main extends Application {
             edit.commit();
         }
         // 创建全局异常处理器实例 设置全局异常处理器
-        Thread.setDefaultUncaughtExceptionHandler(new MyExceptionHandler(this));
     }
 }

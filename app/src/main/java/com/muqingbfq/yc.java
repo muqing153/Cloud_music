@@ -24,7 +24,7 @@ public class yc extends AppCompatActivity {
     }
 
     public static void start(Object e) {
-        start(main.context, e);
+        start(home.appCompatActivity, e);
     }
 
     public static void start(Context context, Object e) {

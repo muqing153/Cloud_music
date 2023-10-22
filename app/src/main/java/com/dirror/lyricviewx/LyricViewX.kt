@@ -1090,9 +1090,6 @@ open class LyricViewX : EaseView, LyricViewXInterface {
     }
 
     companion object {
-
-        private const val TAG = "LyricViewX"
-
         // 时间线持续时间
         private const val TIMELINE_KEEP_TIME = 3 * DateUtils.SECOND_IN_MILLIS
     }

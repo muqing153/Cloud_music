@@ -26,15 +26,6 @@ public class bflb_db extends BottomSheetDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_bflb_db);
-        // 获取对话框窗口
-/*        Window window = getWindow();
-        if (window != null) {
-            // 设置高度为默认值（例如：500dp）
-            WindowManager.LayoutParams params = window.getAttributes();
-            params.height =
-            window.setAttributes(params);
-        }*/
-        // 设置默认弹出高度和最大上拉高度为 400dp
         int height = main.g - main.g / 2 / 2;
         getBehavior().setPeekHeight(height);
         getBehavior().setMaxHeight(height);
