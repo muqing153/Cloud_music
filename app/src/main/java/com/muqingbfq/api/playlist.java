@@ -2,7 +2,6 @@ package com.muqingbfq.api;
 
 import android.annotation.SuppressLint;
 
-import com.muqingbfq.bfqkz;
 import com.muqingbfq.fragment.gd;
 import com.muqingbfq.fragment.mp3;
 import com.muqingbfq.main;
@@ -19,13 +18,6 @@ import java.util.List;
 
 public class playlist extends Thread {
     public static final String api = "/playlist/track/all?id=";
-    private String uid;
-
-    public playlist(String uid) {
-        this.uid = uid;
-        start();
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     public static boolean hq(List<xm> list, String uid) {
         list.clear();
@@ -101,24 +93,5 @@ public class playlist extends Thread {
             gj.sc("失败的错误 " + e);
             wj.sc(wj.mp3_xz);
         }
-    }
-
-    @Override
-    public void run() {
-        super.run();
-/*        if (uid.equals(wj.mp3_xz)) {
-            playlist.hq_xz(mp3.list);
-        } else if (uid.equals(wj.mp3_like)) {
-            playlist.hq_like(mp3
-            .list);
-        } else {
-            playlist.hq(mp3.list, uid);
-        }
-        if (bfqkz.list == null || bfqkz.list.isEmpty()) {
-            int size = mp3.list.size();
-            for (int i = 0; i < size; i++) {
-                bfqkz.list.add(mp3.list.get(i));
-            }
-        }*/
     }
 }

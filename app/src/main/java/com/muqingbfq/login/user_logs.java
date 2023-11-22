@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -25,10 +24,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.muqingbfq.R;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
+import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
+import com.muqingbfq.yc;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Objects;
 
 public class user_logs extends AppCompatActivity {
@@ -120,7 +123,7 @@ public class user_logs extends AppCompatActivity {
                         new visitor();
                     }
                     wl.setcookie(cookie);
-                    new user_message();
+                    new user_message(user);
                     user_logs.this.finish();
                 }
             } catch (Exception e) {
@@ -132,7 +135,7 @@ public class user_logs extends AppCompatActivity {
     public static class erweima extends Thread {
         int code = 800;
         String unikey, qrimg, hq;
-        private long time=0;
+        private long time = 0;
         ImageView imageView;
         TextView textView;
         MaterialAlertDialogBuilder materialAlertDialogBuilder;

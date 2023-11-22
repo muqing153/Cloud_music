@@ -1,7 +1,6 @@
 package com.muqingbfq.mq;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,19 +31,15 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.muqingbfq.R;
 
 import java.io.File;
-import java.util.Locale;
 
 public class llq extends AppCompatActivity {
     WebView web;
     Toolbar toolbar;
-    @SuppressLint({"DefaultLocale", "ObsoleteSdkInt"})
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_llq);
-
         Intent intent = getIntent();
-
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -136,7 +131,6 @@ public class llq extends AppCompatActivity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-                gj.sc(newProgress);
                 if (newProgress == 100) {
                     progressBar.setVisibility(View.GONE);
                 } else {

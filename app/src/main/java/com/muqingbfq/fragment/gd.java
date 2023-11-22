@@ -39,7 +39,7 @@ import com.muqingbfq.xm;
 public class gd extends Fragment {
     public static String gdid;
     public static BaseAdapter lbspq;
-    public static List<xm> list = new ArrayList<>();
+    public static List<xm> list;
     public static JSONObject like = new JSONObject();
     GridView gridView;
 
@@ -47,6 +47,7 @@ public class gd extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gd, container, false);
+        list = new ArrayList<>();
         lbspq = new baseadapter(view.getContext());
         gridView = view.findViewById(R.id.wgbj);
         gridView.setAdapter(lbspq);
@@ -54,7 +55,6 @@ public class gd extends Fragment {
             gdid = main.mp3_csh;
         }
         TabLayout tabLayout = view.findViewById(R.id.tablayout);
-//        tabLayout.removeAllTabs();
         for (String name : new String[]{"推荐", "排行榜", "下载"}) {
             TabLayout.Tab tab = tabLayout.newTab();
             tab.setText(name);
@@ -68,11 +68,9 @@ public class gd extends Fragment {
                 lbspq.notifyDataSetChanged();
                 new thread(tab.getText().toString());
             }
-
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
             }
-
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
             }

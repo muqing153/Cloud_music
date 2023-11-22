@@ -8,7 +8,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -34,39 +33,24 @@ public class wj {
             mp3_xz = gd + mp3_xz;
             mp3_like = gd + mp3_like;
             tx = filesdri + tx;
-            if (!new File(mp3).exists()) {
-                new File(mp3).mkdirs();
-            }
-            if (!new File(gd).exists()) {
-                new File(gd).mkdirs();
-            }
         } catch (Exception e) {
             yc.start(context, e);
         }
-    }
-
-    public static boolean new_wj(String string) {
-        File file = new File(string);
-        if (file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-        try {
-            return file.createNewFile();
-        } catch (IOException e) {
-            gj.sc(e);
-        }
-        return false;
     }
 
     /*
      * 这里定义的是一个文件保存的方法，写入到文件中，所以是输出流
      * */
     public static boolean xrwb(String url, String text) {
+        if (text == null) {
+            text = "";
+        }
         File file = new File(url);
 //如果文件不存在，创建文件
         try {
-            if (file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
+            File parentFile = file.getParentFile();
+            if (!parentFile.exists()) {
+                parentFile.mkdirs();
             }
             if (!file.exists())
                 file.createNewFile();
@@ -102,6 +86,10 @@ public class wj {
 
     public static boolean cz(String url) {
         return new File(url).exists();
+    }
+
+    public static boolean cz(File file) {
+        return file.exists();
     }
 
     public static boolean sc(String url) {
@@ -144,21 +132,5 @@ public class wj {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public static class xrwb extends Thread {
-        String url, text;
-
-        public xrwb(String url, String text) {
-            this.url = url;
-            this.text = text;
-            start();
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            xrwb(url, text);
-        }
     }
 }

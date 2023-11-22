@@ -4,14 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.SeekBar;
-
-import androidx.core.content.ContextCompat;
 
 import com.muqingbfq.api.url;
+import com.muqingbfq.fragment.Media;
 import com.muqingbfq.fragment.gd;
-import com.muqingbfq.fragment.mp3;
-import com.muqingbfq.mq.gj;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,6 +38,9 @@ public class bfq_an {
     }
 
     public static void xyq() {
+        if (bfqkz.list == null) {
+            return;
+        }
         bfqkz.mt.pause();
         int ms = bfqkz.ms;
         if (bfqkz.ms == 0) {
@@ -50,32 +49,6 @@ public class bfq_an {
         bfqkz.xm = bfqkz.list.get(bfqkz.getmti(ms));
         new url(bfqkz.xm);
     }
-
-    public static class tdt implements SeekBar.OnSeekBarChangeListener {
-        //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            bfq.time_b.setText(getTime(progress));
-
-//                bfq.time_b.setText(simpleDateFormat.format(new Date(progress)));
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-            // 暂停播放
-             bfqkz.mt.pauseTimer();
-//            bfqkz.mt.pause();
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            // 播放音乐到指定位置
-            bfqkz.mt.seekTo(seekBar.getProgress());
-            bfqkz.mt.resumeTimer();
-//            bfqkz.mt.start();
-        }
-    }
-
     public static class control implements View.OnClickListener {
         public control(ImageView imageView) {
             switch (bfqkz.ms) {
@@ -122,25 +95,14 @@ public class bfq_an {
     public static String getTime(long time) {
         return simpleDateFormat.format(new Date(time));
     }
-
-    public static void UI(boolean bool) {
-        if (bfq.getVisibility()) {
-            bfq.xyq.setEnabled(bool);
-            bfq.syq.setEnabled(bool);
-            bfq.kg.setEnabled(bool);
-            bfq.tdt.setEnabled(bool);
-        }
-    }
     public static void islike(Context context) {
         try {
             gd.like.getJSONObject(String.valueOf(bfqkz.xm.id));
-            bfq.like.setImageTintList(ContextCompat.
-                    getColorStateList(context, android.R.color.holo_red_dark));
             bfqkz.like_bool = true;
+            Media.setlike(true);
         } catch (Exception e) {
-            bfq.like.setImageTintList(ContextCompat.getColorStateList(context, R.color.text));
-            gj.sc("bfq_an islike() :" + e);
             bfqkz.like_bool = false;
+            Media.setlike(false);
         }
     }
 }

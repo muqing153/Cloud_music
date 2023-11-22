@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.muqingbfq.api.url;
+import com.muqingbfq.mq.BluetoothMusicController;
 import com.muqingbfq.mq.gj;
 
 import java.util.ArrayList;
@@ -19,10 +20,8 @@ import java.util.List;
 import java.util.Random;
 
 public class bfqkz extends MediaBrowserServiceCompat {
-    public static com.muqingbfq.MediaPlayer mt = new com.muqingbfq.MediaPlayer();
-    public static String id;
+    public static com.muqingbfq.MediaPlayer mt;
     public static List<xm> list = new ArrayList<>();
-    public static long tdt_max, tdt_wz;
     public static int ms;
     //    0 循环 1 顺序 2 随机
     public static xm xm;
@@ -52,31 +51,31 @@ public class bfqkz extends MediaBrowserServiceCompat {
             if (xm.picurl == null || xm.picurl.equals("")) {
                 xm.picurl = url.picurl(xm.id);
             }
-            mt.reset();
             mt.setDataSource(id);
         } catch (Exception e) {
-            gj.sc("bfqkz mp3(String id) :" + e);
+            yc.start(home.appCompatActivity, "bfqkz mp3(" + id + ") :" + e);
         }
     }
 
     public static MediaSessionCompat mSession;
     public static MediaMetadataCompat build;
     public static PlaybackStateCompat playback;
-
-
     @Override
     public void onCreate() {
         super.onCreate();
+        if (mt == null) {
+            mt = new com.muqingbfq.MediaPlayer();
+            new BluetoothMusicController(this);
+        }
         mSession = new MediaSessionCompat(this, "MusicService");
         playback=new PlaybackStateCompat.Builder()
                 .setState(PlaybackStateCompat.STATE_NONE,0,1.0f)
                 .build();
-        mSession.setCallback(new MediaSessionCompat.Callback() {
+/*        mSession.setCallback(new MediaSessionCompat.Callback() {
             @Override
             public void onPlay() {
                 mt.start();
             }
-
             @Override
             public void onPause() {
                 // 处理暂停音乐逻辑
@@ -98,15 +97,15 @@ public class bfqkz extends MediaBrowserServiceCompat {
             public void onSkipToPrevious() {
                 // 处理切换到上一首音乐逻辑
             }
-        });//设置回调
+        });*/
         build = new MediaMetadataCompat.Builder()
                 .build();
         mSession.setMetadata(build);
         mSession.setPlaybackState(playback);
-        mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         mSession.setActive(true);
         setSessionToken(mSession.getSessionToken());
         notify = new com.muqingbfq.mq.NotificationManagerCompat(this);
+
     }
 
     @Nullable

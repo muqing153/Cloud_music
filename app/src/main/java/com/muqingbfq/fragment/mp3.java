@@ -22,6 +22,7 @@ import com.muqingbfq.api.playlist;
 import com.muqingbfq.api.url;
 import com.muqingbfq.bfq;
 import com.muqingbfq.bfqkz;
+import com.muqingbfq.home;
 import com.muqingbfq.list.MyViewHoder;
 import com.muqingbfq.main;
 import com.muqingbfq.xm;
@@ -49,6 +50,8 @@ public class mp3 extends AppCompatActivity {
         lb.setAdapter(lbspq);
         String id = intent.getStringExtra("id");
         new start(id);
+/*        getSupportFragmentManager().beginTransaction()
+                .add(R.id.bfq_db,home.bfq_db).commit();*/
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -105,12 +108,10 @@ public class mp3 extends AppCompatActivity {
             holder.name.setTextColor(color);
             holder.zz.setTextColor(color);
             holder.view.setOnClickListener(view -> {
-                bfqkz.id = x.id;
                 if (bfqkz.xm == null || !bfqkz.xm.id.equals(x.id)) {
                     bfqkz.xm = x;
                     new url(x);
                 }
-//                if (!gd.gdid.equals(bflb_db.gdid)) {
                     bfqkz.list.clear();
                     int size = list.size();
                     for (int i = 0; i < size; i++) {

@@ -75,7 +75,6 @@ public class bflb_db extends BottomSheetDialog {
             holder.name.setTextColor(color);
             holder.zz.setTextColor(color);
             holder.view.setOnClickListener(view -> {
-                bfqkz.id = x.id;
                 if (bfqkz.xm != x) {
                     bfqkz.xm = x;
                     new url(x);

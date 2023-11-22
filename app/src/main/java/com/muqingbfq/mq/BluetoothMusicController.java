@@ -16,15 +16,12 @@ public class BluetoothMusicController {
 
     public BluetoothMusicController(Context context) {
         this.context = context;
-//        bluetoothReceiver.setOnHeadsetListener(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
 
         intentFilter.addAction("android.intent.action.HEADSET_PLUG");
         context.registerReceiver(new MyButtonClickReceiver(), intentFilter);
         registerHeadsetReceiver();
-//        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-//        setupMediaSession();
     }
 
     public void stop() {

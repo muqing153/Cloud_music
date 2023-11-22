@@ -1,7 +1,5 @@
 package com.muqingbfq.mq;
 
-import static com.muqingbfq.bfqkz.xm;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
@@ -15,7 +13,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.core.app.ActivityCompat;
@@ -25,11 +22,8 @@ import androidx.media.session.MediaButtonReceiver;
 import com.muqingbfq.MyButtonClickReceiver;
 import com.muqingbfq.R;
 import com.muqingbfq.bfq;
-import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
-import com.muqingbfq.fragment.bfq_db;
-import com.muqingbfq.fragment.mp3;
-import com.muqingbfq.home;
+import com.muqingbfq.fragment.Media;
 import com.muqingbfq.start;
 import com.muqingbfq.yc;
 
@@ -62,7 +56,6 @@ public class NotificationManagerCompat {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
             PendingIntent pendingIntent = getActivity(context, intent);
-//                    PendingIntent.getActivity(context, 0, intent, flag);
             Intent my = new Intent(context, MyButtonClickReceiver.class);
             pendingIntent_kg = getBroadcast(context, my.
                     setAction("kg"));
@@ -133,15 +126,10 @@ public class NotificationManagerCompat {
                     R.drawable.icon);
         }
         if (notificationManager != null) {
-            notificationBuilder.setContentTitle(xm.name);
-            notificationBuilder.setContentText(xm.zz);
             notificationBuilder.setLargeIcon(bitmap);
             notificationManager.notify(1, notificationBuilder.build());
         }
-        if (bfq.tx != null) {
-            bfq.tx.setImageBitmap(bitmap);
-        }
-
+        Media.setImageBitmap(bitmap);
     }
 
     private NotificationCompat.Builder getNotificationBuilder(Context context) {

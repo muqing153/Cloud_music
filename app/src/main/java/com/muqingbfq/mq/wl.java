@@ -27,8 +27,9 @@ public class wl {
     }
 
     public static boolean iskong() {
-        return Cookie.equals("") || Cookie == null;
+        return Cookie.equals("");
     }
+
     public static String hq(String url) {
         try {
             OkHttpClient client = new OkHttpClient();
@@ -74,57 +75,59 @@ public class wl {
         @Override
         public void run() {
             super.run();
-            xz(url, x);
+            try {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        //访问路径
+                        .url(url)
+                        .build();
+                Call call = client.newCall(request);
+                Response response = call.execute();
+                if (response.isSuccessful()) {
+                    ResponseBody body = response.body();
+                    if (body != null) {
+                        File file = new File(wj.mp3, String.valueOf(x.id));
+                        if (!file.getParentFile().exists()) {
+                            file.getParentFile().mkdirs();
+                        }
+                        InputStream inputStream = body.byteStream();
+                        FileOutputStream fileOutputStream =
+                                new FileOutputStream(file);
+                        // 替换为实际要保存的文件路径
+                        byte[] buffer = new byte[4096];
+                        int bytesRead;
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            fileOutputStream.write(buffer, 0, bytesRead);
+                        }
+                        fileOutputStream.close();
+                        inputStream.close();
+                    }
+                }
+                JSONObject jsonObject = new JSONObject();
+                if (wj.cz(wj.mp3_xz)) {
+                    jsonObject = new JSONObject(wj.dqwb(wj.mp3_xz));
+                } else {
+                    jsonObject.put("songs", new JSONArray());
+                }
+                JSONArray songs = jsonObject.getJSONArray("songs");
+                if (songs.length() > 30) {
+                    songs.remove(0);
+                    String id = songs.getJSONObject(0).getString("id");
+                    gj.sc(wj.mp3 + id);
+                    new File(wj.mp3+id).delete();
+                }
+                File file = new File(wj.mp3);
+                JSONObject json = new JSONObject();
+                json.put("id", x.id);
+                json.put("name", x.name);
+                json.put("zz", x.zz);
+                json.put("picUrl", x.picurl);
+                songs.put(json);
+                wj.xrwb(wj.mp3_xz, jsonObject.toString());
+            } catch (Exception e) {
+                gj.sc("wl xz " + e);
+            }
         }
     }
 
-    public static boolean xz(String url, final xm x) {
-        try {
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    //访问路径
-                    .url(url)
-                    .build();
-            Call call = client.newCall(request);
-            Response response = call.execute();
-            if (response.isSuccessful()) {
-                ResponseBody body = response.body();
-                if (body != null) {
-                    File file = new File(wj.mp3, String.valueOf(x.id));
-                    InputStream inputStream = body.byteStream();
-                    FileOutputStream fileOutputStream =
-                            new FileOutputStream(file);
-                    // 替换为实际要保存的文件路径
-                    byte[] buffer = new byte[4096];
-                    int bytesRead;
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        fileOutputStream.write(buffer, 0, bytesRead);
-                    }
-                    fileOutputStream.close();
-                    inputStream.close();
-                }
-            }
-            JSONObject jsonObject = new JSONObject();
-            if (wj.cz(wj.mp3_xz)) {
-                jsonObject = new JSONObject(wj.dqwb(wj.mp3_xz));
-            } else {
-                jsonObject.put("songs", new JSONArray());
-            }
-            JSONArray songs = jsonObject.getJSONArray("songs");
-            if (songs.length() > 30) {
-                songs.remove(0);
-            }
-            JSONObject json = new JSONObject();
-            json.put("id", x.id);
-            json.put("name", x.name);
-            json.put("zz", x.zz);
-            json.put("picUrl", x.picurl);
-            songs.put(json);
-            wj.xrwb(wj.mp3_xz, jsonObject.toString());
-            return true;
-        } catch (Exception e) {
-            gj.sc("wl xz " + e);
-        }
-        return false;
-    }
 }

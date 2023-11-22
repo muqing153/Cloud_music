@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
 
+import com.muqingbfq.mq.gj;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MyButtonClickReceiver extends BroadcastReceiver {
-    private Timer timer = new Timer();
+    private final Timer timer = new Timer();
     private static int clickCount;
 
     public MyButtonClickReceiver() {
@@ -130,8 +132,11 @@ public class MyButtonClickReceiver extends BroadcastReceiver {
      * 对蓝牙  播放-暂停
      */
     public static void playOrPause() {
-//        gj.sc(isMusicServiceBound);
-            // 播放/暂停按钮点击事件 if (isMusicServiceBound)
+        if (bfqkz.mt == null) {
+            return;
+        }
+        gj.sc(bfqkz.mt);
+//        gj.sc(isMusicServiceBound);播放/暂停按钮点击事件 if (isMusicServiceBound)
         if (bfqkz.mt.isPlaying()) {
             bfqkz.mt.pause();
         } else {

@@ -19,7 +19,7 @@ public class main extends Application {
     public static SharedPreferences.Editor edit;
 
     public static String mp3 = "mp3", mp3_csh,
-            Time = "Time", Cookie = "Cookie";
+     Cookie = "Cookie", user;
 
     @Override
     public void onCreate() {
@@ -27,10 +27,6 @@ public class main extends Application {
         new wj(this);
         sp = getSharedPreferences("Set_up", MODE_PRIVATE);
         edit = sp.edit();
-        if (sp.getLong(Time, 0) == 0) {
-            edit.putLong(Time, System.currentTimeMillis());
-        }
-        start.time = sp.getLong(Time, System.currentTimeMillis());
         boolean bj = false;
         try {
             mp3_csh = sp.getString(mp3, "");
@@ -56,6 +52,5 @@ public class main extends Application {
         if (bj) {
             edit.commit();
         }
-        // 创建全局异常处理器实例 设置全局异常处理器
     }
 }

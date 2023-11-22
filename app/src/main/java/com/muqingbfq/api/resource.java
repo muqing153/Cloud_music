@@ -1,5 +1,7 @@
 package com.muqingbfq.api;
 
+import android.text.TextUtils;
+
 import com.muqingbfq.R;
 import com.muqingbfq.main;
 import com.muqingbfq.start;
@@ -12,35 +14,28 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 import java.util.List;
+
 import com.muqingbfq.xm;
+
 public class resource {
 
     public static void recommend(List<xm> list) {
         String hq;
         JSONObject json;
         try {
-            if (wj.cz(wj.gd_json)&& start.time>System.currentTimeMillis()-3600000) {
+            hq = wl.hq("/recommend/resource?cookie=" + wl.Cookie);
+            if (TextUtils.isEmpty(hq) && wj.cz(wj.gd_json)) {
                 hq = wj.dqwb(wj.gd_json);
-                json = new JSONObject(hq);
-            } else {
-                hq = wl.hq("/recommend/resource?cookie="+wl.Cookie);
-                if (hq == null && wj.cz(wj.gd_json)) {
-                    hq = wj.dqwb(wj.gd_json);
-                    json = new JSONObject(hq);
-                }
-                json = new JSONObject(hq);
-                if (json.getInt("code") == 200) {
-                    wj.xrwb(wj.gd_json, hq);
-                    start.time = System.currentTimeMillis();
-                    main.edit.putLong(main.Time, start.time);
-                    main.edit.commit();
-                }
             }
-            JSONArray recommend = json.getJSONArray("recommend");
-            int length = recommend.length();
-            for (int i = 0; i < length; i++) {
-                JSONObject jsonObject = recommend.getJSONObject(i);
-                add(jsonObject, list);
+            json = new JSONObject(hq);
+            if (json.getInt("code") == 200) {
+                wj.xrwb(wj.gd_json, hq);
+                JSONArray recommend = json.getJSONArray("recommend");
+                int length = recommend.length();
+                for (int i = 0; i < length; i++) {
+                    JSONObject jsonObject = recommend.getJSONObject(i);
+                    add(jsonObject, list);
+                }
             }
         } catch (Exception e) {
             gj.sc("resource tuijian" + e);

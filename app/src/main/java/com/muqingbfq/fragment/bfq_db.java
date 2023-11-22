@@ -2,7 +2,6 @@ package com.muqingbfq.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.muqingbfq.R;
 import com.muqingbfq.bfq;
@@ -26,35 +25,61 @@ import java.util.List;
 
 public class bfq_db extends Fragment {
     @SuppressLint("StaticFieldLeak")
-    public static View view;
-    public static TextView name, zz;
-    public static ImageView txa;
-
-
+    private static View view;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (view == null) {
+            String jsonList = this.getContext().getSharedPreferences("list", Context.MODE_PRIVATE)
+                    .getString("listData", null); // 获取保存的 JSON 字符串
+            if (jsonList != null) {
+                Type type = new TypeToken<List<xm>>() {
+                }.getType();
+                bfqkz.list = new com.google.gson.Gson().fromJson(jsonList, type); // 将 JSON 字符串转换回列表数据
+            }
+        }
         view = inflater.inflate(R.layout.fragment_bfq_db, container, false);
-        name = view.findViewById(R.id.name);
-        zz = view.findViewById(R.id.zz);
-        txa = view.findViewById(R.id.kg);
-        txa.setOnClickListener(new bfq_an.kz());
-
+        TextView name = view.findViewById(R.id.name);
+        TextView zz = view.findViewById(R.id.zz);
+        view.findViewById(R.id.kg).setOnClickListener(new bfq_an.kz());
         view.findViewById(R.id.txb).setOnClickListener(view -> bflb_db.start(getContext()));
-        view.setOnClickListener(view12 -> bfq.start(home.appCompatActivity));
-
+        view.setOnClickListener(vw -> bfq.start(home.appCompatActivity));
 // 恢复列表数据
-        SharedPreferences sharedPreferences = this.getContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        String jsonList = sharedPreferences.getString("listData", ""); // 获取保存的 JSON 字符串
-        if (!jsonList.isEmpty()) {
-            Gson gson = new Gson();
-            Type type = new TypeToken<List<xm>>() {
-            }.getType();
-            bfqkz.list = gson.fromJson(jsonList, type); // 将 JSON 字符串转换回列表数据
-        } else {
-            view.setVisibility(View.GONE);
+        if (bfqkz.xm != null) {
+            name.setText(bfqkz.xm.name);
+            zz.setText(bfqkz.xm.zz);
+        }
+        if (bfqkz.mt != null) {
+            Media.setbf(bfqkz.mt.isPlaying());
         }
         return view;
     }
+    private static <T extends View> T findViewById(int id) {
+        return view.findViewById(id);
+    }
 
+    public static void setkg(boolean bool) {
+        if (view != null) {
+            ImageView imageView = findViewById(R.id.kg);
+            if (bool) {
+                imageView.setImageResource(R.drawable.bf);
+            } else {
+                imageView.setImageResource(R.drawable.zt);
+            }
+        }
+    }
+
+    public static void setname(String str) {
+        if (view != null) {
+            TextView textView = findViewById(R.id.name);
+            textView.setText(str);
+        }
+    }
+
+    public static void setzz(String str) {
+        if (view != null) {
+            TextView textView = findViewById(R.id.zz);
+            textView.setText(str);
+        }
+    }
 }

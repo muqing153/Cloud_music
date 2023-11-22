@@ -5,13 +5,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.session.MediaControllerCompat;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.LeadingMarginSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,95 +19,121 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
+import com.muqingbfq.fragment.Media;
 import com.muqingbfq.fragment.bfq_db;
 import com.muqingbfq.mq.gj;
 
+import java.util.List;
+
 public class home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public Toolbar toolbar;
-    public static AppCompatActivity appCompatActivity;
-    @SuppressLint("CommitTransaction")
+    @SuppressLint("StaticFieldLeak")
+    public static Context appCompatActivity;
+
+    @SuppressLint({"CommitTransaction", "ObsoleteSdkInt"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         appCompatActivity = this;
         try {
-            toolbar = findViewById(R.id.toolbar);
+            //初始化工具栏
+            Toolbar toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             DrawerLayout drawerLayout = findViewById(R.id.chct);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
             drawerLayout.addDrawerListener(toggle);
             toggle.syncState();
+            //初始化侧滑
             NavigationView chb = findViewById(R.id.chb);
             chb.setNavigationItemSelectedListener(this);
-            Menu menu = chb.getMenu();
-            for (int i = 0; i < menu.size(); i++) {
-                MenuItem item = menu.getItem(i);
-                SpannableString spannableString = new SpannableString(item.getTitle());
-                spannableString.setSpan(new LeadingMarginSpan.Standard(
-                        26, 26), 0, spannableString.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-                item.setTitle(spannableString);
-            }
             new com.muqingbfq.fragment.sz(this, chb.getHeaderView(0));
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.bfq_db, new bfq_db()).commit();
-            mediaBrowser = new MediaBrowserCompat(this,
-                    new ComponentName(this, bfqkz.class), new MediaBrowserCompat.ConnectionCallback() {
+            //初始化播放器组件
+            if (mediaBrowser == null) {
+                mediaBrowser = new MediaBrowserCompat(this,
+                        new ComponentName(this, bfqkz.class),
+                        connectionCallbacks,
+                        null);
+                mediaBrowser.connect();
+            }
+            //检测更新
+            new gj.jianchagengxin(this);
+        } catch (Exception e) {
+            yc.tc(this, e);
+        }
+    }
+
+    public static MediaBrowserCompat mediaBrowser;
+    private MediaBrowserCompat.ConnectionCallback connectionCallbacks =
+            new MediaBrowserCompat.ConnectionCallback() {
                 @Override
                 public void onConnected() {
-                    // 连接成功后执行的操作
-                    MediaControllerCompat mediaController;
-                    try {
-                        mediaController = new MediaControllerCompat(home.this,
-                                mediaBrowser.getSessionToken());
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                    MediaControllerCompat.setMediaController(home.this, mediaController);
-
+                    // 已连接到服务，可以开始浏览媒体内容
+                    // 订阅媒体内容
+                    mediaBrowser.subscribe("mediaId", subscriptionCallback);
+                    // 请求当前播放状态
+                    MediaControllerCompat mediaController = new MediaControllerCompat(home.this, mediaBrowser.getSessionToken());
+                    MediaControllerCompat.TransportControls transportControls = mediaController.getTransportControls();
+                    // 执行媒体控制操作
+                    transportControls.play();
                 }
 
                 @Override
                 public void onConnectionSuspended() {
-                    // 连接暂停时执行的操作
-//                    gj.ts(home.this,"zangting");
+                    // 与服务的连接暂停或断开
+                    // 取消订阅媒体内容
+                    mediaBrowser.unsubscribe("mediaId", subscriptionCallback);
+                    // 清除播放状态
+                    MediaControllerCompat mediaController = new MediaControllerCompat(home.this, mediaBrowser.getSessionToken());
+                    MediaControllerCompat.TransportControls transportControls = mediaController.getTransportControls();
+                    // 执行媒体控制操作
+                    transportControls.stop();
                 }
 
                 @Override
                 public void onConnectionFailed() {
-                    // 连接失败时执行的操作
-//                    gj.ts(home.this,"shibai");
+                    // 与服务的连接失败
+                    // 尝试重新连接服务或显示错误信息等
                 }
-            }, null);
-            mediaBrowser.connect();
-        } catch (Exception e) {
-            gj.sc(e);
-        }
-    }
+            };
+    private MediaBrowserCompat.SubscriptionCallback subscriptionCallback =
+            new MediaBrowserCompat.SubscriptionCallback() {
+                @Override
+                public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children) {
+                    // 媒体内容加载完成
+                    // 处理每个媒体项
+                    // ...
+                }
 
-    MediaBrowserCompat mediaBrowser;
+                @Override
+                public void onError(@NonNull String parentId) {
+                    // 媒体内容加载失败
+                    // 处理加载失败的情况
+                }
+            };
 
     @Override
     protected void onPause() {
         super.onPause();
+        //在销毁 Activity 之前，系统会先调用 onDestroy()。系统调用此回调的原因如下：
         // 保存列表数据
-        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("list", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String jsonList = gson.toJson(bfqkz.list); // 将列表数据转换为 JSON 字符串
-        editor.putString("listData", jsonList); // 保存 JSON 字符串到 SharedPreferences
+        String jsonList = new com.google.gson.Gson().toJson(bfqkz.list);
+        editor.putString("listData", jsonList);
         editor.apply();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        mediaBrowser.disconnect();
+    protected void onResume() {
+        super.onResume();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.bfq_db, new bfq_db()).commit();
     }
-    private long time;
 
+    private long time;
+    @SuppressLint("StaticFieldLeak")
+    public static com.muqingbfq.fragment.bfq_db bfq_db = new bfq_db();
     @Override
     public void onBackPressed() {
         if (bfqkz.mt.isPlaying()) {
@@ -126,13 +149,11 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_search) {
@@ -141,12 +162,14 @@ public class home extends AppCompatActivity implements NavigationView.OnNavigati
         }
         return super.onOptionsItemSelected(item);
     }
-
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         com.muqingbfq.fragment.sz.switch_sz(this, item.getItemId());
         return false;
     }
-
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Media.view = null;
+    }
 }

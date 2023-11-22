@@ -3,6 +3,7 @@ package com.muqingbfq;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,10 +18,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.flexbox.AlignItems;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexWrap;
+import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.muqingbfq.fragment.search;
 import com.muqingbfq.mq.gj;
@@ -39,7 +42,7 @@ public class activity_search extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
 
     private JSONObject json = new JSONObject();
-    private List<String> json_list = new ArrayList<>();
+    private final List<String> json_list = new ArrayList<>();
     private final List<String> list = new ArrayList<>();
     ListView listPopupWindow;
     public static AppCompatActivity appCompatActivity;
@@ -54,6 +57,13 @@ public class activity_search extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RecyclerView recyclerView = findViewById(R.id.list_recycler);
+        FlexboxLayoutManager manager = new FlexboxLayoutManager(this);
+        //设置主轴排列方式
+        manager.setFlexDirection(FlexDirection.ROW);
+        //设置是否换行
+        manager.setFlexWrap(FlexWrap.WRAP);
+        manager.setAlignItems(AlignItems.STRETCH);
+        recyclerView.setLayoutManager(manager);
         SearchRecordAdapter recordAdapter = new SearchRecordAdapter();
         recyclerView.setAdapter(recordAdapter);
 
@@ -62,7 +72,6 @@ public class activity_search extends AppCompatActivity {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 String str = v.getText().toString();
                 if (!str.equals("")) {
-//                    退出activity并返回str数据
                     start(str);
                 }
             }
@@ -81,6 +90,7 @@ public class activity_search extends AppCompatActivity {
                 })
                 .show());
         listPopupWindow = findViewById(R.id.search_recycler);
+//历史记录的LayoutManager
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, list);
         listPopupWindow.setAdapter(adapter);
@@ -98,11 +108,7 @@ public class activity_search extends AppCompatActivity {
             start(editText.getText().toString());
 
         });
-        editText.setOnFocusChangeListener((view, b) -> {
-            if (b) {
-                dismiss();
-            }
-        });
+        Object o = new Object();
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -110,47 +116,40 @@ public class activity_search extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (TextUtils.isEmpty(s)){
+                    dismiss();
+                    return;
+                }
                 list.clear();
-                if (s.length() < 1) {
-                    list.clear();
-                    adapter.notifyDataSetChanged();
-                    editText.clearFocus();
-                    dismiss();
-                    return;
+                if (listPopupWindow.getVisibility() == View.GONE) {
+                    listPopupWindow.setVisibility(View.VISIBLE);
                 }
-                if (!editText.hasFocus()) {
-                    dismiss();
-                    return;
-                }
-                listPopupWindow.setVisibility(View.VISIBLE);
                 new Thread() {
                     @Override
                     public void run() {
-                        String hq = wl.hq("/search/suggest?keywords=" + s + "&type=mobile");
-                        try {
-                            JSONArray jsonArray = new JSONObject(hq).getJSONObject("result")
-                                    .getJSONArray("allMatch");
-                            int length = jsonArray.length();
-                            for (int i = 0; i < length; i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                String keyword = jsonObject.getString("keyword");
-                                list.add(keyword);
+                        synchronized (o) {
+                            String hq = wl.hq("/search/suggest?keywords=" + s + "&type=mobile");
+                            try {
+                                JSONArray jsonArray = new JSONObject(hq).getJSONObject("result")
+                                        .getJSONArray("allMatch");
+                                int length = jsonArray.length();
+                                for (int i = 0; i < length; i++) {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    String keyword = jsonObject.getString("keyword");
+                                    list.add(keyword);
+                                }
+                                main.handler.post(() -> adapter.notifyDataSetChanged());
+                            } catch (Exception e) {
+                                gj.sc(e);
                             }
-                            main.handler.post(() -> adapter.notifyDataSetChanged());
-                        } catch (Exception e) {
-                            gj.ts(activity_search.this, e);
                         }
-                        super.run();
                     }
                 }.start();
             }
-
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
-        fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
     }
 
     public void dismiss() {
@@ -159,6 +158,9 @@ public class activity_search extends AppCompatActivity {
 
     private void addSearchRecord(String name) {
         try {
+            if (!findViewById(R.id.xxbj1).isShown()) {
+                findViewById(R.id.xxbj1).setVisibility(View.VISIBLE);
+            }
             if (!json.has("list")) {
                 json.put("list", new JSONArray());
             }
@@ -171,7 +173,7 @@ public class activity_search extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            gj.sc(e);
         }
     }
 
@@ -192,27 +194,14 @@ public class activity_search extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
-
-    com.muqingbfq.fragment.search search;
     public void start(String name) {
         dismiss();
-        if (name.equals("")) {
-            return;
-        }
-        if (search == null) {
-            search = new search(name);
-        }
-        if (!search.isVisible()) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.search_fragment, search)
-                    .addToBackStack(null).commit();
-        } else {
+        if (!TextUtils.isEmpty(name)) {
+            search search = (com.muqingbfq.fragment.search) getSupportFragmentManager().
+                    findFragmentById(R.id.search_fragment);
             search.setStart(name);
+            addSearchRecord(name);
         }
-        addSearchRecord(name);
     }
 
     class SearchRecordAdapter extends RecyclerView.Adapter<SearchRecordAdapter.ViewHolder> {
@@ -239,7 +228,7 @@ public class activity_search extends AppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = View.inflate(parent.getContext(), android.R.layout.simple_list_item_1, null);
+            View view = View.inflate(parent.getContext(), R.layout.list_text, null);
             return new ViewHolder(view);
         }
 
@@ -263,8 +252,23 @@ public class activity_search extends AppCompatActivity {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                recordTextView = itemView.findViewById(android.R.id.text1);
+                recordTextView = itemView.findViewById(R.id.button);
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        end();
+    }
+
+    private void end() {
+        search search = (com.muqingbfq.fragment.search) getSupportFragmentManager().
+                findFragmentById(R.id.search_fragment);
+        if (search.getVisibility()) {
+            search.setVisibility(false);
+        } else {
+            finish();
         }
     }
 }

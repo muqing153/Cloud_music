@@ -1,9 +1,17 @@
 package com.muqingbfq;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +28,15 @@ public class sz extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        UI();
+//        UI();
+//        kaifazhe();
+    }
+
+    /**
+     * 建立底部浮动栏的方法
+     */
+    public void CreateFloatView(){
+            View mFloatView = LayoutInflater.from(getBaseContext()).inflate(R.layout.fragment_bfq_db,null);
     }
 
     @SuppressLint("ApplySharedPref")
@@ -70,4 +86,32 @@ public class sz extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void kaifazhe() {
+        MaterialSwitch materialSwitch = findViewById(R.id.switch_kfz);
+        materialSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                        !Settings.canDrawOverlays(this)) {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, 114511);
+                } else {
+                    com.muqingbfq.mq.floating.start(sz.this);
+                }
+            } else {
+                com.muqingbfq.mq.floating.end(sz.this);
+            }
+        });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 114511) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)) {
+                com.muqingbfq.mq.floating.start(sz.this);
+            }
+        }
+    }
+
 }

@@ -18,7 +18,7 @@ import org.json.JSONObject;
 
 public class enroll extends AppCompatActivity {
     EditText eduser,edpassword;
-    String user, password;
+    String user , name , password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +27,13 @@ public class enroll extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intent intent = getIntent();
+        //获取UID编辑框
         eduser = findViewById(R.id.edit_user);
         eduser.setText(
                 intent.getStringExtra("user"));
+        //设置密码编辑框
         edpassword = findViewById(R.id.edit_password);
+
         findViewById(R.id.edit_cookie).setOnClickListener(view -> new user_logs.erweima(view.getContext()));
         findViewById(R.id.enroll).setOnClickListener(view -> a());
     }
@@ -65,8 +68,11 @@ public class enroll extends AppCompatActivity {
         @Override
         public void run() {
             super.run();
-            String s = wl.get("http://139.196.224.229/muqing/enroll.php?user=" + user + "&password=" + password
-                    + "&cookie" + wl.Cookie);
+            String get = "user=" + user
+                    + "&name=" + name
+                    + "&password=" + password
+                    + "&cookie" + wl.Cookie;
+            String s = wl.get("http://139.196.224.229/muqing/enroll.php?" + get);
             try {
                 JSONObject jsonObject = new JSONObject(s);
                 int code = jsonObject.getInt("code");
@@ -80,6 +86,4 @@ public class enroll extends AppCompatActivity {
             }
         }
     }
-
-
 }

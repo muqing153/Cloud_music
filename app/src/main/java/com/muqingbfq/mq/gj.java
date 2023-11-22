@@ -2,21 +2,16 @@ package com.muqingbfq.mq;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.muqingbfq.main;
 import com.muqingbfq.yc;
+
+import org.json.JSONObject;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -35,7 +30,8 @@ public class gj {
         if (a == null) {
             a = "null";
         }
-        Log.d("云音乐", String.valueOf(a));
+        Log.d("云音乐", a.toString());
+        floating.addtext(a.toString());
     }
 
     public static void llq(Context context, String str) {
@@ -47,11 +43,6 @@ public class gj {
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, str);
         context.startActivity(shareIntent);
-    }
-
-    public static int isDarkTheme(Context context) {
-        return context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-//        return flag == Configuration.UI_MODE_NIGHT_YES;
     }
 
     public static boolean isWiFiConnected() {
@@ -71,24 +62,50 @@ public class gj {
         return false;  // 默认为流量网络
     }
 
-    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int cornerRadius) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
+    public static class jianchagengxin extends Thread {
+        Context context;
 
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
+        public jianchagengxin(Context context) {
+            this.context = context;
+            if (!wj.cz(wj.filesdri + "gx.mq")) {
+                start();
+            }
+        }
 
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint);
-
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        return output;
+        @Override
+        public void run() {
+            super.run();
+            jianchagengxin(context);
+        }
     }
 
+    public static int jianchagengxin(Context context) {
+        try {
+            String versionName = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0).versionName;
+            String hq = wl.get(main.http + "/muqingbfq?bb=" + versionName);
+            final JSONObject jsonObject = new JSONObject(hq);
+            boolean code = jsonObject.getInt("code") == 1;
+            String msg = jsonObject.getString("msg");
+            if (code) {
+                String url = jsonObject.getString("url");
+                String bb = jsonObject.getString("bb");
+                main.handler.post(() -> new MaterialAlertDialogBuilder(context)
+                        .setTitle("更新" + bb)
+                        .setMessage(msg+"\n"+"取消后不再提示更新你需要到关于软件手动检测")
+                        .setNegativeButton("取消", (dialogInterface, i) -> {
+                            wj.xrwb(wj.filesdri + "gx.mq", null);
+                        })
+                        .setPositiveButton("更新", (dialogInterface, i) -> context.startActivity(new Intent(Intent.ACTION_VIEW,
+                                Uri.parse(url))))
+//                                    new ApkDownloader(context).downloadAndInstall(url, wj.filesdri))
+                        .show());
+            }
+            //1表示需要更新
+            return code ? 1 : 0;
+        } catch (Exception e) {
+            sc(e);
+        }
+        return 400;
+    }
 }

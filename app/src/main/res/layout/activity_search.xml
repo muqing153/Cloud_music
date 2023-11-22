@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,53 +26,60 @@
             tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
     </androidx.appcompat.widget.Toolbar>
     <RelativeLayout
-        android:id="@+id/xxbj1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="1">
         <LinearLayout
-            android:id="@+id/xxbj2"
+            android:id="@+id/xxbj1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="6dp"
-            tools:ignore="UseCompoundDrawables">
-            <TextView
-                android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/lishijilu"
-                android:textColor="@color/text"
-                android:textSize="26sp" />
-            <ImageView
-                android:id="@+id/deleat"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="16dp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/deleat"
-                android:src="@drawable/deleat" />
+                android:orientation="horizontal"
+                android:padding="6dp"
+                tools:ignore="UseCompoundDrawables">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/lishijilu"
+                    android:textColor="@color/text"
+                    android:textSize="26sp" />
+                <ImageView
+                    android:id="@+id/deleat"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/deleat"
+                    android:src="@drawable/deleat" />
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"/>
         </LinearLayout>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_below="@id/xxbj2"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-        <FrameLayout
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/search_fragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:name="com.muqingbfq.fragment.search"
+            tools:layout="@layout/fragment_search" />
+        <ListView
+            android:id="@+id/search_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="@color/bj"/>
     </RelativeLayout>
-
-    <ListView
-        android:id="@+id/search_recycler"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/bfq_db"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:visibility="gone"
-        android:background="@color/bj"/>
+        android:layout_height="wrap_content"
+        android:name="com.muqingbfq.fragment.bfq_db"
+        tools:layout="@layout/fragment_bfq_db" />
 
-</RelativeLayout>
+</LinearLayout>

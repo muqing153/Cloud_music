@@ -32,13 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class search extends Fragment {
-
-    String name;
-
-    public search(String name) {
-        this.name = name;
-    }
-
     View view;
     RecyclerView.Adapter<MyViewHoder> lbspq;
     List<xm> list = new ArrayList<>();
@@ -56,20 +49,36 @@ public class search extends Fragment {
         lb.setLayoutManager(manager);
         lbspq = new spq();
         lb.setAdapter(lbspq);
-        new start().start();
+        setVisibility(false);
         return view;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void setStart(String name) {
-        this.name = name;
-        list.clear();
-        lbspq.notifyDataSetChanged();
-        new start().start();
+    public void setVisibility(boolean bool) {
+        if (bool) {
+            view.setVisibility(View.VISIBLE);
+        } else {
+            view.setVisibility(View.GONE);
+        }
+    }
 
+    public boolean getVisibility() {
+        return view.isShown();
+    }
+
+    public void setStart(String name) {
+        setVisibility(true);
+        list.clear();
+        new start(name);
     }
 
     public class start extends Thread {
+        String name;
+
+        public start(String name) {
+            this.name = name;
+            start();
+        }
+
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void run() {
@@ -124,7 +133,6 @@ public class search extends Fragment {
             holder.name.setTextColor(color);
             holder.zz.setTextColor(color);
             holder.view.setOnClickListener(view1 -> {
-                bfqkz.id = x.id;
                 if (bfqkz.xm == null || !bfqkz.xm.id.equals(x.id)) {
                     bfqkz.xm = x;
                     new url(x);

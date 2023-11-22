@@ -1,115 +1,156 @@
 package com.muqingbfq;
 
+import static com.muqingbfq.bfqkz.xm;
+
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.PlaybackException;
+import androidx.media3.common.Player;
+import androidx.media3.exoplayer.ExoPlayer;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.muqingbfq.api.url;
+import com.muqingbfq.fragment.Media;
 import com.muqingbfq.fragment.bfq_db;
-import com.muqingbfq.fragment.mp3;
+import com.muqingbfq.mq.gj;
 
-import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
+public class MediaPlayer {
+    public ExoPlayer build;
+    // 每秒更新一次进度
+    public Runnable updateSeekBar = new Runnable() {
+        @Override
+        public void run() {
+            if (build != null && build.isPlaying() && Media.getlrcView() != null) {
+                long position = build.getCurrentPosition();
+                Media.setProgress((int) position);
+            }
+            main.handler.postDelayed(this, 1000); // 每秒更新一次进度
+        }
+    };
 
-public class MediaPlayer extends android.media.MediaPlayer {
+    @SuppressLint("UnsafeOptInUsageError")
     public MediaPlayer() {
-        this.setOnCompletionListener(mediaPlayer -> {
-/*            if (!home.db.view.isShown()) {
-                home.db.view.setVisibility(View.VISIBLE);
-            }*/
-            int i = bfqkz.getmti(bfqkz.ms);
-            bfqkz.xm = bfqkz.list.get(i);
-            new Thread() {
-                @Override
-                public void run() {
-                    super.run();
-                    bfqkz.mp3(url.hq(bfqkz.xm));
-                }
-            }.start();
-        });
-        this.setOnErrorListener((mediaPlayer, i, i1) -> {
-            bfqkz.list.remove(bfqkz.xm);
-            return false;
-        });
-        resumeTimer();
-    }
-
-    @Override
-    public void pause() throws IllegalStateException {
-        if (isPlaying()) {
-            super.pause();
-            //暂停
-            if (bfq.kg != null) {
-                bfq.kg.setImageResource(R.drawable.zt);
-            }
-            bfq_db.txa.setImageResource(R.drawable.zt);
-            bfqkz.updateNotification();
-        }
-    }
-
-    public Timer timer;
-    public TimerTask timerTask;
-    public void pauseTimer() {
-        if (timer != null) {
-            timer.cancel();
-        }
-    }
-    public void resumeTimer() {
-        timer = new Timer();//定时器
-        timerTask = new TimerTask() {
+        build = new ExoPlayer.Builder(home.appCompatActivity).build();
+        build.addListener(new Player.Listener() {
             @Override
-            public void run() {
-                if (bfqkz.mt.isPlaying() && bfq.getVisibility()) {
-                    int currentPosition = bfqkz.mt.getCurrentPosition();
-                    bfq.tdt.setProgress(currentPosition);
-                    bfq.lrcView.updateTime(currentPosition, true);
+            public void onPlaybackStateChanged(@Player.State int state) {
+                switch (state) {
+                    case Player.STATE_READY:
+                        bfui();
+                        break;
+
+                    case Player.STATE_ENDED:
+                        int i = bfqkz.getmti(bfqkz.ms);
+                        bfqkz.xm = bfqkz.list.get(i);
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                super.run();
+                                bfqkz.mp3(com.muqingbfq.api.
+                                        url.hq(bfqkz.xm));
+                            }
+                        }.start();
+                        break;
+
+                    case Player.STATE_BUFFERING:
+                    case Player.STATE_IDLE:
+                        break;
                 }
+                if (Media.view != null) {
+                    main.handler.removeCallbacks(updateSeekBar); // 在播放开始时启动更新进度
+                    long duration = build.getDuration();
+                    Media.setMax((int) build.getDuration());
+                    Media.setTime_a(bfq_an.getTime(duration));
+                    long position = build.getCurrentPosition();
+                    Media.setProgress((int) position);
+                    main.handler.post(updateSeekBar); // 在播放开始时启动更新进度
+                }
+                // 在这里将进度更新到UI上
             }
-        };
-        timer.scheduleAtFixedRate(timerTask, 0, 500);
+
+
+            @Override
+            public void onPlayerError(@NonNull PlaybackException error) {
+                gj.sc(error);
+                bfqkz.list.remove(bfqkz.xm);
+                Player.Listener.super.onPlayerError(error);
+                int i = bfqkz.getmti(bfqkz.ms);
+                bfqkz.xm = bfqkz.list.get(i);
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        bfqkz.mp3(com.muqingbfq.api.
+                                url.hq(bfqkz.xm));
+                    }
+                }.start();
+            }
+
+            @Override
+            public void onIsPlayingChanged(boolean isPlaying) {
+                Media.setbf(isPlaying);
+            }
+        });
     }
 
-    @Override
-    public void start() throws IllegalStateException {
-        super.start();
+    public void pause(){
+        if (build.isPlaying()) {
+            build.pause();
+        }
+    }
+
+    public void start(){
         if (bfqkz.xm == null) {
-            bfq_an.xyq();
+            if (bfqkz.list != null && bfqkz.list.size() > 0) {
+                bfq_an.xyq();
+            }
             return;
         }
-        //开始
-        if (bfq.kg != null) {
-            bfq.kg.setImageResource(R.drawable.bf);
-        }
-        bfq_db.txa.setImageResource(R.drawable.bf);
-        bfqkz.updateNotification();
+        build.play();
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    @Override
-    public void setDataSource(String path) throws IOException, IllegalArgumentException, IllegalStateException, SecurityException {
-        super.setDataSource(path);
-        prepare();
-        bfqkz.tdt_max = getDuration();
-        bfqkz.tdt_wz = getCurrentPosition();
+    public void setDataSource(String path) {
+        MediaItem mediaItem = MediaItem.fromUri(path);
+        main.handler.post(() -> {
+            build.setMediaItem(mediaItem);
+            build.prepare();
+            build.setPlayWhenReady(true);
+            start();
+        });
+    }
+
+    public boolean isPlaying() {
+        if (build == null) {
+            return false;
+        }
+        return build.isPlaying();
+    }
+
+    public void seekTo(long a) {
+        build.seekTo(a);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void bfui() {
         Glide.with(home.appCompatActivity)
                 .asBitmap()
                 .load(bfqkz.xm.picurl)
-                .addListener(new RequestListener<Bitmap>() {
+                .listener(new RequestListener<Bitmap>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model,
                                                 @NonNull Target<Bitmap> target, boolean isFirstResource) {
                         bfqkz.notify.setBitmap(null);
                         return false;
                     }
+
                     @Override
                     public boolean onResourceReady(@NonNull Bitmap bitmap, @NonNull Object model, Target<Bitmap> target,
                                                    @NonNull DataSource dataSource, boolean isFirstResource) {
@@ -118,21 +159,23 @@ public class MediaPlayer extends android.media.MediaPlayer {
                     }
                 })
                 .submit();
-        start();
-        main.handler.post(() -> {
-            if (bfq.name != null) {
-                bfq.tdt.setMax((int) bfqkz.tdt_max);
-                bfq.tdt.setProgress((int) bfqkz.tdt_wz);
-                bfq.time_a.setText(bfq_an.getTime(bfqkz.tdt_max));
-                bfq.name.setText(bfqkz.xm.name);
-                bfq.zz.setText(bfqkz.xm.zz);
-                bfq_an.islike(bfq.like.getContext());
-            }
-            bfq_db.name.setText(bfqkz.xm.name);
-            bfq_db.zz.setText(bfqkz.xm.zz);
-            if (mp3.lbspq != null) {
-                mp3.lbspq.notifyDataSetChanged();
-            }
-        });
+        String name = xm.name, zz = bfqkz.xm.zz;
+        if (Media.view != null) {
+            Media.setProgress(0);
+            Media.setname(name);
+            Media.setzz(zz);
+            bfq_an.islike(Media.view.getContext());
+        }
+        bfq_db.setname(name);
+        bfq_db.setzz(zz);
+        if (bfqkz.notify.notificationManager != null) {
+            bfqkz.notify.notificationBuilder.setContentTitle(name);
+            bfqkz.notify.notificationBuilder.setContentText(zz);
+            bfqkz.notify.notificationManager_notify();
+
+        }
+        if (com.muqingbfq.fragment.mp3.lbspq != null) {
+            com.muqingbfq.fragment.mp3.lbspq.notifyDataSetChanged();
+        }
     }
 }

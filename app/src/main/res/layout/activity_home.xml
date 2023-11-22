@@ -28,10 +28,12 @@
                 android:layout_weight="1"
                 android:name="com.muqingbfq.fragment.gd"
                 tools:layout="@layout/fragment_gd" />
-            <FrameLayout
+            <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/bfq_db"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:name="com.muqingbfq.fragment.bfq_db"
+                tools:layout="@layout/fragment_bfq_db" />
         </androidx.appcompat.widget.LinearLayoutCompat>
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/chb"

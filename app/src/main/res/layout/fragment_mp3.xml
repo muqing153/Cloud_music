@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -11,5 +11,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lb"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/bfq_db"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.muqingbfq.fragment.bfq_db"
+        tools:layout="@layout/fragment_bfq_db" />
 </LinearLayout>

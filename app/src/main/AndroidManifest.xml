@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="CoarseFineLocation,WrongManifestParent">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -22,6 +21,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
+    <!--悬浮窗权限-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
+
     <application
         android:name=".main"
         android:allowBackup="true"
@@ -29,65 +32,50 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:launchMode="singleTask"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.云音乐"
         android:usesCleartextTraffic="true"
-        tools:targetApi="32">
+        tools:targetApi="31">
         <activity
             android:name=".start"
             android:configChanges="uiMode"
             android:exported="true"
-            android:launchMode="singleTop"
             android:theme="@style/Theme.main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter tools:ignore="AppLinkUrlError">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
         </activity>
-        <activity
-            android:name=".login.enroll" />
-        <activity
-            android:name=".activity_search" />
+        <activity android:name=".login.enroll" />
+        <activity android:name=".activity_search" />
         <activity
             android:name=".bfq"
-            android:noHistory="true"
+            android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
             android:exported="true"
-            android:theme="@style/fragment_dialog">
-            <intent-filter>
-                <action android:name="transparent.text.SECONDACTIVITY" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".fragment.mp3"
-            android:noHistory="true" />
-        <activity
-            android:name=".activity_about_software" />
-        <activity
-            android:name=".login.user_logs" />
-        <activity
-            android:name=".sz" />
+            android:theme="@style/fragment_dialog" />
+
+        <activity android:name=".fragment.mp3" />
+        <activity android:name=".activity_about_software" />
+        <activity android:name=".login.user_logs" />
+        <activity android:name=".sz" />
         <activity
             android:name=".home"
             android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
-            android:exported="false"
-            android:launchMode="singleTask" />
+            android:exported="false" />
         <activity android:name=".mq.llq" />
+        <activity android:name=".fragment.baseactivity" />
         <activity android:name=".yc" />
 
-        <service android:name=".bfqkz"
+        <service
+            android:name=".bfqkz"
             android:exported="false"
             android:permission="TODO">
             <intent-filter>
-                <action android:name="android.media.browse.MediaBrowserService" />
+                <action android:name="androidx.media3.session.MediaSessionService" />
             </intent-filter>
         </service>
+        <service android:name=".mq.floating" />
         <receiver
             android:name=".MyButtonClickReceiver"
             android:enabled="true"
