@@ -34,7 +34,7 @@ public class enroll extends AppCompatActivity {
         //设置密码编辑框
         edpassword = findViewById(R.id.edit_password);
 
-        findViewById(R.id.edit_cookie).setOnClickListener(view -> new user_logs.erweima(view.getContext()));
+//        findViewById(R.id.edit_cookie).setOnClickListener(view -> new user_logs.erweima(view.getContext()));
         findViewById(R.id.enroll).setOnClickListener(view -> a());
     }
 

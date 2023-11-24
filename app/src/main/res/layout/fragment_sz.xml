@@ -33,21 +33,19 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/sz_text1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/cardview"
-                android:text="@string/denglu"
+                android:text="@string/login"
                 android:textSize="26sp" />
             <TextView
                 android:id="@+id/sz_text2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/sz_text1"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="35dp"
-                android:layout_toEndOf="@id/cardview"
                 android:text="我是一名小小的游客" />
         </LinearLayout>
     </LinearLayout>

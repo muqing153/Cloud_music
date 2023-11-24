@@ -1,15 +1,16 @@
 package com.muqingbfq;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat;
+import android.app.Service;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.IBinder;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.media.MediaBrowserServiceCompat;
 
 import com.muqingbfq.api.url;
 import com.muqingbfq.mq.BluetoothMusicController;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class bfqkz extends MediaBrowserServiceCompat {
+public class bfqkz extends Service {
     public static com.muqingbfq.MediaPlayer mt;
     public static List<xm> list = new ArrayList<>();
     public static int ms;
@@ -45,10 +46,11 @@ public class bfqkz extends MediaBrowserServiceCompat {
     @SuppressLint("NotifyDataSetChanged")
     public static void mp3(String id) {
         try {
-            if (id == null) {
+            if (TextUtils.isEmpty(id)) {
                 return;
             }
-            if (xm.picurl == null || xm.picurl.equals("")) {
+            gj.sc(xm.picurl);
+            if (TextUtils.isEmpty(xm.picurl.toString())) {
                 xm.picurl = url.picurl(xm.id);
             }
             mt.setDataSource(id);
@@ -103,20 +105,20 @@ public class bfqkz extends MediaBrowserServiceCompat {
         mSession.setMetadata(build);
         mSession.setPlaybackState(playback);
         mSession.setActive(true);
-        setSessionToken(mSession.getSessionToken());
+//        setSessionToken(mSession.getSessionToken());
         notify = new com.muqingbfq.mq.NotificationManagerCompat(this);
 
     }
 
     @Nullable
     @Override
-    public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
+    public IBinder onBind(Intent intent) {
         return null;
     }
-
-    @Override
-    public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
-
+    public class MyBinder extends Binder {
+        bfqkz getService() {
+            return bfqkz.this;
+        }
     }
 
     public static void updateNotification() {

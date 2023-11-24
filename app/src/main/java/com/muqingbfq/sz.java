@@ -7,11 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,15 +24,8 @@ public class sz extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        UI();
-//        kaifazhe();
-    }
-
-    /**
-     * 建立底部浮动栏的方法
-     */
-    public void CreateFloatView(){
-            View mFloatView = LayoutInflater.from(getBaseContext()).inflate(R.layout.fragment_bfq_db,null);
+        UI();
+        kaifazhe();
     }
 
     @SuppressLint("ApplySharedPref")
@@ -104,6 +93,7 @@ public class sz extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

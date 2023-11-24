@@ -140,7 +140,7 @@ public class MediaPlayer {
 
     @SuppressLint("NotifyDataSetChanged")
     private void bfui() {
-        Glide.with(home.appCompatActivity)
+        Glide.with(home.appCompatActivity.getApplicationContext())
                 .asBitmap()
                 .load(bfqkz.xm.picurl)
                 .listener(new RequestListener<Bitmap>() {

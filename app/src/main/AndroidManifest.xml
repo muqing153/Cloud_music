@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 存储权限 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 存储权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission
-        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络权限 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
@@ -36,7 +36,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.云音乐"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        android:requestLegacyExternalStorage="true"
+        tools:targetApi="s">
         <activity
             android:name=".start"
             android:configChanges="uiMode"
@@ -48,24 +49,24 @@
             </intent-filter>
         </activity>
         <activity android:name=".login.enroll" />
+        <activity android:name=".login.user_logs" />
+        <activity android:name=".login.user_editing" />
         <activity android:name=".activity_search" />
         <activity
             android:name=".bfq"
             android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
-            android:exported="true"
             android:theme="@style/fragment_dialog" />
 
         <activity android:name=".fragment.mp3" />
         <activity android:name=".activity_about_software" />
-        <activity android:name=".login.user_logs" />
         <activity android:name=".sz" />
         <activity
             android:name=".home"
             android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
             android:exported="false" />
         <activity android:name=".mq.llq" />
-        <activity android:name=".fragment.baseactivity" />
         <activity android:name=".yc" />
+        <activity android:name=".login.cookie" />
 
         <service
             android:name=".bfqkz"

@@ -31,7 +31,6 @@
     <string name="guanfangliaoqun">官方聊群</string>
     <string name="lianxizuozhe">联系作者</string>
     <string name="guanyuruanjiang">关于软件</string>
-    <string name="denglu">登录</string>
     <string name="deleat">删除</string>
     <string name="lishijilu">历史记录</string>
     <string name="_00_00">00:00</string>
@@ -43,5 +42,9 @@
         <item>下载歌单</item>
         <item>收藏歌单（不可用)</item>
         <item>删除歌单</item>
+    </string-array>
+    <string-array name="xingbie">
+        <item>男</item>
+        <item>女</item>
     </string-array>
 </resources>

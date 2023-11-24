@@ -104,7 +104,7 @@ public class search extends Fragment {
                             zz.append("/").append(name_zz);
                         }
                     }
-                    list.add(new xm(id, name, zz.toString(), null));
+                    list.add(new xm(id, name, zz.toString(), ""));
                 }
                 main.handler.post(() -> lbspq.notifyDataSetChanged());
             } catch (Exception e) {

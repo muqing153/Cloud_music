@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    tools:context=".login.user_logs">
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -33,13 +32,14 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="50dp"
             android:layout_marginEnd="16dp"
-            android:hint="UID">
-
+            android:hint="铁锈助手账号">
             <EditText
                 android:id="@+id/edit_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                tools:ignore="LabelFor,VisualLintTextFieldSize,TextContrastCheck"
+                android:autofillHints="" />
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -47,29 +47,49 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
-            android:hint="密码">
+            android:hint="密码"
+            app:passwordToggleEnabled="true">
 
             <EditText
                 android:id="@+id/edit_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autofillHints=""
                 android:inputType="textPassword"
-                android:textColorHint="#546E7A" />
+                android:textColorHint="#546E7A"
+                tools:ignore="LabelFor,TextContrastCheck,VisualLintTextFieldSize" />
+        </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone"
+            android:hint="验证码">
+            <EditText
+                android:id="@+id/edit_key"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:inputType="number"
+                tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <Button
                 android:id="@+id/login"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="登录"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="30dp"
                 android:layout_weight="1"
-                android:textColor="@color/bj" />
+                android:text="@string/login"
+                tools:ignore="ButtonStyle,DuplicateSpeakableTextCheck" />
             <Button
                 android:id="@+id/enroll"
                 android:layout_width="wrap_content"
@@ -77,8 +97,8 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:text="注册"
-                android:textColor="@color/bj" />
+                android:text="注册(维护中)"
+                tools:ignore="ButtonStyle" />
         </LinearLayout>
 
     </LinearLayout>

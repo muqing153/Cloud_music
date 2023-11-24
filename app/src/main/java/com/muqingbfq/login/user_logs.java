@@ -1,60 +1,60 @@
 package com.muqingbfq.login;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Base64;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.muqingbfq.R;
 import com.muqingbfq.main;
+import com.muqingbfq.mq.EditViewDialog;
 import com.muqingbfq.mq.gj;
-import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
-import com.muqingbfq.yc;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.File;
-import java.util.Objects;
 
 public class user_logs extends AppCompatActivity {
 
     EditText edituser, editpassword;
     Toolbar toolbar;
+    public static String UUID;
 
+    @SuppressLint("HardwareIds")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_logs);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        UUID = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+
         edituser = findViewById(R.id.edit_user);
         editpassword = findViewById(R.id.edit_password);
         findViewById(R.id.login).setOnClickListener(view -> new CloudUser(edituser.getText().toString()
                 , editpassword.getText().toString()));
-        findViewById(R.id.enroll).setOnClickListener(view -> {
+/*        findViewById(R.id.enroll).setOnClickListener(view -> {
             Intent intent = new Intent(user_logs.this, enroll.class);
             intent.putExtra("user", edituser.getText().toString());
             startActivityForResult(intent, 0);
-        });
+        });*/
     }
 
     @Override
@@ -94,16 +94,17 @@ public class user_logs extends AppCompatActivity {
         return bitmap;
     }
 
-    class CloudUser extends Thread {
-        String user, password;
 
-        public CloudUser(String user, String password) {
+    class CloudUser extends Thread {
+        String account, password;
+
+        public CloudUser(String account, String password) {
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             View v = getWindow().peekDecorView();
             if (null != v) {
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
-            this.user = user;
+            this.account = account;
             this.password = password;
             start();
         }
@@ -111,20 +112,86 @@ public class user_logs extends AppCompatActivity {
         @Override
         public void run() {
             super.run();
-            String s = wl.get(main.http + "/user.php?" + "user=" + user + "&password=" + password);
             try {
-                JSONObject jsonObject = new JSONObject(s);
-                int code = jsonObject.getInt("code");
-                String msg = jsonObject.getString("msg");
-                main.handler.post(() -> gj.ts(user_logs.this, msg));
-                if (code == 200) {
-                    String cookie = jsonObject.getString("cookie");
-                    if (wl.iskong()) {
-                        new visitor();
+                String post = wl.post("/php/user.php?action=login",
+                        new String[]{
+                                "account", "passWord", "appID", "isEmail"
+                        },
+                        new String[]{
+                                account, password, UUID, ""
+                        });
+                gj.sc(post);
+                if (!TextUtils.isEmpty(post)) {
+                    JSONObject jsonObject = new JSONObject(post);
+                    if (jsonObject.getInt("code") == 0) {
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        gj.sc(data);
+                        //用户token
+                        String token = data.getString("token");
+                        //用户名称account
+                        String account = data.getString("account");
+                        main.settoken(token, account);
+                        new user_message(account);
+                        user_logs.this.finish();
+                    } else {
+                        String message = jsonObject.getString("message");
+                        gj.xcts(user_logs.this, message);
+                        if (message.equals("请更改登录设备")) {
+                            JSONObject jsonpost = wl.jsonpost("/php/user.php?action=verification",
+                                    new String[]{
+                                            "account", "passWord", "appID", "isEmail"
+                                    },
+                                    new String[]{
+                                            account, password, UUID, ""
+                                    });
+                            gj.sc(jsonpost);
+                            if (!TextUtils.isEmpty(jsonpost.toString()) &&
+                                    jsonpost.getInt("code") != 0) {
+                                return;
+                            }
+                            String message1 = jsonpost.getString("message");
+                            gj.xcts(user_logs.this, message1);
+                            main.handler.post(() -> {
+                                EditViewDialog editViewDialog = new EditViewDialog(user_logs.this,
+                                        "请输入验证码");
+                                editViewDialog.setMessage("验证码在你账号锁绑定的邮箱绘制垃圾桶中请及时查看");
+                                editViewDialog.setPositive(view -> {
+                                    new Thread() {
+                                        @Override
+                                        public void run() {
+                                            JSONObject jsonpost = wl.jsonpost("/php/user.php?action=changeAppId",
+                                                    new String[]{
+                                                            "account", "key", "appID", "isEmail"
+                                                    },
+                                                    new String[]{
+                                                            account, editViewDialog.getEditText(), UUID, "false"
+                                                    });
+                                            gj.sc(jsonpost.toString());
+                                            if (!TextUtils.isEmpty(jsonpost.toString())) {
+                                                try {
+                                                    int code = jsonpost.getInt("code");
+                                                    if (code == 0) {
+                                                        gj.xcts(user_logs.this,
+                                                                "验证成功请重新登录");
+                                                        editViewDialog.dismiss();
+                                                    } else {
+                                                        gj.xcts(user_logs.this,
+                                                                jsonpost.getString("message"));
+                                                    }
+                                                } catch (JSONException e) {
+                                                    editViewDialog.dismiss();
+                                                    gj.sc(e);
+                                                }
+                                            }
+                                        }
+                                    }.start();
+//                                    editViewDialog.dismiss();
+                                });
+                                editViewDialog.setEditinputType("number");
+                                editViewDialog.show();
+                            });
+                        }
                     }
-                    wl.setcookie(cookie);
-                    new user_message(user);
-                    user_logs.this.finish();
                 }
             } catch (Exception e) {
                 gj.sc(e);
@@ -132,94 +199,4 @@ public class user_logs extends AppCompatActivity {
         }
     }
 
-    public static class erweima extends Thread {
-        int code = 800;
-        String unikey, qrimg, hq;
-        private long time = 0;
-        ImageView imageView;
-        TextView textView;
-        MaterialAlertDialogBuilder materialAlertDialogBuilder;
-
-        public erweima(Context context) {
-            View inflate = LayoutInflater.from(context).inflate(R.layout.erweima, null);
-            imageView = inflate.findViewById(R.id.image);
-            textView = inflate.findViewById(R.id.text);
-// 创建布局参数对象
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(main.g, main.k);
-// 设置视图的布局参数
-            imageView.setLayoutParams(layoutParams);
-            materialAlertDialogBuilder = new MaterialAlertDialogBuilder(context) {
-            };
-            materialAlertDialogBuilder.setOnDismissListener(dialog -> {
-                // 对话框消失时触发的操作
-                // 可以在这里处理一些额外的逻辑
-                code = 0;
-            });
-            materialAlertDialogBuilder.setView(inflate).setTitle("请使用网易云音乐扫码");
-            materialAlertDialogBuilder.show();
-            start();
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            while (code != 0) {
-                try {
-                    hq = wl.hq("/login/qr/check?key=" + unikey + Time());
-                    if (hq != null) {
-                        JSONObject json = new JSONObject(hq);
-                        code = json.getInt("code");
-                        switch (code) {
-                            case 800:
-                            case 400:
-                                setwb("二维码过期");
-                                hqkey();
-                                break;
-                            case 801:
-                                setwb("等待扫码");
-                                break;
-                            case 802:
-                                setwb("等待确认");
-                                break;
-                            case 803:
-                                setwb("登录成功");
-                                wl.setcookie(json.getString("cookie"));
-                                main.handler.postDelayed(() -> materialAlertDialogBuilder.create().cancel(),
-                                        500);
-                                code = 0;
-                                break;
-                            default:
-                                code = 0;
-                                // 默认情况下的操作
-                                break;
-                        }
-                    }
-                    sleep(1000);
-                } catch (Exception e) {
-                    gj.sc(e);
-                }
-            }
-        }
-
-        private void hqkey() throws Exception {
-            unikey = new JSONObject(Objects.requireNonNull(wl.hq("/login/qr/key"))).
-                    getJSONObject("data").getString("unikey");
-            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(wl.hq("/login/qr/create?key=" +
-                    unikey +
-                    "&qrimg=base64")));
-            qrimg = jsonObject.getJSONObject("data").getString("qrimg");
-            main.handler.post(() -> imageView.setImageBitmap(stringToBitmap(qrimg)));
-        }
-
-        private String Time() {
-            if (time < System.currentTimeMillis() - 1000) {
-                time = System.currentTimeMillis();
-            }
-            return "&timestamp" + time;
-        }
-
-        private void setwb(String wb) {
-            main.handler.post(() -> textView.setText(wb));
-        }
-    }
 }

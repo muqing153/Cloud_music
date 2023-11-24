@@ -27,7 +27,8 @@ public class yc extends AppCompatActivity {
         String deviceManufacturer = Build.MANUFACTURER;
         String osVersion = Build.VERSION.RELEASE;
         int sdkVersion = Build.VERSION.SDK_INT;
-        @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        @SuppressLint("HardwareIds") String deviceId = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int widthPixels = metrics.widthPixels;
         int heightPixels = metrics.heightPixels;

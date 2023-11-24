@@ -2,7 +2,6 @@ package com.muqingbfq;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,6 +10,8 @@ import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
 
 public class main extends Application {
+    private static Application application;
+
     public static Handler handler = new Handler(Looper.getMainLooper());
     public static String api = "http://139.196.224.229:3000";
     public static String http = "http://139.196.224.229/muqing";
@@ -19,11 +20,15 @@ public class main extends Application {
     public static SharedPreferences.Editor edit;
 
     public static String mp3 = "mp3", mp3_csh,
-     Cookie = "Cookie", user;
+     Cookie = "Cookie";
+    public static String account,token;
 
+    @SuppressLint("HardwareIds")
     @Override
     public void onCreate() {
         super.onCreate();
+        application = this;
+//        UUID.randomUUID().toString();
         new wj(this);
         sp = getSharedPreferences("Set_up", MODE_PRIVATE);
         edit = sp.edit();
@@ -52,5 +57,26 @@ public class main extends Application {
         if (bj) {
             edit.commit();
         }
+    }
+
+    public static SharedPreferences getSharedPreferences(String string) {
+        return application.getSharedPreferences(string, MODE_PRIVATE);
+    }
+
+    public static String getToken() {
+        SharedPreferences token1 = getSharedPreferences("token");
+        return token1.getString("token", null);
+    }
+    public static String getAccount() {
+        SharedPreferences token1 = getSharedPreferences("token");
+        return token1.getString("account", null);
+    }
+
+    public static void settoken(String token, String account) {
+        SharedPreferences token1 = getSharedPreferences("token");
+        SharedPreferences.Editor edit1 = token1.edit();
+        edit1.putString("token", token);
+        edit1.putString("account", account);
+        edit1.apply();
     }
 }
