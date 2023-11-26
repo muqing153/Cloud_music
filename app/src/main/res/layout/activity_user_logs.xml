@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
@@ -15,7 +14,7 @@
     <LinearLayout
         android:id="@+id/user1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -31,10 +30,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="50dp"
-            android:layout_marginEnd="16dp"
-            android:hint="铁锈助手账号">
+            android:layout_marginEnd="16dp">
             <EditText
                 android:id="@+id/edit_user"
+                android:hint="铁锈助手账号"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
@@ -47,7 +46,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
-            android:hint="密码"
             app:passwordToggleEnabled="true">
 
             <EditText
@@ -55,6 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autofillHints=""
+                android:hint="密码"
                 android:inputType="textPassword"
                 android:textColorHint="#546E7A"
                 tools:ignore="LabelFor,TextContrastCheck,VisualLintTextFieldSize" />
@@ -77,29 +76,28 @@
                 tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/login"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="30dp"
-                android:layout_weight="1"
-                android:text="@string/login"
-                tools:ignore="ButtonStyle,DuplicateSpeakableTextCheck" />
-            <Button
-                android:id="@+id/enroll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="注册(维护中)"
-                tools:ignore="ButtonStyle" />
-        </LinearLayout>
-
+        <Button
+            android:id="@+id/login"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="30dp"
+            android:layout_weight="1"
+            android:text="@string/login"
+            tools:ignore="ButtonStyle,DuplicateSpeakableTextCheck" />
+        <Button
+            android:id="@+id/enroll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/enroll"
+            tools:ignore="ButtonStyle" />
     </LinearLayout>
 </LinearLayout>

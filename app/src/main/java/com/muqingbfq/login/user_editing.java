@@ -87,8 +87,6 @@ public class user_editing extends ActivityToolbar {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_editing);
-        setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         imageViewa = findViewById(R.id.image1);
         edit_name = findViewById(R.id.edit_name);
         edit_qianming = findViewById(R.id.edit_qianming);

@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.云音乐" parent="Theme.start">
+    <style name="Theme.muqing" parent="Theme.start">
 <!--        <item name="colorOnPrimary">@color/text</item>-->
 <!--        <item name="colorOnSecondary">@color/text</item>-->
         <item name="android:windowLightStatusBar">true</item>
@@ -16,7 +16,7 @@
 
     </style>
 
-    <style name="fragment_dialog" parent="Theme.云音乐">
+    <style name="fragment_dialog" parent="Theme.muqing">
         <item name="android:windowIsTranslucent">true</item>
     </style>
 

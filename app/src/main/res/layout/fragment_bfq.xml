@@ -5,65 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical">
+
         <RelativeLayout
             android:id="@+id/kp1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_vertical"
-            tools:ignore="NestedWeights">
+            android:gravity="center">
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/view1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                android:layout_centerHorizontal="true"
-                app:cardUseCompatPadding="true">
+                android:layout_width="260dp"
+                android:layout_height="260dp"
+                app:cardCornerRadius="16dp">
                 <ImageView
                     android:id="@+id/mttx"
-                    android:layout_width="260dp"
-                    android:layout_height="260dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:importantForAccessibility="no"
                     android:scaleType="fitXY"
                     android:src="@drawable/icon" />
             </com.google.android.material.card.MaterialCardView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/view1"
-                android:layout_alignStart="@id/view1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:text="@string/name"
-                    android:textColor="@color/text"
-                    android:textSize="26sp" />
-
-                <TextView
-                    android:id="@+id/zz"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:text="@string/zz"
-                    android:textSize="20sp" />
-            </LinearLayout>
-
         </RelativeLayout>
-        <com.dirror.lyricviewx.LyricViewX
+
+        <me.wcy.lrcview.LrcView
             android:id="@+id/gc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="2"
             app:lrcCurrentTextColor="@color/text"
             app:lrcLabel="@string/app_name"
             app:lrcNormalTextSize="16sp"
@@ -72,6 +45,7 @@
             app:lrcTimelineTextColor="@color/text_tm"
             tools:ignore="MissingConstraints" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,6 +62,7 @@
             app:tint="@color/text"
             tools:ignore="ContentDescription" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -117,6 +92,7 @@
             android:layout_height="wrap_content"
             android:text="@string/_00_00" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

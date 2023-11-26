@@ -32,12 +32,14 @@ public class EditViewDialog {
         buttona.setOnClickListener(view -> dismiss());
         buttonb.setOnClickListener(view -> dismiss());
     }
-    public void setTitle(String str) {
+    public EditViewDialog setTitle(String str) {
         AlertDialogBuilder.setTitle(str);
+        return this;
     }
 
-    public void setMessage(String str) {
+    public EditViewDialog setMessage(String str) {
         AlertDialogBuilder.setMessage(str);
+        return this;
     }
 
     public AlertDialog show() {
@@ -51,7 +53,7 @@ public class EditViewDialog {
         return editText.getText().toString();
     }
 
-    public void setEditinputType(String str) {
+    public EditViewDialog setEditinputType(String str) {
         int inputType;
         switch (str) {
             case "textCapCharacters":
@@ -142,6 +144,7 @@ public class EditViewDialog {
                 break;
         }
         editText.setInputType(inputType);
+        return this;
     }
 
     public void dismiss() {
@@ -152,8 +155,13 @@ public class EditViewDialog {
         buttona.setOnClickListener(a);
     }
 
-    public void setPositive(View.OnClickListener a) {
+    public EditViewDialog setPositive(View.OnClickListener a) {
         buttonb.setOnClickListener(a);
+        return this;
     }
 
+    public interface OnClickListener extends View.OnClickListener {
+        @Override
+        void onClick(View view);
+    }
 }

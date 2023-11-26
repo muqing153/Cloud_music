@@ -119,17 +119,16 @@ public class NotificationManagerCompat {
     }
 
     @SuppressLint({"MissingPermission", "RestrictedApi", "NotifyDataSetChanged"})
-    public void setBitmap(Bitmap bitmap) {
-        bfq.bitmap = bitmap;
-        if (bitmap == null) {
-            bitmap = BitmapFactory.decodeResource(context.getResources(),
+    public void setBitmap() {
+        if (bfq.bitmap == null) {
+            bfq.bitmap = BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.icon);
         }
         if (notificationManager != null) {
-            notificationBuilder.setLargeIcon(bitmap);
+            notificationBuilder.setLargeIcon(bfq.bitmap);
             notificationManager.notify(1, notificationBuilder.build());
         }
-        Media.setImageBitmap(bitmap);
+        Media.setImageBitmap();
     }
 
     private NotificationCompat.Builder getNotificationBuilder(Context context) {

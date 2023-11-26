@@ -29,7 +29,6 @@ public class bflb_db extends BottomSheetDialog {
         int height = main.g - main.g / 2 / 2;
         getBehavior().setPeekHeight(height);
         getBehavior().setMaxHeight(height);
-
         try {
             RecyclerView lb = findViewById(R.id.lb);
             lb.setAdapter(new spq());

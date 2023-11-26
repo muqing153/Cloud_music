@@ -1,7 +1,6 @@
 package com.muqingbfq.login;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +13,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -33,6 +34,20 @@ public class user_logs extends AppCompatActivity {
     Toolbar toolbar;
     public static String UUID;
 
+    ActivityResultLauncher<Intent> enroll =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == RESULT_OK) {
+                            Intent data = result.getData();
+                            if (data != null) {
+                                Bundle bundle = data.getExtras();
+                                String user = bundle.getString("user");
+                                String password = bundle.getString("password");
+                                edituser.setText(user);
+                                editpassword.setText(password);
+                            }
+                        }
+                    });
     @SuppressLint("HardwareIds")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,23 +65,12 @@ public class user_logs extends AppCompatActivity {
         editpassword = findViewById(R.id.edit_password);
         findViewById(R.id.login).setOnClickListener(view -> new CloudUser(edituser.getText().toString()
                 , editpassword.getText().toString()));
-/*        findViewById(R.id.enroll).setOnClickListener(view -> {
+        findViewById(R.id.enroll).setOnClickListener(view -> {
             Intent intent = new Intent(user_logs.this, enroll.class);
             intent.putExtra("user", edituser.getText().toString());
-            startActivityForResult(intent, 0);
-        });*/
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && requestCode == 0 && resultCode == Activity.RESULT_OK) {
-            Bundle bundle = data.getExtras();
-            String user = bundle.getString("user");
-            String password = bundle.getString("password");
-            edituser.setText(user);
-            editpassword.setText(password);
-        }
+            intent.putExtra("appID", UUID);
+            enroll.launch(intent);
+        });
     }
     //some statement
 
@@ -95,8 +99,8 @@ public class user_logs extends AppCompatActivity {
     }
 
 
+    public String account, password;
     class CloudUser extends Thread {
-        String account, password;
 
         public CloudUser(String account, String password) {
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -104,8 +108,8 @@ public class user_logs extends AppCompatActivity {
             if (null != v) {
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
-            this.account = account;
-            this.password = password;
+            user_logs.this.account = account;
+            user_logs.this.password = password;
             start();
         }
 
@@ -121,82 +125,129 @@ public class user_logs extends AppCompatActivity {
                                 account, password, UUID, ""
                         });
                 gj.sc(post);
-                if (!TextUtils.isEmpty(post)) {
-                    JSONObject jsonObject = new JSONObject(post);
-                    if (jsonObject.getInt("code") == 0) {
-                        JSONObject data = jsonObject.getJSONObject("data");
-                        gj.sc(data);
-                        //用户token
-                        String token = data.getString("token");
-                        //用户名称account
-                        String account = data.getString("account");
-                        main.settoken(token, account);
-                        new user_message(account);
-                        user_logs.this.finish();
-                    } else {
-                        String message = jsonObject.getString("message");
-                        gj.xcts(user_logs.this, message);
-                        if (message.equals("请更改登录设备")) {
-                            JSONObject jsonpost = wl.jsonpost("/php/user.php?action=verification",
-                                    new String[]{
-                                            "account", "passWord", "appID", "isEmail"
-                                    },
-                                    new String[]{
-                                            account, password, UUID, ""
-                                    });
-                            gj.sc(jsonpost);
-                            if (!TextUtils.isEmpty(jsonpost.toString()) &&
-                                    jsonpost.getInt("code") != 0) {
-                                return;
-                            }
-                            String message1 = jsonpost.getString("message");
-                            gj.xcts(user_logs.this, message1);
-                            main.handler.post(() -> {
-                                EditViewDialog editViewDialog = new EditViewDialog(user_logs.this,
-                                        "请输入验证码");
-                                editViewDialog.setMessage("验证码在你账号锁绑定的邮箱绘制垃圾桶中请及时查看");
-                                editViewDialog.setPositive(view -> {
-                                    new Thread() {
-                                        @Override
-                                        public void run() {
-                                            JSONObject jsonpost = wl.jsonpost("/php/user.php?action=changeAppId",
-                                                    new String[]{
-                                                            "account", "key", "appID", "isEmail"
-                                                    },
-                                                    new String[]{
-                                                            account, editViewDialog.getEditText(), UUID, "false"
-                                                    });
-                                            gj.sc(jsonpost.toString());
-                                            if (!TextUtils.isEmpty(jsonpost.toString())) {
-                                                try {
-                                                    int code = jsonpost.getInt("code");
-                                                    if (code == 0) {
-                                                        gj.xcts(user_logs.this,
-                                                                "验证成功请重新登录");
-                                                        editViewDialog.dismiss();
-                                                    } else {
-                                                        gj.xcts(user_logs.this,
-                                                                jsonpost.getString("message"));
-                                                    }
-                                                } catch (JSONException e) {
+                if (TextUtils.isEmpty(post)) {
+                    return;
+                }
+                JSONObject jsonObject = new JSONObject(post);
+                if (jsonObject.getInt("code") == 0) {
+                    JSONObject data = jsonObject.getJSONObject("data");
+                    gj.sc(data);
+                    //用户token
+                    String token = data.getString("token");
+                    //用户名称account
+                    String account = data.getString("account");
+                    main.settoken(token, account);
+                    new user_message(account);
+                    user_logs.this.finish();
+                } else {
+                    String message = jsonObject.getString("message");
+                    gj.xcts(user_logs.this, message);
+                    if (message.equals("请更改登录设备")) {
+                        JSONObject jsonpost = wl.jsonpost("/php/user.php?action=verification",
+                                new String[]{
+                                        "account", "passWord", "appID", "isEmail"
+                                },
+                                new String[]{
+                                        account, password, UUID, ""
+                                });
+                        gj.sc(jsonpost);
+                        if (!TextUtils.isEmpty(jsonpost.toString()) &&
+                                jsonpost.getInt("code") != 0) {
+                            return;
+                        }
+                        String message1 = jsonpost.getString("message");
+                        gj.xcts(user_logs.this, message1);
+                        main.handler.post(() -> {
+                            EditViewDialog editViewDialog = new EditViewDialog(user_logs.this,
+                                    "请输入验证码");
+                            editViewDialog.setMessage("验证码在你账号锁绑定的邮箱绘制垃圾桶中请及时查看");
+                            editViewDialog.setPositive(view -> {
+                                new Thread() {
+                                    @Override
+                                    public void run() {
+                                        JSONObject jsonpost = wl.jsonpost("/php/user.php?action=changeAppId",
+                                                new String[]{
+                                                        "account", "key", "appID", "isEmail"
+                                                },
+                                                new String[]{
+                                                        account, editViewDialog.getEditText(), UUID, "false"
+                                                });
+                                        gj.sc(jsonpost.toString());
+                                        if (!TextUtils.isEmpty(jsonpost.toString())) {
+                                            try {
+                                                int code = jsonpost.getInt("code");
+                                                if (code == 0) {
+                                                    gj.xcts(user_logs.this,
+                                                            "验证成功请重新登录");
                                                     editViewDialog.dismiss();
-                                                    gj.sc(e);
+                                                } else {
+                                                    gj.xcts(user_logs.this,
+                                                            jsonpost.getString("message"));
                                                 }
+                                            } catch (JSONException e) {
+                                                editViewDialog.dismiss();
+                                                gj.sc(e);
                                             }
                                         }
-                                    }.start();
+                                    }
+                                }.start();
 //                                    editViewDialog.dismiss();
-                                });
-                                editViewDialog.setEditinputType("number");
-                                editViewDialog.show();
                             });
-                        }
+                            editViewDialog.setEditinputType("number");
+                            editViewDialog.show();
+                        });
+                    } else if (message.equals("请先激活您的账户")) {
+                        jihuo();
                     }
                 }
             } catch (Exception e) {
                 gj.sc(e);
             }
         }
+    }
+
+    public void jihuo() {
+        main.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                EditViewDialog editViewDialog = new EditViewDialog(user_logs.this, "激活用户")
+                        .setMessage("验证码在你账号锁绑定的邮箱绘制垃圾桶中请及时查看");
+                editViewDialog.setPositive(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String editText = editViewDialog.getEditText();
+                                new Thread() {
+                                    @Override
+                                    public void run() {
+                                        super.run();
+                                        JSONObject post = wl.jsonpost("/php/user.php?action=enableAccount",
+                                                new String[]{
+                                                        "account", "key"
+                                                }
+                                                , new String[]{
+                                                        account, editText
+                                                });
+                                        if (TextUtils.isEmpty(post.toString())) {
+                                            return;
+                                        }
+                                        try {
+                                            int code = post.getInt("code");
+                                            gj.xcts(user_logs.this, post.getString("message"));
+                                            if (code == 1) {
+                                                return;
+                                            }
+                                            editViewDialog.dismiss();
+                                        } catch (JSONException e) {
+                                            gj.sc(e);
+                                        }
+
+                                    }
+                                }.start();
+                            }
+                        }).setEditinputType("number")
+                        .show();
+            }
+        });
     }
 
 }

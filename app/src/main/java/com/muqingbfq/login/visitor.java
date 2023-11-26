@@ -12,20 +12,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class visitor extends Thread {
-
-    AppCompatActivity activity;
-    Intent intent;
-
-    public visitor(AppCompatActivity activity, Intent intent) {
-        this.activity = activity;
-        this.intent = intent;
-        start();
-    }
-
     public visitor() {
         start();
     }
-
     @Override
     public void run() {
         super.run();
@@ -36,7 +25,5 @@ public class visitor extends Thread {
         } catch (Exception e) {
             com.muqingbfq.mq.gj.sc(e);
         }
-        activity.startActivity(intent);
-        activity.finish();
     }
 }

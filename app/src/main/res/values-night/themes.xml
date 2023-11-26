@@ -1,19 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.云音乐" parent="Theme.start">
+    <style name="Theme.muqing" parent="Theme.start">
 <!--        <item name="colorPrimary">@color/purple_200</item>-->
 <!--        <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/text</item>
         &lt;!&ndash; Secondary brand color. &ndash;&gt;
         <item name="colorOnSecondary">@color/text</item>-->
         <item name="android:windowLightStatusBar">false</item>
-    </style>
-
-    <style name="Theme.ui" parent="Theme.云音乐">
-        <item name="android:windowTranslucentStatus">false</item>
-        <item name="android:windowTranslucentNavigation">false</item>
-        <!--        设置全屏为false-->
-        <item name="android:statusBarColor">@color/tm</item>
-        <item name="android:navigationBarColor">@color/tm</item>
     </style>
 </resources>

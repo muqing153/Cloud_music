@@ -56,8 +56,6 @@ public class sz {
     public static void switch_sz(Context context, int id) {
         if (id == R.id.a) {
             gj.llq(context, "https://rust.coldmint.top/ftp/muqing/");
-        } else if (id == R.id.cookie) {
-
         } else if (id == R.id.b) {
             context.startActivity(new Intent(context, com.muqingbfq.sz.class));
 //                    设置中心

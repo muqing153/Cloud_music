@@ -3,7 +3,6 @@ package com.muqingbfq.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,16 +17,16 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.dirror.lyricviewx.LyricViewX;
 import com.muqingbfq.R;
 import com.muqingbfq.api.url;
 import com.muqingbfq.bfq;
 import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
 import com.muqingbfq.main;
-import com.muqingbfq.xm;
 
 import org.json.JSONObject;
+
+import me.wcy.lrcview.LrcView;
 
 public class Media extends Fragment {
     @SuppressLint("StaticFieldLeak")
@@ -36,7 +35,7 @@ public class Media extends Fragment {
     private static TextView time_a, time_b;
     @SuppressLint("StaticFieldLeak")
     private static SeekBar tdt;
-    private static LyricViewX lrcview;
+    private static LrcView lrcview;
 
     public static void setTime_a(String str) {
         if (time_a == null) {
@@ -58,7 +57,7 @@ public class Media extends Fragment {
 
     public static void setProgress(int progress) {
         tdt.setProgress(progress);
-        lrcview.updateTime(progress, true);
+        lrcview.updateTime(progress);
     }
 
     public static void setbf(boolean bool) {
@@ -85,7 +84,7 @@ public class Media extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         if (view != null) {
-//            main.handler.post(() -> setImageBitmap(bfq.bitmap));
+            main.handler.post(Media::setImageBitmap);
             return view;
         }
         view = inflater.inflate(R.layout.fragment_bfq, container, false);
@@ -95,6 +94,7 @@ public class Media extends Fragment {
         view.findViewById(R.id.xyq).setOnClickListener(kz);
         view.findViewById(R.id.syq).setOnClickListener(kz);
         ImageView tx = view.findViewById(R.id.mttx);
+        
         tdt = view.findViewById(R.id.tdt);
         tdt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -121,12 +121,12 @@ public class Media extends Fragment {
         //初始化歌词组件
         View kp = view.findViewById(R.id.kp1);
         lrcview = getlrcView();
-        lrcview.setDraggable(true, (time) -> {
-            com.muqingbfq.bfqkz.mt.build.seekTo(Math.toIntExact(time));
-            return true;
+        lrcview.setDraggable(true, (view, time) -> {
+            bfqkz.mt.build.seekTo(Math.toIntExact(time));
+            return false;
         });
         if (!isTablet(bfq.context)) {
-            lrcview.setOnSingerClickListener(() -> {
+            lrcview.setOnTapListener((view, x, y) -> {
                 if (kp.getVisibility() == View.VISIBLE) {
                     kp.setVisibility(View.GONE);
                 } else {
@@ -163,8 +163,6 @@ public class Media extends Fragment {
         ImageView control = view.findViewById(R.id.control);
         control.setOnClickListener(new bfq_an.control(control));
         if (bfqkz.xm != null) {
-            setname(bfqkz.xm.name);
-            setzz(bfqkz.xm.zz);
             main.handler.removeCallbacks(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度
             long duration = bfqkz.mt.build.getDuration();
             tdt.setMax((int) bfqkz.mt.build.getDuration());
@@ -198,17 +196,15 @@ public class Media extends Fragment {
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
-    public static LyricViewX getlrcView() {
+    public static LrcView getlrcView() {
         if (view == null) {
             return null;
         }
         return view.findViewById(R.id.gc);
     }
-
     public static void loadLyric(String a, String b) {
-        lrcview.loadLyric(a, b);
+        lrcview.loadLrc(a, b);
     }
-
     public static void setlike(boolean bool) {
         ImageView imageView = view.findViewById(R.id.like);
         int color = R.color.text;
@@ -219,35 +215,36 @@ public class Media extends Fragment {
                 getColorStateList(view.getContext(), color));
     }
 
-    public static void setImageBitmap(Bitmap bitmap) {
+    public static void setImageBitmap() {
         if (view == null) {
             return;
         }
         ImageView imageView = view.findViewById(R.id.mttx);
         if (imageView != null) {
-            imageView.setImageBitmap(bitmap);
+            main.handler.post(() -> imageView.setImageBitmap(bfq.bitmap));
         }
     }
 
     public static void setname(String str) {
-        if (view == null) {
+        if (bfq.context == null) {
             return;
         }
-        TextView name = view.findViewById(R.id.name);
+        TextView name = bfq.context.findViewById(R.id.name);
         name.setText(str);
     }
 
     public static void setzz(String str) {
-        if (view == null) {
+        if (bfq.context == null) {
             return;
         }
-        TextView zz = view.findViewById(R.id.zz);
+        TextView zz = bfq.context.findViewById(R.id.zz);
         zz.setText(str);
     }
 
-    @Nullable
-    @Override
-    public Context getContext() {
+    public static Context Context() {
+        if (view == null) {
+            return null;
+        }
         return view.getContext();
     }
 }

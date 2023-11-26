@@ -82,14 +82,7 @@ public class bfqkz extends Service {
             public void onPause() {
                 // 处理暂停音乐逻辑
                 mt.pause();
-                if(playback.getState() == PlaybackStateCompat.STATE_PLAYING){
-                    playback = new PlaybackStateCompat.Builder()
-                            .setState(PlaybackStateCompat.STATE_PAUSED,0,1.0f)
-                            .build();
-                    mSession.setPlaybackState(playback);
-                }
             }
-
             @Override
             public void onSkipToNext() {
                 // 处理切换到下一首音乐逻辑

@@ -140,21 +140,22 @@ public class MediaPlayer {
 
     @SuppressLint("NotifyDataSetChanged")
     private void bfui() {
-        Glide.with(home.appCompatActivity.getApplicationContext())
+        Glide.with(main.application)
                 .asBitmap()
                 .load(bfqkz.xm.picurl)
                 .listener(new RequestListener<Bitmap>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model,
                                                 @NonNull Target<Bitmap> target, boolean isFirstResource) {
-                        bfqkz.notify.setBitmap(null);
+                        bfq.bitmap = null;
+                        bfqkz.notify.setBitmap();
                         return false;
                     }
-
                     @Override
                     public boolean onResourceReady(@NonNull Bitmap bitmap, @NonNull Object model, Target<Bitmap> target,
                                                    @NonNull DataSource dataSource, boolean isFirstResource) {
-                        bfqkz.notify.setBitmap(bitmap);
+                        bfq.bitmap = bitmap;
+                        bfqkz.notify.setBitmap();
                         return false;
                     }
                 })

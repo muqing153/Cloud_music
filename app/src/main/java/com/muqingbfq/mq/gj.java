@@ -24,6 +24,7 @@ public class gj {
 
     public static void xcts(Context context, Object b) {
         main.handler.post(() -> Toast.makeText(context, b.toString(), Toast.LENGTH_SHORT).show());
+
     }
 
     public static void sc(Object a) {

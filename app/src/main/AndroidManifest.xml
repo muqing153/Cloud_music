@@ -34,13 +34,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.云音乐"
+        android:theme="@style/Theme.muqing"
         android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true"
         tools:targetApi="s">
         <activity
-            android:name=".start"
-            android:configChanges="uiMode"
+            android:name=".home"
             android:exported="true"
             android:theme="@style/Theme.main">
             <intent-filter>
@@ -60,22 +58,13 @@
         <activity android:name=".fragment.mp3" />
         <activity android:name=".activity_about_software" />
         <activity android:name=".sz" />
-        <activity
-            android:name=".home"
-            android:configChanges="screenSize|smallestScreenSize|orientation|screenLayout"
-            android:exported="false" />
         <activity android:name=".mq.llq" />
         <activity android:name=".yc" />
         <activity android:name=".login.cookie" />
 
         <service
             android:name=".bfqkz"
-            android:exported="false"
-            android:permission="TODO">
-            <intent-filter>
-                <action android:name="androidx.media3.session.MediaSessionService" />
-            </intent-filter>
-        </service>
+            android:exported="false" />
         <service android:name=".mq.floating" />
         <receiver
             android:name=".MyButtonClickReceiver"
@@ -83,7 +72,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
-                <action android:name="com.example.MY_BUTTON_CLICKED" />
             </intent-filter>
         </receiver>
     </application>

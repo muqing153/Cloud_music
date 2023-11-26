@@ -5,10 +5,6 @@
         android:icon="@drawable/fuwuzhongxing"
         android:title="@string/fuwuzhongxing" />
     <item
-        android:id="@+id/cookie"
-        android:icon="@drawable/icon"
-        android:title="绑定Cookie" />
-    <item
         android:id="@+id/b"
         android:icon="@drawable/set_up"
         android:title="@string/shezhizhongxing" />

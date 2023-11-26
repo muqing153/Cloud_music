@@ -10,13 +10,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.muqingbfq.fragment.Media;
+
 public class bfq extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
-    public static Context context;
+    public static AppCompatActivity context;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = this.getApplicationContext();
+        context = this;
         setContentView(R.layout.activity_bfq);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.end);
@@ -33,6 +35,10 @@ public class bfq extends AppCompatActivity {
             }
             return false;
         });
+        if (bfqkz.xm != null) {
+            Media.setname(bfqkz.xm.name);
+            Media.setzz(bfqkz.xm.zz);
+        }
     }
     public static Bitmap bitmap;
     public static void start(Context context) {
@@ -40,5 +46,10 @@ public class bfq extends AppCompatActivity {
         intent.setClass(context, bfq.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
     }
 }

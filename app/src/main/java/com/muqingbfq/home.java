@@ -1,13 +1,10 @@
 package com.muqingbfq;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,31 +19,17 @@ import com.muqingbfq.fragment.bfq_db;
 import com.muqingbfq.mq.gj;
 
 public class home extends AppCompatActivity {
-    private final ServiceConnection serviceConnection=new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            bfqkz.MyBinder binder = (bfqkz.MyBinder) iBinder;
-            bfqkz service = binder.getService();
-            // 与Service建立连接后，可以通过myService调用Service中的方法
-            isBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            isBound = false;
-            //断开连接
-        }
-    };
-    private boolean isBound = false;
     @SuppressLint("StaticFieldLeak")
     public static AppCompatActivity appCompatActivity;
 
     @SuppressLint({"CommitTransaction", "ObsoleteSdkInt"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Theme_muqing);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         appCompatActivity = this;
+        new start();
         Media.view = null;
         try {
             //初始化工具栏
@@ -68,8 +51,7 @@ public class home extends AppCompatActivity {
             // 启动Service
             if (serviceIntent == null) {
                 serviceIntent = new Intent(this, bfqkz.class);
-//                startService(serviceIntent);
-                bindService(serviceIntent,serviceConnection, Context.BIND_AUTO_CREATE);
+                startService(serviceIntent);
             }
             //检测更新
             new gj.jianchagengxin(this);
@@ -77,6 +59,7 @@ public class home extends AppCompatActivity {
             yc.tc(this, e);
         }
     }
+
     private static Intent serviceIntent;
     @Override
     protected void onPause() {
@@ -95,17 +78,6 @@ public class home extends AppCompatActivity {
         super.onResume();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.bfq_db, new bfq_db()).commit();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //销毁之前 finish();
-        // 解绑Service
-        if (isBound) {
-            unbindService(serviceConnection);
-            isBound = false;
-        }
     }
 
     private long time;

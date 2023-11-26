@@ -6,11 +6,14 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
+import com.muqingbfq.login.visitor;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
 
 public class main extends Application {
-    private static Application application;
+    public static Application application;
 
     public static Handler handler = new Handler(Looper.getMainLooper());
     public static String api = "http://139.196.224.229:3000";
@@ -57,6 +60,20 @@ public class main extends Application {
         if (bj) {
             edit.commit();
         }
+
+        wl.Cookie = main.sp.getString(main.Cookie, "");
+        if (wl.Cookie.equals("")) {
+            new visitor();
+        }
+
+        SharedPreferences theme = getSharedPreferences("theme", MODE_PRIVATE);
+        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor edit = theme.edit();
+        int i = theme.getInt("theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        if (i == AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) {
+            edit.putInt("theme", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            edit.apply();
+        }
+        AppCompatDelegate.setDefaultNightMode(i);
     }
 
     public static SharedPreferences getSharedPreferences(String string) {
