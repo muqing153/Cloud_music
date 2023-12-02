@@ -21,7 +21,7 @@ import com.muqingbfq.yc;
 
 public class bflb_db extends BottomSheetDialog {
     public static String gdid;
-
+    public static RecyclerView.Adapter<MyViewHoder> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +55,9 @@ public class bflb_db extends BottomSheetDialog {
     }
 
     class spq extends RecyclerView.Adapter<MyViewHoder> {
+        public spq() {
+            adapter = this;
+        }
         @NonNull
         @Override
         public MyViewHoder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -73,7 +76,7 @@ public class bflb_db extends BottomSheetDialog {
             }
             holder.name.setTextColor(color);
             holder.zz.setTextColor(color);
-            holder.view.setOnClickListener(view -> {
+            holder.itemView.setOnClickListener(view -> {
                 if (bfqkz.xm != x) {
                     bfqkz.xm = x;
                     new url(x);
@@ -87,4 +90,9 @@ public class bflb_db extends BottomSheetDialog {
         }
     }
 
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        adapter = null;
+    }
 }

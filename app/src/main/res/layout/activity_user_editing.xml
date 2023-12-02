@@ -89,16 +89,19 @@
                 android:id="@+id/menu"
                 style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
+                android:hint="性别"
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
                     android:id="@+id/autoComplete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="性别"
-                    android:inputType="none"
+                    android:completionThreshold="1"
+                    android:imeOptions="actionSearch"
+                    android:maxLength="1"
+                    android:singleLine="true"
                     app:simpleItems="@array/xingbie"
-                    tools:ignore="SpeakableTextPresentCheck,VisualLintTextFieldSize" />
+                    tools:ignore="VisualLintTextFieldSize,SpeakableTextPresentCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout

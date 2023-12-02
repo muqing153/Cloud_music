@@ -18,7 +18,8 @@ android {
         //noinspection OldTargetApi
         targetSdk 31
         versionCode 1
-        versionName "1.6.8"
+        versionName "1.7.0"
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -36,6 +37,9 @@ android {
                 //在这里修改apk文件名
                 outputFileName = "Cloud_music-${variant.name}-v${variant.versionName}.apk"
             }
+    }
+    viewBinding {
+        enabled = true
     }
 }
 dependencies {

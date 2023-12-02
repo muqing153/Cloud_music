@@ -20,6 +20,11 @@ public class playlist extends Thread {
     public static final String api = "/playlist/track/all?id=";
     @SuppressLint("NotifyDataSetChanged")
     public static boolean hq(List<xm> list, String uid) {
+        if (uid.equals("mp3_xz.json")) {
+            return playlist.hq_xz(list);
+        } else if (uid.equals("mp3_like.json")) {
+            return playlist.hq_like(list);
+        }
         list.clear();
         try {
             String hq;
@@ -48,7 +53,6 @@ public class playlist extends Thread {
                 String picUrl = al.getString("picUrl");
                 list.add(new xm(id, name, zz.toString(), picUrl));
             }
-//            main.handler.post(new mp3.lbspq_sx());
             return true;
         } catch (Exception e) {
             gj.sc("失败的错误 " + e);
@@ -56,7 +60,7 @@ public class playlist extends Thread {
         return false;
     }
 
-    public static void hq_like(List<xm> list) {
+    public static boolean hq_like(List<xm> list) {
         list.clear();
         try {
             JSONObject json = gd.like;
@@ -69,12 +73,14 @@ public class playlist extends Thread {
                 list.add(new xm(id, name, zz, picUrl));
             }
             main.handler.post(new mp3.lbspq_sx());
+            return true;
         } catch (Exception e) {
             gj.sc("失败的错误 " + e);
         }
+        return false;
     }
 
-    public static void hq_xz(List<xm> list) {
+    public static boolean hq_xz(List<xm> list) {
         list.clear();
         try {
             JSONArray json = new JSONObject(wj.dqwb(wj.mp3_xz))
@@ -88,10 +94,11 @@ public class playlist extends Thread {
                 String picUrl = jsonObject.getString("picUrl");
                 list.add(new xm(id, name, zz, picUrl));
             }
-//            main.handler.post(new mp3.lbspq_sx());
+            return true;
         } catch (Exception e) {
             gj.sc("失败的错误 " + e);
             wj.sc(wj.mp3_xz);
         }
+        return false;
     }
 }

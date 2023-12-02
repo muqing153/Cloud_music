@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import com.muqingbfq.mq.gj;
 public class home extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     public static AppCompatActivity appCompatActivity;
+    public static ImageView imageView;
 
     @SuppressLint({"CommitTransaction", "ObsoleteSdkInt"})
     @Override
@@ -30,7 +32,14 @@ public class home extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         appCompatActivity = this;
         new start();
-        Media.view = null;
+        if (imageView == null) {
+            imageView = new ImageView(this);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageView.setImageResource(R.drawable.icon);
+        }
+        if (bfq.bitmap != null) {
+            Media.setImageBitmap();
+        }
         try {
             //初始化工具栏
             Toolbar toolbar = findViewById(R.id.toolbar);
@@ -61,6 +70,7 @@ public class home extends AppCompatActivity {
     }
 
     private static Intent serviceIntent;
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -81,6 +91,7 @@ public class home extends AppCompatActivity {
     }
 
     private long time;
+
     @Override
     public void onBackPressed() {
         if (bfqkz.mt.isPlaying()) {

@@ -69,8 +69,9 @@ public class user_message extends Thread {
             if (cover.startsWith("..")) {
                 cover = "https://rust.coldmint.top" + cover.substring(2);
             }
+            String gender = data.getString("gender");
             return new string(new String[]{
-                    headIcon, account, userName, introduce, cover
+                    headIcon, account, userName, introduce, cover, gender
             });
         }
         return null;
@@ -101,6 +102,8 @@ public class user_message extends Thread {
         public String cover() {
             return strings[4];
         }
-
+        public String gender() {
+            return strings[5];
+        }
     }
 }

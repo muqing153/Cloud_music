@@ -28,6 +28,8 @@ import com.muqingbfq.mq.wl;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Pattern;
+
 public class user_logs extends AppCompatActivity {
 
     EditText edituser, editpassword;
@@ -98,7 +100,7 @@ public class user_logs extends AppCompatActivity {
         return bitmap;
     }
 
-
+    String isEmail="false";
     public String account, password;
     class CloudUser extends Thread {
 
@@ -110,6 +112,10 @@ public class user_logs extends AppCompatActivity {
             }
             user_logs.this.account = account;
             user_logs.this.password = password;
+            Pattern pattern = Pattern.compile("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$");
+            if (pattern.matcher(account).matches()) {
+                isEmail = "true";
+            }
             start();
         }
 
@@ -122,7 +128,7 @@ public class user_logs extends AppCompatActivity {
                                 "account", "passWord", "appID", "isEmail"
                         },
                         new String[]{
-                                account, password, UUID, ""
+                                account, password, UUID, isEmail
                         });
                 gj.sc(post);
                 if (TextUtils.isEmpty(post)) {
@@ -148,7 +154,7 @@ public class user_logs extends AppCompatActivity {
                                         "account", "passWord", "appID", "isEmail"
                                 },
                                 new String[]{
-                                        account, password, UUID, ""
+                                        account, password, UUID, isEmail
                                 });
                         gj.sc(jsonpost);
                         if (!TextUtils.isEmpty(jsonpost.toString()) &&
@@ -170,8 +176,9 @@ public class user_logs extends AppCompatActivity {
                                                         "account", "key", "appID", "isEmail"
                                                 },
                                                 new String[]{
-                                                        account, editViewDialog.getEditText(), UUID, "false"
+                                                        account, editViewDialog.getEditText(), UUID, isEmail
                                                 });
+                                        
                                         gj.sc(jsonpost.toString());
                                         if (!TextUtils.isEmpty(jsonpost.toString())) {
                                             try {

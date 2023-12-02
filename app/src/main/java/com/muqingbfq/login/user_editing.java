@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.muqingbfq.R;
+import com.muqingbfq.databinding.ActivityUserEditingBinding;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.ActivityToolbar;
 import com.muqingbfq.mq.gj;
@@ -46,9 +47,9 @@ public class user_editing extends ActivityToolbar {
     //头像，用户名，签名，性别，背景
     ImageView imageViewa;
     EditText edit_name, edit_qianming;
-    AutoCompleteTextView autoCompleteTextView;
     ImageView imageViewb;
     String file_a, file_b;
+    ActivityUserEditingBinding binding;
     @SuppressLint("CheckResult")
     ActivityResultLauncher<Intent> setimagea =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -86,11 +87,11 @@ public class user_editing extends ActivityToolbar {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_editing);
+        binding = ActivityUserEditingBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         imageViewa = findViewById(R.id.image1);
         edit_name = findViewById(R.id.edit_name);
         edit_qianming = findViewById(R.id.edit_qianming);
-        autoCompleteTextView = findViewById(R.id.autoComplete);
         imageViewb = findViewById(R.id.image2);
         new Thread() {
             @Override
@@ -110,6 +111,13 @@ public class user_editing extends ActivityToolbar {
                         Glide.with(user_editing.this)
                                 .load(string.cover())
                                 .into(imageViewb);
+                        String gender = string.gender();
+                        if (gender.equals("1")) {
+                            gender = "男";
+                        } else {
+                            gender = "女";
+                        }
+                        binding.autoComplete.setText(gender);
                     });
                 } catch (Exception e) {
                     gj.sc(e);

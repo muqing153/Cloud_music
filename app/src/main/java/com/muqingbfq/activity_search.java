@@ -25,7 +25,9 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.muqingbfq.databinding.ActivitySearchBinding;
 import com.muqingbfq.fragment.search;
+import com.muqingbfq.mq.ActivityToolbar;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
@@ -37,25 +39,22 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class activity_search extends AppCompatActivity {
+public class activity_search extends ActivityToolbar {
     private EditText editText;
     private ArrayAdapter<String> adapter;
-
+    private SearchRecordAdapter recordAdapter;
     private JSONObject json = new JSONObject();
     private final List<String> json_list = new ArrayList<>();
     private final List<String> list = new ArrayList<>();
     ListView listPopupWindow;
-    public static AppCompatActivity appCompatActivity;
+    ActivitySearchBinding inflate;
 
     @SuppressLint({"RestrictedApi", "NotifyDataSetChanged"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-        appCompatActivity = this;
-        setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        inflate = ActivitySearchBinding.inflate(getLayoutInflater());
+        setContentView(inflate.getRoot());
         RecyclerView recyclerView = findViewById(R.id.list_recycler);
         FlexboxLayoutManager manager = new FlexboxLayoutManager(this);
         //设置主轴排列方式
@@ -64,7 +63,7 @@ public class activity_search extends AppCompatActivity {
         manager.setFlexWrap(FlexWrap.WRAP);
         manager.setAlignItems(AlignItems.STRETCH);
         recyclerView.setLayoutManager(manager);
-        SearchRecordAdapter recordAdapter = new SearchRecordAdapter();
+        new SearchRecordAdapter();
         recyclerView.setAdapter(recordAdapter);
 
         editText = findViewById(R.id.editview);
@@ -77,7 +76,7 @@ public class activity_search extends AppCompatActivity {
             }
             return false;
         });
-        findViewById(R.id.deleat).setOnClickListener(v -> new MaterialAlertDialogBuilder(v.getContext())
+        inflate.deleat.setOnClickListener(v -> new MaterialAlertDialogBuilder(v.getContext())
                 .setTitle("删除")
                 .setMessage("清空历史记录？")
                 .setNegativeButton("取消", null)
@@ -116,7 +115,7 @@ public class activity_search extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (TextUtils.isEmpty(s)){
+                if (TextUtils.isEmpty(s)) {
                     dismiss();
                     return;
                 }
@@ -146,6 +145,7 @@ public class activity_search extends AppCompatActivity {
                     }
                 }.start();
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -221,8 +221,9 @@ public class activity_search extends AppCompatActivity {
                 }
             }
             if (json_list.isEmpty()) {
-                findViewById(R.id.xxbj1).setVisibility(View.INVISIBLE);
+                inflate.xxbj1.setVisibility(View.INVISIBLE);
             }
+            recordAdapter = this;
         }
 
         @NonNull
@@ -270,5 +271,6 @@ public class activity_search extends AppCompatActivity {
         } else {
             finish();
         }
+        com.muqingbfq.fragment.search.lbspq = null;
     }
 }

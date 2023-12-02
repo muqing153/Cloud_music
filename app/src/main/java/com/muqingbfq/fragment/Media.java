@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -16,12 +17,13 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.bumptech.glide.Glide;
 import com.muqingbfq.R;
 import com.muqingbfq.api.url;
 import com.muqingbfq.bfq;
 import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
+import com.muqingbfq.databinding.FragmentBfqBinding;
+import com.muqingbfq.home;
 import com.muqingbfq.main;
 
 import org.json.JSONObject;
@@ -30,7 +32,7 @@ import me.wcy.lrcview.LrcView;
 
 public class Media extends Fragment {
     @SuppressLint("StaticFieldLeak")
-    public static View view;
+    public static LinearLayout view;
     @SuppressLint("StaticFieldLeak")
     private static TextView time_a, time_b;
     @SuppressLint("StaticFieldLeak")
@@ -84,18 +86,22 @@ public class Media extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         if (view != null) {
-            main.handler.post(Media::setImageBitmap);
             return view;
         }
-        view = inflater.inflate(R.layout.fragment_bfq, container, false);
+        FragmentBfqBinding inflate = FragmentBfqBinding.inflate(inflater, container, false);
+        view = inflate.getRoot();
+/*        if (home.imageView == null) {
+            home.imageView = new ImageView(home.appCompatActivity);
+            home.imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            home.imageView.setImageResource(R.drawable.icon);
+        }*/
+        inflate.cardview.addView(home.imageView);
         bfq_an.kz kz = new bfq_an.kz();
         ImageView kg = view.findViewById(R.id.kg);
         kg.setOnClickListener(kz);
         view.findViewById(R.id.xyq).setOnClickListener(kz);
         view.findViewById(R.id.syq).setOnClickListener(kz);
-        ImageView tx = view.findViewById(R.id.mttx);
-        
-        tdt = view.findViewById(R.id.tdt);
+        tdt = inflate.tdt;
         tdt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -116,10 +122,9 @@ public class Media extends Fragment {
             }
         });
 
-        time_a = view.findViewById(R.id.time_a);
-        time_b = view.findViewById(R.id.time_b);
+        time_a = inflate.timeA;
+        time_b = inflate.timeB;
         //初始化歌词组件
-        View kp = view.findViewById(R.id.kp1);
         lrcview = getlrcView();
         lrcview.setDraggable(true, (view, time) -> {
             bfqkz.mt.build.seekTo(Math.toIntExact(time));
@@ -127,6 +132,7 @@ public class Media extends Fragment {
         });
         if (!isTablet(bfq.context)) {
             lrcview.setOnTapListener((view, x, y) -> {
+                View kp = inflate.kp1;
                 if (kp.getVisibility() == View.VISIBLE) {
                     kp.setVisibility(View.GONE);
                 } else {
@@ -135,10 +141,10 @@ public class Media extends Fragment {
             });
         }
         //初始化播放器列表
-        view.findViewById(R.id.bfq_list_mp3).
+        inflate.bfqListMp3.
                 setOnClickListener(view1 -> com.muqingbfq.fragment.bflb_db.start(bfq.context));
 
-        view.findViewById(R.id.like).setOnClickListener(view1 -> {
+        inflate.like.setOnClickListener(view1 -> {
             ImageView like = (ImageView) view1;
             try {
                 if (bfqkz.like_bool) {
@@ -160,8 +166,8 @@ public class Media extends Fragment {
                 e.printStackTrace();
             }
         });
-        ImageView control = view.findViewById(R.id.control);
-        control.setOnClickListener(new bfq_an.control(control));
+
+        inflate.control.setOnClickListener(new bfq_an.control(inflate.control));
         if (bfqkz.xm != null) {
             main.handler.removeCallbacks(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度
             long duration = bfqkz.mt.build.getDuration();
@@ -175,10 +181,6 @@ public class Media extends Fragment {
             if (bfqkz.mt.build.isPlaying()) {
                 kg.setImageResource(R.drawable.bf);
             }
-            Glide.with(getContext())
-                    .load(bfqkz.xm.picurl)
-                    .error(R.drawable.icon)//图片加载失败后，显示的图片
-                    .into(tx);
             bfq_an.islike(bfq.context);
             new Thread() {
                 @Override
@@ -192,8 +194,7 @@ public class Media extends Fragment {
     }
 
     private boolean isTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
-                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     public static LrcView getlrcView() {
@@ -202,9 +203,11 @@ public class Media extends Fragment {
         }
         return view.findViewById(R.id.gc);
     }
+
     public static void loadLyric(String a, String b) {
         lrcview.loadLrc(a, b);
     }
+
     public static void setlike(boolean bool) {
         ImageView imageView = view.findViewById(R.id.like);
         int color = R.color.text;
@@ -216,13 +219,10 @@ public class Media extends Fragment {
     }
 
     public static void setImageBitmap() {
-        if (view == null) {
+        if (home.imageView == null) {
             return;
         }
-        ImageView imageView = view.findViewById(R.id.mttx);
-        if (imageView != null) {
-            main.handler.post(() -> imageView.setImageBitmap(bfq.bitmap));
-        }
+        main.handler.post(() -> home.imageView.setImageBitmap(bfq.bitmap));
     }
 
     public static void setname(String str) {

@@ -107,16 +107,13 @@ public class mp3 extends AppCompatActivity {
             }
             holder.name.setTextColor(color);
             holder.zz.setTextColor(color);
-            holder.view.setOnClickListener(view -> {
+            holder.itemView.setOnClickListener(view -> {
                 if (bfqkz.xm == null || !bfqkz.xm.id.equals(x.id)) {
                     bfqkz.xm = x;
                     new url(x);
                 }
-                    bfqkz.list.clear();
-                    int size = list.size();
-                    for (int i = 0; i < size; i++) {
-                        bfqkz.list.add(list.get(i));
-                    }
+                bfqkz.list.clear();
+                bfqkz.list.addAll(list);
                 bfq.start(mp3.this);
             });
         }

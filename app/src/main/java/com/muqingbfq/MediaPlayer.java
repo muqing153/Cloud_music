@@ -18,7 +18,9 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.muqingbfq.fragment.Media;
+import com.muqingbfq.fragment.bflb_db;
 import com.muqingbfq.fragment.bfq_db;
+import com.muqingbfq.fragment.search;
 import com.muqingbfq.mq.gj;
 
 public class MediaPlayer {
@@ -177,6 +179,13 @@ public class MediaPlayer {
         }
         if (com.muqingbfq.fragment.mp3.lbspq != null) {
             com.muqingbfq.fragment.mp3.lbspq.notifyDataSetChanged();
+        }
+        if (search.lbspq != null) {
+            search.lbspq.notifyDataSetChanged();
+        }
+        if (bflb_db.adapter != null) {
+            bflb_db.adapter.notifyDataSetChanged();
+            gj.sc(1);
         }
     }
 }

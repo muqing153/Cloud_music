@@ -1,8 +1,8 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.muqing" parent="Theme.start">
-<!--        <item name="colorOnPrimary">@color/text</item>-->
-<!--        <item name="colorOnSecondary">@color/text</item>-->
+        <!--        <item name="colorOnPrimary">@color/text</item>-->
+        <!--        <item name="colorOnSecondary">@color/text</item>-->
         <item name="android:windowLightStatusBar">true</item>
 
     </style>
@@ -10,8 +10,8 @@
     <style name="Theme.start" parent="Theme.Material3.DayNight">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-<!--        <item name="android:textColorTertiary">@color/text</item>-->
-<!--        <item name="android:textColorPrimary">@color/text</item>-->
+        <!--        <item name="android:textColorTertiary">@color/text</item>-->
+        <!--        <item name="android:textColorPrimary">@color/text</item>-->
         <item name="android:statusBarColor">@color/tm</item>
 
     </style>

@@ -77,7 +77,6 @@ public class resource {
         list.add(new xm("mp3_like.json", "喜欢", R.mipmap.like, true));
         list.add(new xm("mp3_xz.json", "下载", R.drawable.icon, true));
         try {
-            //            JSONArray date = jsonObject.getJSONArray("");
             JSONObject date = new JSONObject(wj.dqwb(wj.gd_xz));
             for (Iterator<String> it = date.keys(); it.hasNext(); ) {
                 String id = it.next();

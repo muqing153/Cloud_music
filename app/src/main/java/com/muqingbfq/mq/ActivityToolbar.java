@@ -28,4 +28,10 @@ public class ActivityToolbar extends AppCompatActivity {
         super.setContentView(view);
         setToolbar();
     }
+
+    @Override
+    public void setContentView(View view) {
+        super.setContentView(view);
+        setToolbar();
+    }
 }

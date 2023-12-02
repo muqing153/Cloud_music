@@ -1,5 +1,7 @@
 package com.muqingbfq.mq;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -44,6 +46,19 @@ public class gj {
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, str);
         context.startActivity(shareIntent);
+    }
+    /**
+     * 复制文字到剪切板
+     * @param text
+     */
+    public static void fz(Context context,String text){
+        ClipboardManager systemService =
+                (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        // 创建能够存入剪贴板的ClipData对象
+        //‘Label’这是任意文字标签
+        ClipData mClipData = ClipData.newPlainText("Label", text);
+        //将ClipData数据复制到剪贴板：
+        systemService.setPrimaryClip(mClipData);
     }
 
     public static boolean isWiFiConnected() {

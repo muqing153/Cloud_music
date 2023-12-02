@@ -10,7 +10,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -24,7 +23,7 @@ import com.muqingbfq.R;
 import com.muqingbfq.bfq;
 import com.muqingbfq.bfqkz;
 import com.muqingbfq.fragment.Media;
-import com.muqingbfq.start;
+import com.muqingbfq.home;
 import com.muqingbfq.yc;
 
 public class NotificationManagerCompat {
@@ -52,7 +51,7 @@ public class NotificationManagerCompat {
             // 设置启动的程序，如果存在则找出，否则新的启动
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            intent.setComponent(new ComponentName(context, start.class));//用ComponentName得到class对象
+            intent.setComponent(new ComponentName(context, home.class));//用ComponentName得到class对象
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
             PendingIntent pendingIntent = getActivity(context, intent);
@@ -133,15 +132,10 @@ public class NotificationManagerCompat {
 
     private NotificationCompat.Builder getNotificationBuilder(Context context) {
         // 适用于Android 8.0及以上版本
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             return new NotificationCompat.Builder(context, CHANNEL_ID);
-        } else {
-            // Android 7.1及以下版本
-            return new NotificationCompat.Builder(context);
-        }
     }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     private PendingIntent getBroadcast(Context context, Intent intent) {
         int flag;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -150,13 +144,8 @@ public class NotificationManagerCompat {
             flag = PendingIntent.FLAG_UPDATE_CURRENT;
         }
         return PendingIntent.getBroadcast(context, 0, intent, flag);
-/*        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-        } else {
-            return PendingIntent.getBroadcast(context, 0, intent, 0);
-        }*/
     }
-    @SuppressLint("UnspecifiedImmutableFlag")
+
     private PendingIntent getActivity(Context context, Intent intent) {
         int flag;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

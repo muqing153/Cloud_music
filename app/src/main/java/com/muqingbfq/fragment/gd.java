@@ -7,13 +7,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -27,6 +28,7 @@ import com.muqingbfq.bfqkz;
 import com.muqingbfq.list.list_gd;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.wj;
+import com.muqingbfq.xm;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,22 +36,22 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.muqingbfq.xm;
-
 public class gd extends Fragment {
     public static String gdid;
-    public static BaseAdapter lbspq;
-    public static List<xm> list;
+    public static RecyclerView.Adapter<VH> lbspq;
+    public List<xm> list = new ArrayList<>();
     public static JSONObject like = new JSONObject();
-    GridView gridView;
+    RecyclerView gridView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gd, container, false);
-        list = new ArrayList<>();
-        lbspq = new baseadapter(view.getContext());
+        lbspq = new baseadapter(view.getContext(),list);
         gridView = view.findViewById(R.id.wgbj);
+        int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), k / 120);
+        gridView.setLayoutManager(gridLayoutManager);
         gridView.setAdapter(lbspq);
         if (gdid == null) {
             gdid = main.mp3_csh;
@@ -64,13 +66,13 @@ public class gd extends Fragment {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                list.clear();
-                lbspq.notifyDataSetChanged();
                 new thread(tab.getText().toString());
             }
+
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
             }
+
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
             }
@@ -85,68 +87,47 @@ public class gd extends Fragment {
         return view;
     }
 
-    class baseadapter extends BaseAdapter {
+    public static class baseadapter extends RecyclerView.Adapter<VH> {
         Context context;
-        LayoutInflater layoutInflater;
-
-        public baseadapter(Context context) {
+        List<xm> list;
+        public baseadapter(Context context, List<xm> list) {
             this.context = context;
-            layoutInflater = LayoutInflater.from(context);
+            this.list = list;
+        }
+        @NonNull
+        @Override
+        public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(context)
+                    .inflate(R.layout.list_gd, parent, false);
+            return new VH(view);
         }
 
         @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return list.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @SuppressLint({"ResourceAsColor", "InflateParams", "ClickableViewAccessibility"})
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            ViewHoder viewHoder;
-            xm xm = list.get(i);
-            if (view == null) {
-                viewHoder = new ViewHoder();
-                view = layoutInflater.inflate(R.layout.list_gd, null, false);
-                viewHoder.textView = view.findViewById(R.id.wb1);
-                viewHoder.imageView = view.findViewById(R.id.fh);
-                viewHoder.cardView = view.findViewById(R.id.cardview);
-                viewHoder.kg = view.findViewById(R.id.kg);
-                view.setTag(viewHoder);
-            } else {
-                viewHoder = (ViewHoder) view.getTag();
-            }
+        public void onBindViewHolder(@NonNull VH holder, int position) {
+            xm xm = list.get(position);
             list_gd gd = new list_gd(xm);
-            viewHoder.cardView.setOnClickListener(gd);
-            viewHoder.cardView.setOnLongClickListener(gd);
-            viewHoder.textView.setText(xm.name);
-            viewHoder.kg.setOnClickListener(view1 -> {
+            holder.cardView.setOnClickListener(gd);
+            holder.cardView.setOnLongClickListener(gd);
+            holder.textView.setText(xm.name);
+            holder.kg.setOnClickListener(view1 -> {
                 ImageView tx = (ImageView) view1;
                 new Thread() {
+                    @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void run() {
                         super.run();
-                        boolean an=playlist.hq(bfqkz.list, xm.id);
-                            main.handler.post(() -> {
-                                if (an) {
-                                    bfq_an.xyq();
-                                    tx.setImageResource(R.drawable.bf);
-                                    main.edit.putString(main.mp3, xm.id);
-                                    main.edit.commit();
-                                    main.mp3_csh = gdid = xm.id;
-                                }
-                                com.muqingbfq.fragment.gd.lbspq.notifyDataSetChanged();
-                            });
-                        }
+                        boolean an = playlist.hq(bfqkz.list, xm.id);
+                        main.handler.post(() -> {
+                            if (an) {
+                                bfq_an.xyq();
+                                tx.setImageResource(R.drawable.bf);
+                                main.edit.putString(main.mp3, xm.id);
+                                main.edit.commit();
+                                main.mp3_csh = gdid = xm.id;
+                            }
+                            com.muqingbfq.fragment.gd.lbspq.notifyDataSetChanged();
+                        });
+                    }
                 }.start();
             });
             int color = ContextCompat.getColor(context, R.color.text);
@@ -157,19 +138,31 @@ public class gd extends Fragment {
             } else if (xm.cz) {
                 color = ContextCompat.getColor(context, R.color.text_cz_tm);
             }
-            viewHoder.kg.setImageDrawable(color_kg);
-            viewHoder.textView.setTextColor(color);
+            holder.kg.setImageDrawable(color_kg);
+            holder.textView.setTextColor(color);
             Glide.with(context).load(xm.picurl).apply(new RequestOptions().placeholder(R.drawable.icon))
-                    .into(viewHoder.imageView);
-//            new wl(xm.picurl, Glide.with(context)).loadImage(bitmap -> viewHoder.imageView.setImageBitmap(bitmap));
-            return view;
+                    .into(holder.imageView);
         }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+
     }
 
-    class ViewHoder {
+    static class VH extends RecyclerView.ViewHolder {
         TextView textView;
         ImageView imageView, kg;
         MaterialCardView cardView;
+
+        public VH(@NonNull View itemView) {
+            super(itemView);
+            textView = itemView.findViewById(R.id.wb1);
+            imageView = itemView.findViewById(R.id.fh);
+            cardView = itemView.findViewById(R.id.cardview);
+            kg = itemView.findViewById(R.id.kg);
+        }
     }
 
     class thread extends Thread {
@@ -177,9 +170,11 @@ public class gd extends Fragment {
 
         public thread(String name) {
             this.name = name;
+            list.clear();
             start();
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         public void run() {
             super.run();
