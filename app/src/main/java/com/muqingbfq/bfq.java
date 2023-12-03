@@ -12,15 +12,19 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.muqingbfq.databinding.ActivityBfqBinding;
 import com.muqingbfq.fragment.Media;
+
+import org.json.JSONObject;
 
 public class bfq extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
@@ -70,8 +74,33 @@ public class bfq extends AppCompatActivity {
         inflate.control.setOnClickListener(new bfq_an.control(inflate.control));
         if (bfqkz.mt != null && bfqkz.mt.build.isPlaying()) {
             inflate.kg.setImageResource(R.drawable.bf);
+            bfq_an.islike(this);
         }
         text();
+
+        inflate.like.setOnClickListener(view1 -> {
+            ImageView like = (ImageView) view1;
+            try {
+                if (bfqkz.like_bool) {
+                    like.setImageTintList(ContextCompat.getColorStateList(bfq.this, R.color.text));
+                    com.muqingbfq.fragment.gd.like.remove(String.valueOf(bfqkz.xm.id));
+                } else {
+                    like.setImageTintList(ContextCompat.
+                            getColorStateList(bfq.this, android.R.color.holo_red_dark));
+                    JSONObject json = new JSONObject();
+                    json.put("name", bfqkz.xm.name);
+                    json.put("zz", bfqkz.xm.zz);
+                    json.put("picUrl", bfqkz.xm.picurl);
+                    com.muqingbfq.fragment.gd.like.put(String.valueOf(bfqkz.xm.id), json);
+                }
+                com.muqingbfq.mq.wj.xrwb(com.muqingbfq.mq.wj.mp3_like,
+                        com.muqingbfq.fragment.gd.like.toString());
+                bfqkz.like_bool = !bfqkz.like_bool;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
     public static Bitmap bitmap;

@@ -133,28 +133,6 @@ public class Media extends Fragment {
             });
         }
         //初始化播放器列表
-        bfq.findViewById(R.id.like).setOnClickListener(view1 -> {
-            ImageView like = (ImageView) view1;
-            try {
-                if (bfqkz.like_bool) {
-                    like.setImageTintList(ContextCompat.getColorStateList(view.getContext(), R.color.text));
-                    com.muqingbfq.fragment.gd.like.remove(String.valueOf(bfqkz.xm.id));
-                } else {
-                    like.setImageTintList(ContextCompat.
-                            getColorStateList(view.getContext(), android.R.color.holo_red_dark));
-                    JSONObject json = new JSONObject();
-                    json.put("name", bfqkz.xm.name);
-                    json.put("zz", bfqkz.xm.zz);
-                    json.put("picUrl", bfqkz.xm.picurl);
-                    com.muqingbfq.fragment.gd.like.put(String.valueOf(bfqkz.xm.id), json);
-                }
-                com.muqingbfq.mq.wj.xrwb(com.muqingbfq.mq.wj.mp3_like,
-                        com.muqingbfq.fragment.gd.like.toString());
-                bfqkz.like_bool = !bfqkz.like_bool;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
         if (bfqkz.xm != null) {
             main.handler.removeCallbacks(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度
             long duration = bfqkz.mt.build.getDuration();
@@ -163,7 +141,7 @@ public class Media extends Fragment {
             long position = bfqkz.mt.build.getCurrentPosition();
             setProgress((int) position);
             main.handler.post(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度
-            bfq_an.islike(com.muqingbfq.bfq.context);
+
             new Thread() {
                 @Override
                 public void run() {
@@ -176,7 +154,9 @@ public class Media extends Fragment {
     }
 
     private boolean isTablet(Context context) {
-        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+        return (context.getResources().
+                getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     public static LrcView getlrcView() {
