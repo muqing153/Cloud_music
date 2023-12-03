@@ -102,6 +102,10 @@ public class gd extends Fragment {
             return new VH(view);
         }
 
+        public void setList(List<xm> list) {
+            this.list = list;
+        }
+
         @Override
         public void onBindViewHolder(@NonNull VH holder, int position) {
             xm xm = list.get(position);

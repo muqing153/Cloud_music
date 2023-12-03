@@ -61,7 +61,11 @@ public class resource {
                 for (int i = 0; i < length; i++) {
                     JSONObject get = list_array.getJSONObject(i);
                     String id = get.getString("id");
-                    String name = get.getString("name") + "\n" + get.getString("description");
+                    String name = get.getString("name") + "\n";
+                    String description = get.getString("description");
+                    if (!TextUtils.isEmpty(description) && !description.equals("null")) {
+                        name += description;
+                    }
                     boolean cz = wj.cz(wj.gd + id);
                     String coverImgUrl = get.getString("coverImgUrl");
                     list.add(new xm(id, name, coverImgUrl, cz));

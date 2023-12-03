@@ -171,12 +171,7 @@ public class MediaPlayer {
         }
         bfq_db.setname(name);
         bfq_db.setzz(zz);
-        if (bfqkz.notify.notificationManager != null) {
-            bfqkz.notify.notificationBuilder.setContentTitle(name);
-            bfqkz.notify.notificationBuilder.setContentText(zz);
-            bfqkz.notify.notificationManager_notify();
 
-        }
         if (com.muqingbfq.fragment.mp3.lbspq != null) {
             com.muqingbfq.fragment.mp3.lbspq.notifyDataSetChanged();
         }

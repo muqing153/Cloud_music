@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bfq"
+        app:navigationIcon="@drawable/end">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <com.muqingbfq.view.Text
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/name"
+                android:textColor="@color/text"
+                android:textSize="26sp" />
+
+            <TextView
+                android:id="@+id/zz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:text="@string/zz"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_bfq"
+        android:name="com.muqingbfq.fragment.Media"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:layout="@layout/fragment_bfq" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:baselineAligned="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/control"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="26dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/mt_sx"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/syq"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="12dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/syq"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/kg"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/zt"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/xyq"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="12dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:importantForAccessibility="no"
+                android:src="@drawable/xyq" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end">
+
+            <ImageView
+                android:id="@+id/bfq_list_mp3"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="16dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/cd"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:id="@+id/like"
+                android:layout_width="36dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="26dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@mipmap/like"
+                app:tint="@color/text"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

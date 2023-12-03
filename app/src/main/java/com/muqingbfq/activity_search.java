@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.flexbox.AlignItems;
@@ -48,8 +47,7 @@ public class activity_search extends ActivityToolbar {
     private final List<String> list = new ArrayList<>();
     ListView listPopupWindow;
     ActivitySearchBinding inflate;
-
-    @SuppressLint({"RestrictedApi", "NotifyDataSetChanged"})
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,9 +195,13 @@ public class activity_search extends ActivityToolbar {
     public void start(String name) {
         dismiss();
         if (!TextUtils.isEmpty(name)) {
-            search search = (com.muqingbfq.fragment.search) getSupportFragmentManager().
-                    findFragmentById(R.id.search_fragment);
-            search.setStart(name);
+            search sea = (search) getSupportFragmentManager().findFragmentById(R.id.search_fragment);
+            if (!name.equals(sea.name)) {
+                sea.i = 0;
+                sea.inflate.tablayout.getTabAt(0).select();
+            }
+            sea.setVisibility(true);
+            sea.setStart(name);
             addSearchRecord(name);
         }
     }
@@ -266,11 +268,15 @@ public class activity_search extends ActivityToolbar {
     private void end() {
         search search = (com.muqingbfq.fragment.search) getSupportFragmentManager().
                 findFragmentById(R.id.search_fragment);
-        if (search.getVisibility()) {
+        if (search.isVisible()) {
             search.setVisibility(false);
         } else {
             finish();
         }
+    }
+    @Override
+    public void finish() {
+        super.finish();
         com.muqingbfq.fragment.search.lbspq = null;
     }
 }

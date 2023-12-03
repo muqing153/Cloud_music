@@ -135,7 +135,6 @@ public class MyButtonClickReceiver extends BroadcastReceiver {
         if (bfqkz.mt == null) {
             return;
         }
-        gj.sc(bfqkz.mt);
 //        gj.sc(isMusicServiceBound);播放/暂停按钮点击事件 if (isMusicServiceBound)
         if (bfqkz.mt.isPlaying()) {
             bfqkz.mt.pause();

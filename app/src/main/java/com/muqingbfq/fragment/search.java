@@ -37,22 +37,22 @@ import java.util.List;
 public class search extends Fragment {
     public static RecyclerView.Adapter<MyViewHoder> lbspq;
     List<xm> list = new ArrayList<>();
+    gd.baseadapter adapter_gd;
+    public String name;
 
-    private String name;
-
-    FragmentSearchBinding inflate;
-    private int i = 0;
-
+    public FragmentSearchBinding inflate;
+    public int i = 0;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         inflate = FragmentSearchBinding.inflate(inflater, container, false);
+        lbspq = new spq();
         View view = inflate.getRoot();
         TypedValue typedValue = new TypedValue();
         requireContext().getTheme().resolveAttribute(android.R.attr.windowBackground, typedValue, true);
         // 设置背景颜色
-        lbspq = new spq();
+        adapter_gd = new gd.baseadapter(getContext(), list);
         view.setBackgroundColor(typedValue.data);
         inflate.tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -86,13 +86,19 @@ public class search extends Fragment {
         }
     }
 
-    public boolean getVisibility() {
-        return inflate.getRoot().isShown();
-    }
-
+    public int k;
     public void setStart(String name) {
-        setVisibility(true);
-        gj.sc(i);
+        if (i == 0) {
+            new spq();
+            inflate.recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+            inflate.recyclerview.setAdapter(lbspq);
+        } else if (i == 1) {
+            k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f) / 120;
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),
+                    k);
+            inflate.recyclerview.setLayoutManager(gridLayoutManager);
+            inflate.recyclerview.setAdapter(adapter_gd);
+        }
         new start(name);
     }
 
@@ -100,7 +106,6 @@ public class search extends Fragment {
         public start(String name) {
             list.clear();
             search.this.name = name;
-
             start();
         }
 
@@ -115,13 +120,9 @@ public class search extends Fragment {
             }
             main.handler.post(() -> {
                 if (i == 0) {
-                    inflate.recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
-                    inflate.recyclerview.setAdapter(new spq());
+                    lbspq.notifyDataSetChanged();
                 } else if (i == 1) {
-                    int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
-                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
-                    inflate.recyclerview.setLayoutManager(gridLayoutManager);
-                    inflate.recyclerview.setAdapter(new gd.baseadapter(getContext(), list));
+                    adapter_gd.notifyDataSetChanged();
                 }
 //                lbspq.notifyDataSetChanged();
             });
@@ -158,7 +159,7 @@ public class search extends Fragment {
     }
 
     private void gd() {
-        String hq = wl.hq("/search?keywords=" + name + "&type=1000");
+        String hq = wl.hq("/search?keywords=" + name + "&limit=" + (k * k) + "&type=1000");
         try {
             JSONArray jsonArray = new JSONObject(hq).getJSONObject("result")
                     .getJSONArray("playlists");

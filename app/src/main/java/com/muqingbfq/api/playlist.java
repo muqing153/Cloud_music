@@ -64,6 +64,9 @@ public class playlist extends Thread {
         list.clear();
         try {
             JSONObject json = gd.like;
+            if (json == null || json.length() < 1) {
+                return false;
+            }
             for (Iterator<String> it = json.keys(); it.hasNext(); ) {
                 String id = it.next();
                 JSONObject jsonObject = json.getJSONObject(id);
@@ -72,7 +75,7 @@ public class playlist extends Thread {
                 String picUrl = jsonObject.getString("picUrl");
                 list.add(new xm(id, name, zz, picUrl));
             }
-            main.handler.post(new mp3.lbspq_sx());
+//            main.handler.post(new mp3.lbspq_sx());
             return true;
         } catch (Exception e) {
             gj.sc("失败的错误 " + e);

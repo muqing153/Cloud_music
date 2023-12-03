@@ -30,7 +30,7 @@ import com.muqingbfq.xm;
 import java.util.ArrayList;
 import java.util.List;
 
-public class mp3 extends AppCompatActivity {
+public class mp3 extends com.muqingbfq.mq.ActivityToolbar {
     private final List<xm> list = new ArrayList<>();
     public static RecyclerView.Adapter<MyViewHoder> lbspq;
 
@@ -41,8 +41,6 @@ public class mp3 extends AppCompatActivity {
         Intent intent = getIntent();
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(intent.getStringExtra("name"));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         lbspq = new spq();
         RecyclerView lb = findViewById(R.id.lb);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -50,8 +48,6 @@ public class mp3 extends AppCompatActivity {
         lb.setAdapter(lbspq);
         String id = intent.getStringExtra("id");
         new start(id);
-/*        getSupportFragmentManager().beginTransaction()
-                .add(R.id.bfq_db,home.bfq_db).commit();*/
     }
 
     @SuppressLint("NotifyDataSetChanged")

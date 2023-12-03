@@ -27,9 +27,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class floating extends Service {
-    private static RecyclerView.Adapter<ViewHolder> lbspq = new RecyclerView.Adapter<ViewHolder>() {
+    private static RecyclerView.Adapter<ViewHolder> lbspq;
+
+    class spq extends RecyclerView.Adapter<ViewHolder> {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,11 +49,10 @@ public class floating extends Service {
         public int getItemCount() {
             return list.size();
         }
-    };
+    }
 
     public static void start(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                Settings.canDrawOverlays(context)) {
+        if (Settings.canDrawOverlays(context)) {
             context.startService(new Intent(context, floating.class));
         }
     }
@@ -60,7 +62,7 @@ public class floating extends Service {
         context.stopService(serviceIntent);
     }
 
-    public static List<String> list = new ArrayList<>();
+    public static List<String> list;
     private WindowManager windowManager;
     private View view;
     private View image, layout;
@@ -75,7 +77,7 @@ public class floating extends Service {
         if (lbspq == null || list == null) {
             return;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss"); // 创建一个 SimpleDateFormat 对象，指定时间格式
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.CHINA); // 创建一个 SimpleDateFormat 对象，指定时间格式
         String formattedDate = sdf.format(new Date()); // 格式化当前时间
         list.add(0, formattedDate + ": " + str);
         main.handler.post(lbspq::notifyDataSetChanged);
@@ -85,6 +87,8 @@ public class floating extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        list = new ArrayList<>();
+        lbspq = new spq();
         view = LayoutInflater.from(this).inflate(R.layout.floating_sc, null);
         layout = view.findViewById(R.id.view1);
         ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();

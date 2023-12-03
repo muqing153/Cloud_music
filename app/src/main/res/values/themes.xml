@@ -18,6 +18,13 @@
 
     <style name="fragment_dialog" parent="Theme.muqing">
         <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <!--设置无标题-->
+        <item name="android:windowNoTitle">true</item>
+        <!--设置窗口内容不覆盖-->
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 
     <style name="Theme.main" parent="Theme.MaterialComponents.DayNight.DarkActionBar">

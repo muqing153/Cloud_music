@@ -19,7 +19,7 @@ public class wj {
     public static String gd = "gd/";
     public static String tx = "image/";
     public static String gd_json = "gd.json", mp3_xz = "mp3_xz.json", gd_xz = "gd_xz.json",
-            gd_phb = "gd_phb.json", mp3_like = "like.json";
+            gd_phb = "gd_phb.json", mp3_like = "mp3_like.json";
 
     public wj(Context context) {
         try {

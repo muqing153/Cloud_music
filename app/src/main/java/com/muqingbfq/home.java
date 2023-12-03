@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.navigation.NavigationView;
 import com.muqingbfq.fragment.Media;
 import com.muqingbfq.fragment.bfq_db;
@@ -22,9 +23,9 @@ import com.muqingbfq.mq.gj;
 public class home extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     public static AppCompatActivity appCompatActivity;
+    @SuppressLint("StaticFieldLeak")
     public static ImageView imageView;
 
-    @SuppressLint({"CommitTransaction", "ObsoleteSdkInt"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.Theme_muqing);
@@ -35,10 +36,11 @@ public class home extends AppCompatActivity {
         if (imageView == null) {
             imageView = new ImageView(this);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            imageView.setImageResource(R.drawable.icon);
-        }
-        if (bfq.bitmap != null) {
-            Media.setImageBitmap();
+            if (bfq.bitmap == null) {
+                imageView.setImageResource(R.drawable.icon);
+            } else {
+                Media.setImageBitmap();
+            }
         }
         try {
             //初始化工具栏

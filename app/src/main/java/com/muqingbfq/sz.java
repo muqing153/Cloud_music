@@ -4,11 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.MenuItem;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -68,6 +69,8 @@ public class sz extends AppCompatActivity {
         });
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -76,15 +79,20 @@ public class sz extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    ActivityResultLauncher<Intent> intent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (Settings.canDrawOverlays(this)) {
+                    com.muqingbfq.mq.floating.start(sz.this);
+                }
+            });
     public void kaifazhe() {
         MaterialSwitch materialSwitch = findViewById(R.id.switch_kfz);
         materialSwitch.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                        !Settings.canDrawOverlays(this)) {
+                if (!Settings.canDrawOverlays(this)) {
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                             Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent, 114511);
+                    this.intent.launch(intent);
                 } else {
                     com.muqingbfq.mq.floating.start(sz.this);
                 }
@@ -93,15 +101,4 @@ public class sz extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 114511) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)) {
-                com.muqingbfq.mq.floating.start(sz.this);
-            }
-        }
-    }
-
 }

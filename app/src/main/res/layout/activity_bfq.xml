@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/end"
-        app:menu="@menu/bfq">
+        app:menu="@menu/bfq"
+        app:navigationIcon="@drawable/end">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical">
-            <com.muqingbfq.view.TextView
+
+            <com.muqingbfq.view.Text
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,10 +37,64 @@
                 android:textSize="20sp" />
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_bfq"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:name="com.muqingbfq.fragment.Media"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         tools:layout="@layout/fragment_bfq" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="26dp">
+
+        <ImageView
+            android:id="@+id/control"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="26dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/mt_sx"/>
+        <ImageView
+            android:id="@+id/syq"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="12dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/syq"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/kg"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/zt"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/xyq"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="12dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:importantForAccessibility="no"
+            android:src="@drawable/xyq" />
+
+        <ImageView
+            android:id="@+id/bfq_list_mp3"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="26dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/cd"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
 </LinearLayout>

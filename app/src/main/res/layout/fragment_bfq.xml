@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center"
+            tools:ignore="NestedWeights">
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardview"
                 android:layout_width="260dp"
@@ -86,57 +87,4 @@
             android:text="@string/_00_00" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingBottom="26dp">
-
-        <ImageView
-            android:id="@+id/control"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="26dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/mt_sx"
-            tools:ignore="ContentDescription" />
-
-        <ImageView
-            android:id="@+id/syq"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="12dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/syq"
-            tools:ignore="ContentDescription" />
-
-        <ImageView
-            android:id="@+id/kg"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/zt"
-            tools:ignore="ContentDescription" />
-
-        <ImageView
-            android:id="@+id/xyq"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="12dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:importantForAccessibility="no"
-            android:src="@drawable/xyq" />
-
-        <ImageView
-            android:id="@+id/bfq_list_mp3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="26dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/cd"
-            tools:ignore="ContentDescription" />
-    </LinearLayout>
 </LinearLayout>

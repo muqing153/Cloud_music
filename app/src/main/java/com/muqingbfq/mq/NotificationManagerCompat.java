@@ -12,11 +12,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v4.media.MediaMetadataCompat;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.media.session.MediaButtonReceiver;
 
 import com.muqingbfq.MyButtonClickReceiver;
 import com.muqingbfq.R;
@@ -30,11 +29,12 @@ public class NotificationManagerCompat {
     Service context;
     public NotificationCompat.Builder notificationBuilder;
     public androidx.core.app.NotificationManagerCompat notificationManager;
+    private String name, zz;
 
     public NotificationManagerCompat(Service context) {
         this.context = context;
-        CharSequence name = context.getString(R.string.app_name);
-        String zz = context.getString(R.string.zz);
+        name = context.getString(R.string.app_name);
+        zz = context.getString(R.string.zz);
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name,
@@ -54,7 +54,7 @@ public class NotificationManagerCompat {
             intent.setComponent(new ComponentName(context, home.class));//用ComponentName得到class对象
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
-            PendingIntent pendingIntent = getActivity(context, intent);
+            pendingIntent = getActivity(context, intent);
             Intent my = new Intent(context, MyButtonClickReceiver.class);
             pendingIntent_kg = getBroadcast(context, my.
                     setAction("kg"));
@@ -64,15 +64,14 @@ public class NotificationManagerCompat {
                     setAction("xyq"));
             // 取消操作的PendingIntent
 // 取消操作的PendingIntent
-            PendingIntent cancelIntent = MediaButtonReceiver.buildMediaButtonPendingIntent(context,
-                    PlaybackStateCompat.ACTION_STOP);
-            androidx.media.app.NotificationCompat.MediaStyle style =
-                    new androidx.media.app.NotificationCompat.MediaStyle()
-                            .setShowActionsInCompactView(0, 1, 2)
-                            .setMediaSession(bfqkz.mSession.getSessionToken())
-                            .setShowCancelButton(true)
-                            .setCancelButtonIntent(cancelIntent);
-
+/*            PendingIntent cancelIntent = MediaButtonReceiver.buildMediaButtonPendingIntent(context,
+                    PlaybackStateCompat.ACTION_STOP);*/
+            style = new androidx.media.app.NotificationCompat.MediaStyle()
+                    .setShowActionsInCompactView(0, 1, 2)
+                    .setMediaSession(bfqkz.mSession.getSessionToken());
+//                            .setShowCancelButton(true)
+//                            .setCancelButtonIntent(cancelIntent);
+            notificationManager = androidx.core.app.NotificationManagerCompat.from(context);
             notificationBuilder = getNotificationBuilder(context)
                     .setSmallIcon(R.drawable.icon)
                     .setContentTitle(name).setContentText(zz)
@@ -81,34 +80,42 @@ public class NotificationManagerCompat {
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setContentIntent(pendingIntent)
                     .setStyle(style);
-            notificationManager = androidx.core.app.NotificationManagerCompat.from(context);
-            tzl_an();
+            tzl();
 //            context.startForeground(1, notificationBuilder.build());
         } catch (Exception e) {
             yc.start(context, e);
         }
     }
 
+    PendingIntent pendingIntent;
+    androidx.media.app.NotificationCompat.MediaStyle style;
+
+    @SuppressLint("RestrictedApi")
+    public void tzl() {
+        if (bfqkz.xm != null) {
+            name = bfqkz.xm.name;
+            zz = bfqkz.xm.zz;
+        }
+        bfqkz.build = new MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, name)
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, zz)
+                .build();
+        bfqkz.mSession.setMetadata(bfqkz.build);
+        notificationBuilder.mActions.clear();
+        notificationBuilder.addAction(android.R.drawable.ic_media_previous, "syq", pendingIntent_syq) // #0
+                .addAction(bfqkz.mt.isPlaying() ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play
+                        , "kg", pendingIntent_kg)  // #1
+                .addAction(android.R.drawable.ic_media_next, "xyq", pendingIntent_xyq)
+                .setContentTitle(name)
+                .setContentText(zz)
+                .setOngoing(bfqkz.mt.isPlaying());
+        notificationManager_notify();
+    }
+
     private PendingIntent pendingIntent_kg,
             pendingIntent_syq,
             pendingIntent_xyq;
     private final String CHANNEL_ID = "muqing_yy_id";
-
-    @SuppressLint("RestrictedApi")
-    public void tzl_an() {
-        notificationBuilder.mActions.clear();
-        notificationBuilder
-/*                .addAction(R.drawable.syq, "syq", pendingIntent_syq) // #0
-                .addAction(bfqkz.mt.isPlaying() ? R.drawable.bf : R.drawable.zt
-                        , "kg", pendingIntent_kg)  // #1
-                .addAction(R.drawable.xyq, "xyq", pendingIntent_xyq);*/
-                .addAction(android.R.drawable.ic_media_previous, "syq", pendingIntent_syq) // #0
-                .addAction(bfqkz.mt.isPlaying() ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play
-                        , "kg", pendingIntent_kg)  // #1
-                .addAction(android.R.drawable.ic_media_next, "xyq", pendingIntent_xyq);
-        notificationBuilder.setOngoing(bfqkz.mt.isPlaying());
-        notificationManager_notify();
-    }
 
     public void notificationManager_notify() {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -133,7 +140,7 @@ public class NotificationManagerCompat {
     private NotificationCompat.Builder getNotificationBuilder(Context context) {
         // 适用于Android 8.0及以上版本
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            return new NotificationCompat.Builder(context, CHANNEL_ID);
+        return new NotificationCompat.Builder(context, CHANNEL_ID);
     }
 
     private PendingIntent getBroadcast(Context context, Intent intent) {

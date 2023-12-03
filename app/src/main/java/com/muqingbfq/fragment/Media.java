@@ -33,6 +33,12 @@ import me.wcy.lrcview.LrcView;
 public class Media extends Fragment {
     @SuppressLint("StaticFieldLeak")
     public static LinearLayout view;
+    private static bfq bfq;
+
+    public void setBfq(bfq bfq) {
+        Media.bfq = bfq;
+    }
+
     @SuppressLint("StaticFieldLeak")
     private static TextView time_a, time_b;
     @SuppressLint("StaticFieldLeak")
@@ -63,24 +69,19 @@ public class Media extends Fragment {
     }
 
     public static void setbf(boolean bool) {
-        if (bool) {
-            //开始
-            kgsetImageResource(R.drawable.bf);
-        } else {
-            //暂停
-            kgsetImageResource(R.drawable.zt);
+        if (bfq != null) {
+            if (bool) {
+                //开始
+                bfq.kgsetImageResource(R.drawable.bf);
+            } else {
+                //暂停
+                bfq.kgsetImageResource(R.drawable.zt);
+            }
         }
         bfq_db.setkg(bool);
         bfqkz.updateNotification();
     }
 
-    private static void kgsetImageResource(int a) {
-        if (view == null) {
-            return;
-        }
-        ImageView imageView = view.findViewById(R.id.kg);
-        imageView.setImageResource(a);
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -90,17 +91,8 @@ public class Media extends Fragment {
         }
         FragmentBfqBinding inflate = FragmentBfqBinding.inflate(inflater, container, false);
         view = inflate.getRoot();
-/*        if (home.imageView == null) {
-            home.imageView = new ImageView(home.appCompatActivity);
-            home.imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            home.imageView.setImageResource(R.drawable.icon);
-        }*/
         inflate.cardview.addView(home.imageView);
-        bfq_an.kz kz = new bfq_an.kz();
-        ImageView kg = view.findViewById(R.id.kg);
-        kg.setOnClickListener(kz);
-        view.findViewById(R.id.xyq).setOnClickListener(kz);
-        view.findViewById(R.id.syq).setOnClickListener(kz);
+
         tdt = inflate.tdt;
         tdt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -130,7 +122,7 @@ public class Media extends Fragment {
             bfqkz.mt.build.seekTo(Math.toIntExact(time));
             return false;
         });
-        if (!isTablet(bfq.context)) {
+        if (!isTablet(com.muqingbfq.bfq.context)) {
             lrcview.setOnTapListener((view, x, y) -> {
                 View kp = inflate.kp1;
                 if (kp.getVisibility() == View.VISIBLE) {
@@ -141,10 +133,7 @@ public class Media extends Fragment {
             });
         }
         //初始化播放器列表
-        inflate.bfqListMp3.
-                setOnClickListener(view1 -> com.muqingbfq.fragment.bflb_db.start(bfq.context));
-
-        inflate.like.setOnClickListener(view1 -> {
+        bfq.findViewById(R.id.like).setOnClickListener(view1 -> {
             ImageView like = (ImageView) view1;
             try {
                 if (bfqkz.like_bool) {
@@ -166,22 +155,15 @@ public class Media extends Fragment {
                 e.printStackTrace();
             }
         });
-
-        inflate.control.setOnClickListener(new bfq_an.control(inflate.control));
         if (bfqkz.xm != null) {
             main.handler.removeCallbacks(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度
             long duration = bfqkz.mt.build.getDuration();
             tdt.setMax((int) bfqkz.mt.build.getDuration());
             setTime_a(bfq_an.getTime(duration));
-
             long position = bfqkz.mt.build.getCurrentPosition();
             setProgress((int) position);
-
             main.handler.post(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度
-            if (bfqkz.mt.build.isPlaying()) {
-                kg.setImageResource(R.drawable.bf);
-            }
-            bfq_an.islike(bfq.context);
+            bfq_an.islike(com.muqingbfq.bfq.context);
             new Thread() {
                 @Override
                 public void run() {
@@ -209,7 +191,7 @@ public class Media extends Fragment {
     }
 
     public static void setlike(boolean bool) {
-        ImageView imageView = view.findViewById(R.id.like);
+        ImageView imageView = bfq.findViewById(R.id.like);
         int color = R.color.text;
         if (bool) {
             color = android.R.color.holo_red_dark;
@@ -222,22 +204,22 @@ public class Media extends Fragment {
         if (home.imageView == null) {
             return;
         }
-        main.handler.post(() -> home.imageView.setImageBitmap(bfq.bitmap));
+        main.handler.post(() -> home.imageView.setImageBitmap(com.muqingbfq.bfq.bitmap));
     }
 
     public static void setname(String str) {
-        if (bfq.context == null) {
+        if (com.muqingbfq.bfq.context == null) {
             return;
         }
-        TextView name = bfq.context.findViewById(R.id.name);
+        TextView name = com.muqingbfq.bfq.context.findViewById(R.id.name);
         name.setText(str);
     }
 
     public static void setzz(String str) {
-        if (bfq.context == null) {
+        if (com.muqingbfq.bfq.context == null) {
             return;
         }
-        TextView zz = bfq.context.findViewById(R.id.zz);
+        TextView zz = com.muqingbfq.bfq.context.findViewById(R.id.zz);
         zz.setText(str);
     }
 
