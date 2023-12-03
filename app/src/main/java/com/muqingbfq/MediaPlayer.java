@@ -167,7 +167,7 @@ public class MediaPlayer {
             Media.setProgress(0);
             Media.setname(name);
             Media.setzz(zz);
-            bfq_an.islike(Media.view.getContext());
+            bfq_an.islike();
         }
         bfq_db.setname(name);
         bfq_db.setzz(zz);

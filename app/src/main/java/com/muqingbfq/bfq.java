@@ -29,7 +29,7 @@ import org.json.JSONObject;
 public class bfq extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     public static AppCompatActivity context;
-    ActivityBfqBinding inflate;
+    public ActivityBfqBinding inflate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,15 +56,6 @@ public class bfq extends AppCompatActivity {
             }
             return false;
         });
-        if (bfqkz.xm != null) {
-            Media.setname(bfqkz.xm.name);
-            Media.setzz(bfqkz.xm.zz);
-        }
-/*        inflate.name.setOnLongClickListener(view -> {
-            gj.fz(bfq.this, inflate.name.getText().toString());
-            gj.ts(bfq.this, "复制成功");
-            return false;
-        });*/
         bfq_an.kz kz = new bfq_an.kz();
         inflate.kg.setOnClickListener(kz);
         inflate.xyq.setOnClickListener(kz);
@@ -74,18 +65,17 @@ public class bfq extends AppCompatActivity {
         inflate.control.setOnClickListener(new bfq_an.control(inflate.control));
         if (bfqkz.mt != null && bfqkz.mt.build.isPlaying()) {
             inflate.kg.setImageResource(R.drawable.bf);
-            bfq_an.islike(this);
+
         }
         text();
-
         inflate.like.setOnClickListener(view1 -> {
-            ImageView like = (ImageView) view1;
             try {
                 if (bfqkz.like_bool) {
-                    like.setImageTintList(ContextCompat.getColorStateList(bfq.this, R.color.text));
+                    inflate.like
+                            .setImageTintList(ContextCompat.getColorStateList(bfq.this, R.color.text));
                     com.muqingbfq.fragment.gd.like.remove(String.valueOf(bfqkz.xm.id));
                 } else {
-                    like.setImageTintList(ContextCompat.
+                    inflate.like.setImageTintList(ContextCompat.
                             getColorStateList(bfq.this, android.R.color.holo_red_dark));
                     JSONObject json = new JSONObject();
                     json.put("name", bfqkz.xm.name);
@@ -100,7 +90,11 @@ public class bfq extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
-
+        if (bfqkz.xm != null) {
+            Media.setname(bfqkz.xm.name);
+            Media.setzz(bfqkz.xm.zz);
+            bfq_an.islike();
+        }
     }
 
     public static Bitmap bitmap;

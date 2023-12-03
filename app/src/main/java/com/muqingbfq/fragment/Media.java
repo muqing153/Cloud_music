@@ -25,6 +25,7 @@ import com.muqingbfq.bfqkz;
 import com.muqingbfq.databinding.FragmentBfqBinding;
 import com.muqingbfq.home;
 import com.muqingbfq.main;
+import com.muqingbfq.mq.gj;
 
 import org.json.JSONObject;
 
@@ -171,13 +172,16 @@ public class Media extends Fragment {
     }
 
     public static void setlike(boolean bool) {
-        ImageView imageView = bfq.findViewById(R.id.like);
+        if (bfq == null || bfq.inflate == null) {
+            return;
+        }
         int color = R.color.text;
         if (bool) {
             color = android.R.color.holo_red_dark;
         }
-        imageView.setImageTintList(ContextCompat.
-                getColorStateList(view.getContext(), color));
+        gj.sc(color);
+        bfq.inflate.like.setImageTintList(ContextCompat.
+                getColorStateList(com.muqingbfq.bfq.context, color));
     }
 
     public static void setImageBitmap() {

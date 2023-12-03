@@ -95,7 +95,7 @@ public class bfq_an {
     public static String getTime(long time) {
         return simpleDateFormat.format(new Date(time));
     }
-    public static void islike(Context context) {
+    public static void islike() {
         try {
             gd.like.getJSONObject(String.valueOf(bfqkz.xm.id));
             bfqkz.like_bool = true;
