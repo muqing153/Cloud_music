@@ -59,7 +59,7 @@ public class bfq extends AppCompatActivity {
         bfq_an.kz kz = new bfq_an.kz();
         inflate.kg.setOnClickListener(kz);
         inflate.xyq.setOnClickListener(kz);
-        inflate.xyq.setOnClickListener(kz);
+        inflate.syq.setOnClickListener(kz);
         inflate.bfqListMp3.
                 setOnClickListener(view1 -> com.muqingbfq.fragment.bflb_db.start(this));
         inflate.control.setOnClickListener(new bfq_an.control(inflate.control));
