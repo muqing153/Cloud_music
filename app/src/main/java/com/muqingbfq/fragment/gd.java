@@ -53,9 +53,6 @@ public class gd extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), k / 120);
         gridView.setLayoutManager(gridLayoutManager);
         gridView.setAdapter(lbspq);
-        if (gdid == null) {
-            gdid = main.mp3_csh;
-        }
         TabLayout tabLayout = view.findViewById(R.id.tablayout);
         for (String name : new String[]{"推荐", "排行榜", "下载"}) {
             TabLayout.Tab tab = tabLayout.newTab();
@@ -127,23 +124,18 @@ public class gd extends Fragment {
                                 tx.setImageResource(R.drawable.bf);
                                 main.edit.putString(main.mp3, xm.id);
                                 main.edit.commit();
-                                main.mp3_csh = gdid = xm.id;
+                                gdid = xm.id;
                             }
                             com.muqingbfq.fragment.gd.lbspq.notifyDataSetChanged();
                         });
                     }
                 }.start();
             });
-            int color = ContextCompat.getColor(context, R.color.text);
             Drawable color_kg = ContextCompat.getDrawable(context, R.drawable.zt);
             if (xm.id.equals(gdid)) {
-                color = ContextCompat.getColor(context, R.color.text_cz);
                 color_kg = ContextCompat.getDrawable(context, R.drawable.bf);
-            } else if (xm.cz) {
-                color = ContextCompat.getColor(context, R.color.text_cz_tm);
             }
             holder.kg.setImageDrawable(color_kg);
-            holder.textView.setTextColor(color);
             Glide.with(context).load(xm.picurl).apply(new RequestOptions().placeholder(R.drawable.icon))
                     .into(holder.imageView);
         }

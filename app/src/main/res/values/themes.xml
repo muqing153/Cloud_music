@@ -10,11 +10,26 @@
     <style name="Theme.start" parent="Theme.Material3.DayNight">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <!--        <item name="android:textColorTertiary">@color/text</item>-->
-        <!--        <item name="android:textColorPrimary">@color/text</item>-->
         <item name="android:statusBarColor">@color/tm</item>
+        <!-- 控件选中时的颜色,默认使用colorAccent -->
+<!--        <item name="android:colorControlActivated">#FF7F50</item>-->
+        <!-- 设置文本颜色 -->
+        <item name="android:textColorPrimary">@color/text</item>
+        <item name="android:colorPrimary">#00BCD4</item>
+        <item name="colorPrimaryDark">#8000BCD4</item>
 
+        <item name="tabStyle">@style/Widget.App.TabLayout</item>
     </style>
+    <style name="Widget.App.TabLayout" parent="Widget.Material3.TabLayout">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TabLayout</item>
+<!--        <item name="tabTextAppearance">@style/TextAppearance.App.LabelLarge</item>-->
+    </style>
+    <style name="ThemeOverlay.App.TabLayout" parent="">
+        <item name="colorPrimary">#00BCD4</item>
+        <item name="colorOnSurface">#ADD8E6</item>
+    </style>
+
+
 
     <style name="fragment_dialog" parent="Theme.muqing">
         <item name="android:windowIsTranslucent">true</item>
@@ -31,5 +46,11 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowBackground">@drawable/start</item>
+    </style>
+
+<!--    按钮主题-->
+    <style name="Button">
+        <item name="android:backgroundTint">#1C71A9</item>
+
     </style>
 </resources>

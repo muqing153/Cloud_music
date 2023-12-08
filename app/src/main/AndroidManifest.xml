@@ -49,6 +49,7 @@
         <activity android:name=".login.enroll" />
         <activity android:name=".login.user_logs" />
         <activity android:name=".login.user_editing" />
+        <activity android:name=".clean.fragment_clean" />
         <activity android:name=".activity_search" />
         <activity
             android:name=".bfq"

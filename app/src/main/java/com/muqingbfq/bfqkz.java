@@ -55,7 +55,6 @@ public class bfqkz extends Service {
             if (TextUtils.isEmpty(id)) {
                 return;
             }
-            gj.sc(xm.picurl);
             if (TextUtils.isEmpty(xm.picurl.toString())) {
                 xm.picurl = url.picurl(xm.id);
             }

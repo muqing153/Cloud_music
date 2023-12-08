@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.muqingbfq.R;
 import com.muqingbfq.databinding.ActivityUserEditingBinding;
+import com.muqingbfq.fragment.sz;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.ActivityToolbar;
 import com.muqingbfq.mq.gj;
@@ -149,7 +150,13 @@ public class user_editing extends ActivityToolbar {
         };
         imageViewa.setOnClickListener(onClickListener);
         imageViewb.setOnClickListener(onClickListener);
-        findViewById(R.id.button2).setOnClickListener(view -> startActivity(new Intent(user_editing.this, cookie.class)));
+        binding.userEnd.setOnClickListener(view ->{
+            finish();
+            main.settoken(null, null);
+            sz.setname("未登录");
+            sz.setqianming(null);
+            sz.imageView.setImageResource(R.drawable.icon);
+        });
         findViewById(R.id.button1).setOnClickListener(view -> {
             // 创建OkHttpClient实例
             OkHttpClient client = new OkHttpClient();

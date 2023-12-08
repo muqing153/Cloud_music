@@ -49,7 +49,7 @@ public class wj {
 //如果文件不存在，创建文件
         try {
             File parentFile = file.getParentFile();
-            if (!parentFile.exists()) {
+            if (!parentFile.isDirectory()) {
                 parentFile.mkdirs();
             }
             if (!file.exists())

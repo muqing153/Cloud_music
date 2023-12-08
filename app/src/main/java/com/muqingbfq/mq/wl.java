@@ -1,10 +1,23 @@
 package com.muqingbfq.mq;
 
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.nfc.Tag;
+import android.provider.MediaStore;
+
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.UnsupportedTagException;
+import com.muqingbfq.home;
 import com.muqingbfq.main;
 import com.muqingbfq.xm;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,7 +58,7 @@ public class wl {
         return null;
     }
 
-    public static String post(String str, String[] a,String[] b) {
+    public static String post(String str, String[] a, String[] b) {
 
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -66,7 +79,7 @@ public class wl {
         return null;
     }
 
-    public static JSONObject jsonpost(String str, String[] a, String[] b){
+    public static JSONObject jsonpost(String str, String[] a, String[] b) {
         try {
             return new JSONObject(post(str, a, b));
         } catch (JSONException e) {
@@ -105,6 +118,12 @@ public class wl {
         public void run() {
             super.run();
             try {
+                if (new File(wj.mp3).isDirectory()) {
+                    File[] aa = new File(wj.mp3).listFiles();
+                    if (aa.length >= 30) {
+                        aa[0].delete();
+                    }
+                }
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         //访问路径
@@ -115,9 +134,13 @@ public class wl {
                 if (response.isSuccessful()) {
                     ResponseBody body = response.body();
                     if (body != null) {
-                        File file = new File(wj.mp3, String.valueOf(x.id));
+                        File file = new File(wj.mp3, x.id+".mp3");
                         if (!file.getParentFile().exists()) {
                             file.getParentFile().mkdirs();
+                        }
+                        File parentFile = file.getParentFile();
+                        if (!parentFile.isDirectory()) {
+                            parentFile.mkdirs();
                         }
                         InputStream inputStream = body.byteStream();
                         FileOutputStream fileOutputStream =
@@ -130,27 +153,20 @@ public class wl {
                         }
                         fileOutputStream.close();
                         inputStream.close();
+                        Mp3File mp3file = new Mp3File(file);
+                        if (mp3file.hasId3v2Tag()) {
+                            ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                            // 设置新的ID值
+                            id3v2Tag.setTitle(x.name);
+                            id3v2Tag.setArtist(x.zz);
+                            id3v2Tag.setAlbum(x.zz);
+                            id3v2Tag.setUrl(x.picurl.toString());
+                            mp3file.save(wj.mp3 + x.id);
+                            file.delete();
+                            // 保存修改后的音乐文件，删除原来的文件
+                        }
                     }
                 }
-                JSONObject jsonObject = new JSONObject();
-                if (wj.cz(wj.mp3_xz)) {
-                    jsonObject = new JSONObject(wj.dqwb(wj.mp3_xz));
-                } else {
-                    jsonObject.put("songs", new JSONArray());
-                }
-                JSONArray songs = jsonObject.getJSONArray("songs");
-                if (songs.length() > 30) {
-                    songs.remove(0);
-                    String id = songs.getJSONObject(0).getString("id");
-                    new File(wj.mp3+id).delete();
-                }
-                JSONObject json = new JSONObject();
-                json.put("id", x.id);
-                json.put("name", x.name);
-                json.put("zz", x.zz);
-                json.put("picUrl", x.picurl);
-                songs.put(json);
-                wj.xrwb(wj.mp3_xz, jsonObject.toString());
             } catch (Exception e) {
                 gj.sc("wl xz " + e);
             }

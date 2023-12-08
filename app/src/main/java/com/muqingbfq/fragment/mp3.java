@@ -22,6 +22,7 @@ import com.muqingbfq.api.playlist;
 import com.muqingbfq.api.url;
 import com.muqingbfq.bfq;
 import com.muqingbfq.bfqkz;
+import com.muqingbfq.databinding.FragmentMp3Binding;
 import com.muqingbfq.home;
 import com.muqingbfq.list.MyViewHoder;
 import com.muqingbfq.main;
@@ -37,10 +38,10 @@ public class mp3 extends com.muqingbfq.mq.ActivityToolbar {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_mp3);
+        FragmentMp3Binding inflate = FragmentMp3Binding.inflate(getLayoutInflater());
         Intent intent = getIntent();
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(intent.getStringExtra("name"));
+        inflate.toolbar.setTitle(intent.getStringExtra("name"));
+        setContentView(inflate.getRoot());
         lbspq = new spq();
         RecyclerView lb = findViewById(R.id.lb);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -84,7 +85,6 @@ public class mp3 extends com.muqingbfq.mq.ActivityToolbar {
     }
 
     class spq extends RecyclerView.Adapter<MyViewHoder> {
-
         @NonNull
         @Override
         public MyViewHoder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -120,14 +120,6 @@ public class mp3 extends com.muqingbfq.mq.ActivityToolbar {
         }
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     public static void startactivity(Context context, String id) {
         context.startActivity(new Intent(context, mp3.class).putExtra("id", id));

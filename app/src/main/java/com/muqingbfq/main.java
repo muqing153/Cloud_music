@@ -22,7 +22,7 @@ public class main extends Application {
     public static SharedPreferences sp;
     public static SharedPreferences.Editor edit;
 
-    public static String mp3 = "mp3", mp3_csh,
+    public static String mp3 = "mp3",
      Cookie = "Cookie";
     public static String account,token;
 
@@ -36,13 +36,6 @@ public class main extends Application {
         sp = getSharedPreferences("Set_up", MODE_PRIVATE);
         edit = sp.edit();
         boolean bj = false;
-        try {
-            mp3_csh = sp.getString(mp3, "");
-        } catch (Exception e) {
-            edit.putString(mp3, "");
-            edit.commit();
-            mp3_csh = "";
-        }
         try {
             com.muqingbfq.bfqkz.ms = sp.getInt("ms", 1);
         } catch (Exception e) {

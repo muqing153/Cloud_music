@@ -131,13 +131,14 @@
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/user_end"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="6dp"
-                android:text="绑定网易云(Cookie储在本地)" />
+                app:icon="@drawable/user_end"
+                android:text="@string/tuichudenglu" />
         </LinearLayout>
     </ScrollView>
 

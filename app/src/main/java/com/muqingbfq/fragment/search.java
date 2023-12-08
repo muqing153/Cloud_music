@@ -42,6 +42,7 @@ public class search extends Fragment {
 
     public FragmentSearchBinding inflate;
     public int i = 0;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -87,6 +88,7 @@ public class search extends Fragment {
     }
 
     public int k;
+
     public void setStart(String name) {
         if (i == 0) {
             new spq();
@@ -207,15 +209,11 @@ public class search extends Fragment {
                     bfqkz.xm = x;
                     new url(x);
                 }
-                if (!com.muqingbfq.fragment.gd.gdid.equals(bflb_db.gdid)) {
-                    bfqkz.list.clear();
-                    int size = list.size();
-                    for (int i = 0; i < size; i++) {
-                        bfqkz.list.add(list.get(i));
-                    }
-                }
-                bfqkz.mt.start();
-                bfq.start(getContext());
+//                if (!com.muqingbfq.fragment.gd.gdid.equals(bflb_db.gdid)) {
+                gd.gdid = null;
+                bfqkz.list.clear();
+                bfqkz.list.addAll(list);
+                bfq.start(search.this.getContext());
             });
         }
 

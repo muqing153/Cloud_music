@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.muqingbfq.R;
 import com.muqingbfq.activity_about_software;
+import com.muqingbfq.clean.fragment_clean;
+import com.muqingbfq.login.cookie;
 import com.muqingbfq.login.user_editing;
 import com.muqingbfq.login.user_logs;
 import com.muqingbfq.login.user_message;
@@ -60,6 +62,7 @@ public class sz {
             context.startActivity(new Intent(context, com.muqingbfq.sz.class));
 //                    设置中心
         } else if (id == R.id.c) {
+            context.startActivity(new Intent(context, fragment_clean.class));
 //                    储存清理
         } else if (id == R.id.d) {
             try {
@@ -86,10 +89,8 @@ public class sz {
             context.startActivity(new Intent(context, activity_about_software.class));
 //                    关于软件
         } else if (id == R.id.g) {
-            main.settoken(null, null);
-            setname("未登录");
-            setqianming(null);
-            imageView.setImageResource(R.drawable.icon);
+            context.startActivity(new Intent(context, cookie.class));
+            //绑定网易云
         }
     }
 }

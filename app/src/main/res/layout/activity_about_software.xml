@@ -66,14 +66,13 @@
             android:id="@+id/button1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/jianchagegnxin"
-            android:textColor="@color/bj" />
-
+            style="@style/Button"
+            android:text="@string/jianchagegnxin" />
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/juanzeng"
-            android:textColor="@color/bj" />
+            style="@style/Button"
+            android:text="@string/juanzeng" />
     </LinearLayout>
 </LinearLayout>

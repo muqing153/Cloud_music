@@ -26,7 +26,7 @@ public class url extends Thread {
         }
         try {
             if (wj.cz(wj.mp3 + x.id)) {
-                return wj.mp3 + x.id;
+                return wj.mp3 ;
             }
             String level = "standard";
             boolean wiFiConnected = gj.isWiFiConnected();

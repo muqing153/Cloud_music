@@ -2,6 +2,8 @@ package com.muqingbfq.api;
 
 import android.annotation.SuppressLint;
 
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.Mp3File;
 import com.muqingbfq.fragment.gd;
 import com.muqingbfq.fragment.mp3;
 import com.muqingbfq.main;
@@ -13,6 +15,7 @@ import com.muqingbfq.xm;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
@@ -75,7 +78,6 @@ public class playlist extends Thread {
                 String picUrl = jsonObject.getString("picUrl");
                 list.add(new xm(id, name, zz, picUrl));
             }
-//            main.handler.post(new mp3.lbspq_sx());
             return true;
         } catch (Exception e) {
             gj.sc("失败的错误 " + e);
@@ -86,15 +88,14 @@ public class playlist extends Thread {
     public static boolean hq_xz(List<xm> list) {
         list.clear();
         try {
-            JSONArray json = new JSONObject(wj.dqwb(wj.mp3_xz))
-                    .getJSONArray("songs");
-            int length = json.length();
-            for (int i = 0; i < length; i++) {
-                JSONObject jsonObject = json.getJSONObject(i);
-                String id = jsonObject.getString("id");
-                String name = jsonObject.getString("name");
-                String zz = jsonObject.getString("zz");
-                String picUrl = jsonObject.getString("picUrl");
+            File file = new File(wj.filesdri + "mp3");
+            File[] files = file.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                ID3v2 mp3File = new Mp3File(files[i]).getId3v2Tag();
+                String id = files[i].getName();
+                String name = mp3File.getTitle();
+                String zz = mp3File.getArtist();
+                String picUrl = mp3File.getUrl();
                 list.add(new xm(id, name, zz, picUrl));
             }
             return true;
