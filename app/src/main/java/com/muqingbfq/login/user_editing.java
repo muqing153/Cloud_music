@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -26,7 +25,7 @@ import com.muqingbfq.R;
 import com.muqingbfq.databinding.ActivityUserEditingBinding;
 import com.muqingbfq.fragment.sz;
 import com.muqingbfq.main;
-import com.muqingbfq.mq.ActivityToolbar;
+import com.muqingbfq.mq.FragmentActivity;
 import com.muqingbfq.mq.gj;
 
 import org.json.JSONException;
@@ -44,7 +43,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class user_editing extends ActivityToolbar {
+public class user_editing extends FragmentActivity {
     //头像，用户名，签名，性别，背景
     ImageView imageViewa;
     EditText edit_name, edit_qianming;

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -14,11 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.navigation.NavigationView;
 import com.muqingbfq.fragment.Media;
 import com.muqingbfq.fragment.bfq_db;
+import com.muqingbfq.fragment.gd;
 import com.muqingbfq.mq.gj;
+
+import me.wcy.lrcview.LrcView;
 
 public class home extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
@@ -28,11 +32,13 @@ public class home extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        appCompatActivity = this;
         setTheme(R.style.Theme_muqing);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        appCompatActivity = this;
-        new start();
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        main.k = dm.widthPixels;
+        main.g = dm.heightPixels;
         if (imageView == null) {
             imageView = new ImageView(this);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -41,6 +47,20 @@ public class home extends AppCompatActivity {
             } else {
                 Media.setImageBitmap();
             }
+        }
+        if (Media.lrcview == null) {
+            // 在合适的位置初始化LrcView
+            Media.lrcview = new LrcView(this);
+            // 请将Context替换为实际的上下文对象
+            // 设置LrcView的属性
+            Media.lrcview.setCurrentColor(getResources().getColor(R.color.text));
+            Media.lrcview.setLabel(getString(R.string.app_name));
+            Media.lrcview.setCurrentTextSize(TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
+//            lrcView.setLrcPadding(16);
+            Media.lrcview.setCurrentTextSize(TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_SP, 20, getResources().getDisplayMetrics()));
+            Media.lrcview.setTimelineTextColor(getResources().getColor(R.color.text_tm));
         }
         try {
             //初始化工具栏
@@ -66,6 +86,7 @@ public class home extends AppCompatActivity {
             }
             //检测更新
             new gj.jianchagengxin(this);
+
         } catch (Exception e) {
             yc.tc(this, e);
         }
@@ -85,12 +106,6 @@ public class home extends AppCompatActivity {
         editor.apply();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.bfq_db, new bfq_db()).commit();
-    }
 
     private long time;
 

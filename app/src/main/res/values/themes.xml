@@ -10,7 +10,7 @@
     <style name="Theme.start" parent="Theme.Material3.DayNight">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">@color/tm</item>
+        <item name="android:statusBarColor">@color/bj</item>
         <!-- 控件选中时的颜色,默认使用colorAccent -->
 <!--        <item name="android:colorControlActivated">#FF7F50</item>-->
         <!-- 设置文本颜色 -->
@@ -19,6 +19,15 @@
         <item name="colorPrimaryDark">#8000BCD4</item>
 
         <item name="tabStyle">@style/Widget.App.TabLayout</item>
+        <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
+    </style>
+
+    <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Toolbar" parent="">
+        <item name="android:background">@color/bj</item>
     </style>
     <style name="Widget.App.TabLayout" parent="Widget.Material3.TabLayout">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.TabLayout</item>

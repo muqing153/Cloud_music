@@ -44,7 +44,7 @@ public class Media extends Fragment {
     private static TextView time_a, time_b;
     @SuppressLint("StaticFieldLeak")
     private static SeekBar tdt;
-    private static LrcView lrcview;
+    public static LrcView lrcview;
 
     public static void setTime_a(String str) {
         if (time_a == null) {
@@ -94,6 +94,10 @@ public class Media extends Fragment {
         view = inflate.getRoot();
         inflate.cardview.addView(home.imageView);
 
+        LinearLayout.LayoutParams layoutParams =
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT,2);
+        inflate.linearlayout.addView(lrcview,layoutParams);
         tdt = inflate.tdt;
         tdt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -118,7 +122,6 @@ public class Media extends Fragment {
         time_a = inflate.timeA;
         time_b = inflate.timeB;
         //初始化歌词组件
-        lrcview = getlrcView();
         lrcview.setDraggable(true, (view, time) -> {
             bfqkz.mt.build.seekTo(Math.toIntExact(time));
             return false;
@@ -160,14 +163,10 @@ public class Media extends Fragment {
                 Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
-    public static LrcView getlrcView() {
-        if (view == null) {
-            return null;
-        }
-        return view.findViewById(R.id.gc);
-    }
-
     public static void loadLyric(String a, String b) {
+        if (lrcview == null || a == null) {
+            return;
+        }
         lrcview.loadLrc(a, b);
     }
 

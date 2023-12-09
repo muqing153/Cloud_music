@@ -8,7 +8,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -132,5 +136,24 @@ public class wj {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void fz(String sourceFilePath, String targetFilePath) {
+        File sourceFile = new File(sourceFilePath);
+        File targetFile = new File(targetFilePath);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            try (InputStream in = Files.newInputStream(sourceFile.toPath());
+                 OutputStream out = Files.newOutputStream(targetFile.toPath())) {
+                byte[] buf = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = in.read(buf)) > 0) {
+                    out.write(buf, 0, bytesRead);
+                }
+                // 文件复制完成
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.muqingbfq.R;
 import com.muqingbfq.main;
-import com.muqingbfq.mq.ActivityToolbar;
+import com.muqingbfq.mq.FragmentActivity;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wl;
 
@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
-public class cookie extends ActivityToolbar {
+public class cookie extends FragmentActivity {
 
     View view_a, view_b;
     TextView textView;

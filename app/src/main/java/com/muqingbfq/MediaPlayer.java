@@ -29,7 +29,7 @@ public class MediaPlayer {
     public Runnable updateSeekBar = new Runnable() {
         @Override
         public void run() {
-            if (build != null && build.isPlaying() && Media.getlrcView() != null) {
+            if (build != null && build.isPlaying() && Media.lrcview != null) {
                 long position = build.getCurrentPosition();
                 Media.setProgress((int) position);
             }
@@ -169,9 +169,7 @@ public class MediaPlayer {
             Media.setzz(zz);
             bfq_an.islike();
         }
-        bfq_db.setname(name);
-        bfq_db.setzz(zz);
-
+        bfq_db.setname(name+"/"+zz);
         if (com.muqingbfq.fragment.mp3.lbspq != null) {
             com.muqingbfq.fragment.mp3.lbspq.notifyDataSetChanged();
         }

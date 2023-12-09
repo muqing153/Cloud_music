@@ -3,8 +3,6 @@ package com.muqingbfq.api;
 import android.text.TextUtils;
 
 import com.muqingbfq.R;
-import com.muqingbfq.main;
-import com.muqingbfq.start;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
@@ -77,9 +75,9 @@ public class resource {
     }
 
     public static void 下载(List<xm> list) {
-//        list.add(new xm("hc.json", "缓存", R.drawable.icon, true));
         list.add(new xm("mp3_like.json", "喜欢", R.mipmap.like, true));
         list.add(new xm("mp3_xz.json", "下载", R.drawable.icon, true));
+        list.add(new xm("mp3_hc.json", "缓存", R.drawable.icon, true));
         try {
             JSONObject date = new JSONObject(wj.dqwb(wj.gd_xz));
             for (Iterator<String> it = date.keys(); it.hasNext(); ) {

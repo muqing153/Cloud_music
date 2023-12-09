@@ -14,34 +14,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
+            <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="wrap_content">
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="?attr/actionBarSize"/>
+            </com.google.android.material.appbar.AppBarLayout>
+
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/gd"
                 android:name="com.muqingbfq.fragment.gd"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/bfq_db"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                android:layout_weight="1"
                 tools:layout="@layout/fragment_gd" />
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/bfq_db"
-                android:name="com.muqingbfq.fragment.bfq_db"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:layout="@layout/fragment_bfq_db" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/chb"

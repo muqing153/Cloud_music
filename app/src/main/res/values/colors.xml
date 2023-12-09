@@ -13,7 +13,7 @@
     <color name="text">#000000</color>
     <color name="text_tm">#80000000</color>
     <color name="tm">#00FFFFFF</color>
-    <color name="bj">@color/white</color>
+    <color name="bj">#F2ECF6</color>
 
     <color name="button_bj">#B3E5FC</color>
 </resources>

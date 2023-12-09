@@ -30,9 +30,11 @@ public class main extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (wj.filesdri == null) {
+            new wj(this);
+        }
         application = this;
 //        UUID.randomUUID().toString();
-        new wj(this);
         sp = getSharedPreferences("Set_up", MODE_PRIVATE);
         edit = sp.edit();
         boolean bj = false;

@@ -27,6 +27,8 @@ public class playlist extends Thread {
             return playlist.hq_xz(list);
         } else if (uid.equals("mp3_like.json")) {
             return playlist.hq_like(list);
+        } else if (uid.equals("mp3_hc.json")) {
+            return hq_hc(list);
         }
         list.clear();
         try {
@@ -89,6 +91,26 @@ public class playlist extends Thread {
         list.clear();
         try {
             File file = new File(wj.filesdri + "mp3");
+            File[] files = file.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                ID3v2 mp3File = new Mp3File(files[i]).getId3v2Tag();
+                String id = files[i].getName();
+                String name = mp3File.getTitle();
+                String zz = mp3File.getArtist();
+                String picUrl = mp3File.getUrl();
+                list.add(new xm(id, name, zz, picUrl));
+            }
+            return true;
+        } catch (Exception e) {
+            gj.sc("失败的错误 " + e);
+            wj.sc(wj.mp3_xz);
+        }
+        return false;
+    }
+    public static boolean hq_hc(List<xm> list) {
+        list.clear();
+        try {
+            File file = new File(wj.filesdri + "hc");
             File[] files = file.listFiles();
             for (int i = 0; i < files.length; i++) {
                 ID3v2 mp3File = new Mp3File(files[i]).getId3v2Tag();

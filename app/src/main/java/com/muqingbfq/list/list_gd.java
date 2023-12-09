@@ -23,22 +23,20 @@ import java.util.Objects;
 
 public class list_gd implements View.OnClickListener, View.OnLongClickListener {
     xm xm;
-
-    public list_gd(com.muqingbfq.xm xm) {
+    gd.baseadapter adaper;
+    public list_gd(com.muqingbfq.xm xm,gd.baseadapter baseadapter) {
         this.xm = xm;
+        this.adaper = baseadapter;
     }
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onClick(View view) {
-//        if (!gd.gdid.equals(xm.id)) {
-//        gd.gdid = xm.id;
         Context context = view.getContext();
         Intent intent = new Intent(context, com.muqingbfq.fragment.mp3.class);
         intent.putExtra("id", xm.id);
         intent.putExtra("name", xm.name);
         context.startActivity(intent);
-//            mp3.startactivity(view.getContext(),xm.id);
     }
 
 
@@ -84,7 +82,7 @@ public class list_gd implements View.OnClickListener, View.OnLongClickListener {
                             gj.sc(e);
                         }
                     }
-                    main.handler.post(() -> gd.lbspq.notifyDataSetChanged());
+                    main.handler.post(() -> adaper.notifyDataSetChanged());
                 }
             }.start();
             // 在这里处理菜单项的点击事件

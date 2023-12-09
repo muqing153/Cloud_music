@@ -1,16 +1,14 @@
 package com.muqingbfq.mq;
 
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.muqingbfq.R;
 
-public class ActivityToolbar extends AppCompatActivity {
+public class FragmentActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

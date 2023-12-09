@@ -4,10 +4,18 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <com.muqingbfq.view.Text
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="26sp"
+            android:textColor="@color/text"/>
+    </com.google.android.material.appbar.MaterialToolbar>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lb"
         android:layout_width="match_parent"

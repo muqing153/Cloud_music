@@ -26,7 +26,7 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.muqingbfq.databinding.ActivitySearchBinding;
 import com.muqingbfq.fragment.search;
-import com.muqingbfq.mq.ActivityToolbar;
+import com.muqingbfq.mq.FragmentActivity;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
@@ -38,7 +38,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class activity_search extends ActivityToolbar {
+public class activity_search extends FragmentActivity {
     private EditText editText;
     private ArrayAdapter<String> adapter;
     private SearchRecordAdapter recordAdapter;

@@ -9,14 +9,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.muqingbfq.R;
-import com.muqingbfq.mq.ActivityToolbar;
+import com.muqingbfq.mq.FragmentActivity;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wl;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class enroll extends ActivityToolbar {
+public class enroll extends FragmentActivity {
     EditText edit_account, edit_username,
             edit_password, edit_email;
 

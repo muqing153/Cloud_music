@@ -6,6 +6,7 @@
     <CheckBox
         android:id="@+id/box"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name" />
+        android:layout_height="100dp"
+        android:text="@string/app_name"
+        android:textSize="26sp"/>
 </LinearLayout>

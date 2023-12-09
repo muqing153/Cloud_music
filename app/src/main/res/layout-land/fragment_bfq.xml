@@ -25,20 +25,9 @@
                 app:cardCornerRadius="16dp"
                 app:cardUseCompatPadding="true" />
         </LinearLayout>
-        <me.wcy.lrcview.LrcView
-            android:id="@+id/gc"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:lrcCurrentTextColor="@color/text"
-            app:lrcLabel="@string/app_name"
-            app:lrcNormalTextSize="16sp"
-            app:lrcPadding="16dp"
-            app:lrcTextSize="20sp"
-            app:lrcTimelineTextColor="@color/text_tm"
-            tools:ignore="MissingConstraints" />
     </LinearLayout>
     <LinearLayout
+        android:background="@color/bj"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"

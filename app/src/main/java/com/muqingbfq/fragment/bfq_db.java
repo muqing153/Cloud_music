@@ -18,6 +18,7 @@ import com.muqingbfq.bfq;
 import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
 import com.muqingbfq.home;
+import com.muqingbfq.mq.wj;
 import com.muqingbfq.xm;
 
 import java.lang.reflect.Type;
@@ -25,7 +26,8 @@ import java.util.List;
 
 public class bfq_db extends Fragment {
     @SuppressLint("StaticFieldLeak")
-    private static View view;
+    public static View view;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,25 +37,26 @@ public class bfq_db extends Fragment {
             if (jsonList != null) {
                 Type type = new TypeToken<List<xm>>() {
                 }.getType();
-                bfqkz.list = new com.google.gson.Gson().fromJson(jsonList, type); // 将 JSON 字符串转换回列表数据
+                bfqkz.list = new com.google.gson.Gson().fromJson(jsonList, type);
+                // 将 JSON 字符串转换回列表数据
             }
         }
         view = inflater.inflate(R.layout.fragment_bfq_db, container, false);
+
         TextView name = view.findViewById(R.id.name);
-        TextView zz = view.findViewById(R.id.zz);
         view.findViewById(R.id.kg).setOnClickListener(new bfq_an.kz());
         view.findViewById(R.id.txb).setOnClickListener(view -> bflb_db.start(getContext()));
         view.setOnClickListener(vw -> bfq.start(home.appCompatActivity));
 // 恢复列表数据
         if (bfqkz.xm != null) {
-            name.setText(bfqkz.xm.name);
-            zz.setText(bfqkz.xm.zz);
+            name.setText(bfqkz.xm.name + "/" + bfqkz.xm.zz);
         }
         if (bfqkz.mt != null) {
             Media.setbf(bfqkz.mt.isPlaying());
         }
         return view;
     }
+
     private static <T extends View> T findViewById(int id) {
         return view.findViewById(id);
     }
@@ -72,13 +75,6 @@ public class bfq_db extends Fragment {
     public static void setname(String str) {
         if (view != null) {
             TextView textView = findViewById(R.id.name);
-            textView.setText(str);
-        }
-    }
-
-    public static void setzz(String str) {
-        if (view != null) {
-            TextView textView = findViewById(R.id.zz);
             textView.setText(str);
         }
     }

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -21,9 +20,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import com.muqingbfq.api.FileDownloader;
+import com.muqingbfq.api.url;
 import com.muqingbfq.databinding.ActivityBfqBinding;
 import com.muqingbfq.fragment.Media;
+import com.muqingbfq.mq.gj;
+import com.muqingbfq.mq.wj;
+import com.muqingbfq.mq.wl;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class bfq extends AppCompatActivity {
@@ -95,7 +101,36 @@ public class bfq extends AppCompatActivity {
             Media.setzz(bfqkz.xm.zz);
             bfq_an.islike();
         }
+        inflate.download.setOnClickListener(view -> {
+            if (wj.cz(wj.mp3 + bfqkz.xm.id)) {
+                gj.ts(this, "你已经下载过这首歌曲了");
+                return;
+            }
+            if (bfqkz.xm != null) {
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        xm x = bfqkz.xm;
+                        String hq = wl.hq(url.api + "?id=" + x.id + "&level=exhigh" + "&cookie=" + wl.Cookie);
+                        if (hq == null) {
+                            return;
+                        }
+                        try {
+                            JSONObject json = new JSONObject(hq);
+                            JSONArray data = json.getJSONArray("data");
+                            JSONObject jsonObject = data.getJSONObject(0);
+                            String url = jsonObject.getString("url");
+                            FileDownloader.downloadFile(bfq.this, url, bfqkz.xm);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }.start();
+            }
+        });
     }
+
 
     public static Bitmap bitmap;
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                 android:text="@string/zz"
                 android:textSize="20sp" />
         </LinearLayout>
-    </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_bfq"
@@ -46,10 +46,10 @@
         android:layout_weight="1"
         tools:layout="@layout/fragment_bfq" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:background="@color/bj"
         android:paddingStart="16dp"
         android:paddingEnd="16dp">
 
@@ -59,9 +59,22 @@
             android:layout_height="36dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@mipmap/like"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/text"
             tools:ignore="ContentDescription" />
-    </LinearLayout>
+
+        <ImageView
+            android:id="@+id/download"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/download"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/text"
+            tools:ignore="ContentDescription" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,6 +82,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="20dp"
+        android:background="@color/bj"
         android:paddingEnd="20dp"
         android:paddingBottom="26dp">
 

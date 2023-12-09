@@ -5,14 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,15 +20,15 @@ import com.muqingbfq.api.url;
 import com.muqingbfq.bfq;
 import com.muqingbfq.bfqkz;
 import com.muqingbfq.databinding.FragmentMp3Binding;
-import com.muqingbfq.home;
 import com.muqingbfq.list.MyViewHoder;
 import com.muqingbfq.main;
+import com.muqingbfq.mq.FragmentActivity;
 import com.muqingbfq.xm;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class mp3 extends com.muqingbfq.mq.ActivityToolbar {
+public class mp3 extends FragmentActivity {
     private final List<xm> list = new ArrayList<>();
     public static RecyclerView.Adapter<MyViewHoder> lbspq;
 
@@ -40,7 +37,8 @@ public class mp3 extends com.muqingbfq.mq.ActivityToolbar {
         super.onCreate(savedInstanceState);
         FragmentMp3Binding inflate = FragmentMp3Binding.inflate(getLayoutInflater());
         Intent intent = getIntent();
-        inflate.toolbar.setTitle(intent.getStringExtra("name"));
+        inflate.title.setText(intent.getStringExtra("name"));
+//        inflate.toolbar.setTitle(intent.getStringExtra("name"));
         setContentView(inflate.getRoot());
         lbspq = new spq();
         RecyclerView lb = findViewById(R.id.lb);
@@ -48,6 +46,8 @@ public class mp3 extends com.muqingbfq.mq.ActivityToolbar {
         lb.setLayoutManager(layoutManager);
         lb.setAdapter(lbspq);
         String id = intent.getStringExtra("id");
+
+//        inflate.bfqDb.setBackground(gd.color);
         new start(id);
     }
 

@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".activity_search">
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -24,7 +24,7 @@
             android:paddingStart="3dp"
             android:paddingEnd="3dp"
             tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
-    </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.MaterialToolbar>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -79,6 +79,7 @@
         android:id="@+id/bfq_db"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/bj"
         android:name="com.muqingbfq.fragment.bfq_db"
         tools:layout="@layout/fragment_bfq_db" />
 

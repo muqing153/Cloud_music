@@ -20,7 +20,6 @@ import com.muqingbfq.xm;
 import com.muqingbfq.yc;
 
 public class bflb_db extends BottomSheetDialog {
-    public static String gdid;
     public static RecyclerView.Adapter<MyViewHoder> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

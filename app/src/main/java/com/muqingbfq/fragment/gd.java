@@ -2,8 +2,10 @@ package com.muqingbfq.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,65 +15,94 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.tabs.TabLayout;
 import com.muqingbfq.R;
 import com.muqingbfq.api.playlist;
 import com.muqingbfq.api.resource;
 import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
+import com.muqingbfq.databinding.FragmentGdBinding;
 import com.muqingbfq.list.list_gd;
 import com.muqingbfq.main;
+import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.xm;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class gd extends Fragment {
     public static String gdid;
-    public static RecyclerView.Adapter<VH> lbspq;
-    public List<xm> list = new ArrayList<>();
     public static JSONObject like = new JSONObject();
-    RecyclerView gridView;
+    FragmentGdBinding binding;
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.bfq_db, new bfq_db())
+                .commit();
+    }
+
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_gd, container, false);
-        lbspq = new baseadapter(view.getContext(),list);
-        gridView = view.findViewById(R.id.wgbj);
-        int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), k / 120);
-        gridView.setLayoutManager(gridLayoutManager);
-        gridView.setAdapter(lbspq);
-        TabLayout tabLayout = view.findViewById(R.id.tablayout);
-        for (String name : new String[]{"推荐", "排行榜", "下载"}) {
-            TabLayout.Tab tab = tabLayout.newTab();
-            tab.setText(name);
-            tabLayout.addTab(tab);
-        }
-        new thread("推荐");
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        binding = FragmentGdBinding.inflate(inflater, container, false);
+        binding.viewPager.setAdapter(new FragmentStateAdapter(getActivity()) {
+            @NonNull
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                new thread(tab.getText().toString());
+            public Fragment createFragment(int position) {
+                switch (position) {
+                    case 0:
+                        return new gd_adapter();
+                    case 1:
+                        return new gd_adapter.paihangbang();
+                    case 2:
+                        return new gd_adapter.wuode();
+                    default:
+                        return new Fragment();
+                }
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            public int getItemCount() {
+                return 3;
             }
-
+        });
+// 将 ViewPager2 绑定到 TabLayout
+        binding.tablayout.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.a) {
+                binding.viewPager.setCurrentItem(0);
+            } else if (itemId == R.id.b) {
+                binding.viewPager.setCurrentItem(1);
+            } else if (itemId == R.id.c) {
+                binding.viewPager.setCurrentItem(2);
+            }
+            return true;
+        });binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        binding.tablayout.setSelectedItemId(R.id.a);
+                        break;
+                    case 1:
+                        binding.tablayout.setSelectedItemId(R.id.b);
+                        break;
+                    case 2:
+                        binding.tablayout.setSelectedItemId(R.id.c);
+                        break;
+                }
             }
         });
         try {
@@ -79,18 +110,19 @@ public class gd extends Fragment {
                 like = new JSONObject(wj.dqwb(wj.mp3_like));
             }
         } catch (JSONException e) {
-            throw new RuntimeException(e);
+            gj.sc(e);
         }
-        return view;
+        return binding.getRoot();
     }
-
     public static class baseadapter extends RecyclerView.Adapter<VH> {
         Context context;
         List<xm> list;
+
         public baseadapter(Context context, List<xm> list) {
             this.context = context;
             this.list = list;
         }
+
         @NonNull
         @Override
         public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -106,7 +138,7 @@ public class gd extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull VH holder, int position) {
             xm xm = list.get(position);
-            list_gd gd = new list_gd(xm);
+            list_gd gd = new list_gd(xm,this);
             holder.cardView.setOnClickListener(gd);
             holder.cardView.setOnLongClickListener(gd);
             holder.textView.setText(xm.name);
@@ -126,7 +158,7 @@ public class gd extends Fragment {
                                 main.edit.commit();
                                 gdid = xm.id;
                             }
-                            com.muqingbfq.fragment.gd.lbspq.notifyDataSetChanged();
+                            notifyDataSetChanged();
                         });
                     }
                 }.start();
@@ -160,33 +192,4 @@ public class gd extends Fragment {
             kg = itemView.findViewById(R.id.kg);
         }
     }
-
-    class thread extends Thread {
-        String name;
-
-        public thread(String name) {
-            this.name = name;
-            list.clear();
-            start();
-        }
-
-        @SuppressLint("NotifyDataSetChanged")
-        @Override
-        public void run() {
-            super.run();
-            switch (name) {
-                case "推荐":
-                    resource.recommend(list);
-                    break;
-                case "下载":
-                    resource.下载(list);
-                    break;
-                case "排行榜":
-                    resource.排行榜(list);
-                    break;
-            }
-            main.handler.post(() -> lbspq.notifyDataSetChanged());
-        }
-    }
-
 }

@@ -161,7 +161,7 @@ public class search extends Fragment {
     }
 
     private void gd() {
-        String hq = wl.hq("/search?keywords=" + name + "&limit=" + (k * k) + "&type=1000");
+        String hq = wl.hq("/search?keywords=" + name + "&limit=" + (k * 3) + "&type=1000");
         try {
             JSONArray jsonArray = new JSONObject(hq).getJSONObject("result")
                     .getJSONArray("playlists");
