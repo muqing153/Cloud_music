@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -18,7 +17,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.muqingbfq.R;
-import com.muqingbfq.api.url;
 import com.muqingbfq.bfq;
 import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
@@ -26,8 +24,6 @@ import com.muqingbfq.databinding.FragmentBfqBinding;
 import com.muqingbfq.home;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
-
-import org.json.JSONObject;
 
 import me.wcy.lrcview.LrcView;
 
@@ -87,6 +83,9 @@ public class Media extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        if (view != null) {
+            return view;
+        }
         FragmentBfqBinding inflate = FragmentBfqBinding.inflate(inflater, container, false);
         view = inflate.getRoot();
         inflate.cardview.addView(home.imageView);
