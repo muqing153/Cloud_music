@@ -20,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.muqingbfq.api.FileDownloader;
 import com.muqingbfq.api.url;
 import com.muqingbfq.databinding.ActivityBfqBinding;
@@ -31,6 +33,10 @@ import com.muqingbfq.mq.wl;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class bfq extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
@@ -76,22 +82,26 @@ public class bfq extends AppCompatActivity {
         text();
         inflate.like.setOnClickListener(view1 -> {
             try {
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<MP3>>() {
+                }.getType();
+                List<MP3> list = gson.fromJson(wj.dqwb(wj.gd + "mp3_like.json"), type);
+                if (list == null) {
+                    list = new ArrayList<>();
+                }
                 if (bfqkz.like_bool) {
+                    list.remove(bfqkz.xm);
                     inflate.like
                             .setImageTintList(ContextCompat.getColorStateList(bfq.this, R.color.text));
-                    com.muqingbfq.fragment.gd.like.remove(String.valueOf(bfqkz.xm.id));
                 } else {
-                    inflate.like.setImageTintList(ContextCompat.
-                            getColorStateList(bfq.this, android.R.color.holo_red_dark));
-                    JSONObject json = new JSONObject();
-                    json.put("name", bfqkz.xm.name);
-                    json.put("zz", bfqkz.xm.zz);
-                    json.put("picUrl", bfqkz.xm.picurl);
-                    com.muqingbfq.fragment.gd.like.put(String.valueOf(bfqkz.xm.id), json);
+                    if (!list.contains(bfqkz.xm)) {
+                        list.add(bfqkz.xm);
+                        inflate.like.setImageTintList(ContextCompat.
+                                getColorStateList(bfq.this, android.R.color.holo_red_dark));
+                    }
                 }
-                com.muqingbfq.mq.wj.xrwb(com.muqingbfq.mq.wj.mp3_like,
-                        com.muqingbfq.fragment.gd.like.toString());
                 bfqkz.like_bool = !bfqkz.like_bool;
+                wj.xrwb(wj.gd + "mp3_like.json", gson.toJson(list));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -111,7 +121,7 @@ public class bfq extends AppCompatActivity {
                     @Override
                     public void run() {
                         super.run();
-                        xm x = bfqkz.xm;
+                        MP3 x = bfqkz.xm;
                         String hq = wl.hq(url.api + "?id=" + x.id + "&level=exhigh" + "&cookie=" + wl.Cookie);
                         if (hq == null) {
                             return;

@@ -18,13 +18,26 @@ import com.muqingbfq.xm;
 public class resource {
 
     public static void recommend(List<xm> list) {
-        String hq;
-        JSONObject json;
         try {
-            hq = wl.hq("/recommend/resource?cookie=" + wl.Cookie);
-            if (TextUtils.isEmpty(hq) && wj.cz(wj.gd_json)) {
-                hq = wj.dqwb(wj.gd_json);
+            String hq = wj.dqwb(wj.gd_json);
+            JSONObject json;
+            if (hq != null) {
+                json = new JSONObject(hq);
+                if (json.getInt("code") == 200) {
+                    wj.xrwb(wj.gd_json, hq);
+                    JSONArray recommend = json.getJSONArray("recommend");
+                    int length = recommend.length();
+                    for (int i = 0; i < length; i++) {
+                        JSONObject jsonObject = recommend.getJSONObject(i);
+                        add(jsonObject, list);
+                    }
+                }
             }
+            hq = wl.hq("/recommend/resource?cookie=" + wl.Cookie);
+            if (hq == null) {
+                return;
+            }
+            list.clear();
             json = new JSONObject(hq);
             if (json.getInt("code") == 200) {
                 wj.xrwb(wj.gd_json, hq);
@@ -75,9 +88,9 @@ public class resource {
     }
 
     public static void 下载(List<xm> list) {
-        list.add(new xm("mp3_like.json", "喜欢", R.mipmap.like, true));
-        list.add(new xm("mp3_xz.json", "下载", R.drawable.icon, true));
-        list.add(new xm("mp3_hc.json", "缓存", R.drawable.icon, true));
+        list.add(new xm("mp3_hc.json", "最近播放", R.drawable.zt, true));
+        list.add(new xm("mp3_like.json", "喜欢", R.drawable.like, true));
+        list.add(new xm("mp3_xz.json", "下载", R.drawable.download, true));
         try {
             JSONObject date = new JSONObject(wj.dqwb(wj.gd_xz));
             for (Iterator<String> it = date.keys(); it.hasNext(); ) {

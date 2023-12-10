@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.tabs.TabLayout;
+import com.muqingbfq.MP3;
 import com.muqingbfq.R;
 import com.muqingbfq.api.url;
 import com.muqingbfq.bfq;
@@ -36,7 +37,8 @@ import java.util.List;
 
 public class search extends Fragment {
     public static RecyclerView.Adapter<MyViewHoder> lbspq;
-    List<xm> list = new ArrayList<>();
+    List<MP3> list = new ArrayList<>();
+    List<xm> xmList = new ArrayList<>();
     gd.baseadapter adapter_gd;
     public String name;
 
@@ -53,7 +55,7 @@ public class search extends Fragment {
         TypedValue typedValue = new TypedValue();
         requireContext().getTheme().resolveAttribute(android.R.attr.windowBackground, typedValue, true);
         // 设置背景颜色
-        adapter_gd = new gd.baseadapter(getContext(), list);
+        adapter_gd = new gd.baseadapter(getContext(), xmList);
         view.setBackgroundColor(typedValue.data);
         inflate.tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -107,6 +109,7 @@ public class search extends Fragment {
     public class start extends Thread {
         public start(String name) {
             list.clear();
+            xmList.clear();
             search.this.name = name;
             start();
         }
@@ -153,7 +156,7 @@ public class search extends Fragment {
                         zz.append("/").append(name_zz);
                     }
                 }
-                list.add(new xm(id, name, zz.toString(), ""));
+                list.add(new MP3(id, name, zz.toString(), ""));
             }
         } catch (Exception e) {
             gj.sc(e);
@@ -172,7 +175,8 @@ public class search extends Fragment {
                 String name = jsonObject.getString("name");
                 String coverImgUrl = jsonObject.getString("coverImgUrl");
 //                gj.sc(name);
-                list.add(new xm(id, name, coverImgUrl, wj.cz(wj.gd + id)));
+                xmList.add(new xm(id, name, coverImgUrl, false));
+
             }
 
         } catch (Exception e) {
@@ -195,7 +199,7 @@ public class search extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHoder holder, int position) {
-            xm x = list.get(position);
+            MP3 x = list.get(position);
             holder.name.setText(x.name);
             holder.zz.setText(x.zz);
             int color = ContextCompat.getColor(holder.getContext(), R.color.text);

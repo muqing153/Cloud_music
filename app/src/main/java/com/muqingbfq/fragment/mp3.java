@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.muqingbfq.MP3;
 import com.muqingbfq.R;
 import com.muqingbfq.api.playlist;
 import com.muqingbfq.api.url;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class mp3 extends FragmentActivity {
-    private final List<xm> list = new ArrayList<>();
+    private final List<MP3> list = new ArrayList<>();
     public static RecyclerView.Adapter<MyViewHoder> lbspq;
 
     @Override
@@ -94,7 +95,7 @@ public class mp3 extends FragmentActivity {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHoder holder, int position) {
-            xm x = list.get(position);
+            MP3 x = list.get(position);
             holder.name.setText(x.name);
             holder.zz.setText(x.zz);
             int color = ContextCompat.getColor(holder.getContext(), R.color.text);

@@ -111,7 +111,6 @@ public class NotificationManagerCompat {
                 .setOngoing(bfqkz.mt.isPlaying());
         notificationManager_notify();
     }
-
     private PendingIntent pendingIntent_kg,
             pendingIntent_syq,
             pendingIntent_xyq;

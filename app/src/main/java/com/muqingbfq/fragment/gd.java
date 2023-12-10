@@ -2,10 +2,8 @@ package com.muqingbfq.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,27 +20,21 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.card.MaterialCardView;
+import com.muqingbfq.MP3;
 import com.muqingbfq.R;
 import com.muqingbfq.api.playlist;
-import com.muqingbfq.api.resource;
 import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
 import com.muqingbfq.databinding.FragmentGdBinding;
 import com.muqingbfq.list.list_gd;
 import com.muqingbfq.main;
-import com.muqingbfq.mq.gj;
-import com.muqingbfq.mq.wj;
 import com.muqingbfq.xm;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class gd extends Fragment {
     public static String gdid;
-    public static JSONObject like = new JSONObject();
     FragmentGdBinding binding;
     @Override
     public void onResume() {
@@ -105,13 +97,6 @@ public class gd extends Fragment {
                 }
             }
         });
-        try {
-            if (wj.cz(wj.mp3_like)) {
-                like = new JSONObject(wj.dqwb(wj.mp3_like));
-            }
-        } catch (JSONException e) {
-            gj.sc(e);
-        }
         return binding.getRoot();
     }
     public static class baseadapter extends RecyclerView.Adapter<VH> {

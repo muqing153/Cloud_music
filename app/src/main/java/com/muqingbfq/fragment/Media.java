@@ -87,17 +87,9 @@ public class Media extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        if (view != null) {
-            return view;
-        }
         FragmentBfqBinding inflate = FragmentBfqBinding.inflate(inflater, container, false);
         view = inflate.getRoot();
         inflate.cardview.addView(home.imageView);
-
-        LinearLayout.LayoutParams layoutParams =
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT,2);
-        inflate.linearlayout.addView(lrcview,layoutParams);
         tdt = inflate.tdt;
         tdt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -135,6 +127,15 @@ public class Media extends Fragment {
                     kp.setVisibility(View.VISIBLE);
                 }
             });
+            LinearLayout.LayoutParams layoutParams =
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT,2);
+            inflate.linearlayout.addView(lrcview,layoutParams);
+        }else{
+            LinearLayout.LayoutParams layoutParams =
+                    new LinearLayout.LayoutParams(0,
+                            LinearLayout.LayoutParams.MATCH_PARENT,1);
+            inflate.linearlayout.addView(lrcview,layoutParams);
         }
         //初始化播放器列表
         if (bfqkz.xm != null) {
@@ -145,14 +146,6 @@ public class Media extends Fragment {
             long position = bfqkz.mt.build.getCurrentPosition();
             setProgress((int) position);
             main.handler.post(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度
-
-            new Thread() {
-                @Override
-                public void run() {
-                    super.run();
-                    url.gc(bfqkz.xm.id);
-                }
-            }.start();
         }
         return view;
     }

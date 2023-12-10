@@ -21,6 +21,10 @@ import com.muqingbfq.fragment.Media;
 import com.muqingbfq.fragment.bfq_db;
 import com.muqingbfq.fragment.gd;
 import com.muqingbfq.mq.gj;
+import com.muqingbfq.mq.wj;
+
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 import me.wcy.lrcview.LrcView;
 
@@ -104,6 +108,7 @@ public class home extends AppCompatActivity {
         String jsonList = new com.google.gson.Gson().toJson(bfqkz.list);
         editor.putString("listData", jsonList);
         editor.apply();
+        wj.setMP3ToFile(bfqkz.xm);
     }
 
 

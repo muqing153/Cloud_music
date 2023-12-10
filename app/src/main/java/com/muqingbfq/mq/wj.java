@@ -2,15 +2,20 @@ package com.muqingbfq.mq;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+import com.muqingbfq.MP3;
 import com.muqingbfq.yc;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.security.MessageDigest;
@@ -155,5 +160,32 @@ public class wj {
                 e.printStackTrace();
             }
         }
+    }
+
+    // 保存MP3对象到文件
+    public static void setMP3ToFile(MP3 mp3) {
+        if (mp3 == null) {
+            return;
+        }
+        Gson gson = new Gson();
+        String json = gson.toJson(mp3);
+        xrwb(filesdri + "mp3.dat", json);
+    }
+
+    // 从文件中加载MP3对象
+    public static MP3 getMP3FromFile() {
+        Gson gson = new Gson();
+        MP3 mp3 = null;
+        try {
+            File file = new File(filesdri + "mp3.dat");
+            if (file.exists() && file.length() > 0) {
+                FileReader reader = new FileReader(file);
+                mp3 = gson.fromJson(reader, MP3.class);
+                reader.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return mp3;
     }
 }

@@ -13,15 +13,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.muqingbfq.databinding.ActivityYcBinding;
 
 public class yc extends AppCompatActivity {
     public static Object exception;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_yc);
-        TextView text = findViewById(R.id.text);
+        ActivityYcBinding binding = ActivityYcBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         String deviceModel = Build.MODEL;
         String deviceManufacturer = Build.MANUFACTURER;
@@ -44,7 +44,7 @@ public class yc extends AppCompatActivity {
                 + "屏幕密度：" + density + "\n"
                 + "密度DPI：" + densityDpi + "\n" +
                 "异常信息： " + exception.toString();
-        text.setText(wb);
+        binding.text.setText(wb);
     }
 
     public static void start(Object e) {

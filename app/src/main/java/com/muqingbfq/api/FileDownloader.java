@@ -17,6 +17,7 @@ import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
+import com.muqingbfq.MP3;
 import com.muqingbfq.R;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
@@ -36,7 +37,7 @@ public class FileDownloader {
     private static final String CHANNEL_ID = "download_channel";
     private static final int NOTIFICATION_ID = 3;
 
-    public static void downloadFile(Context context, String url,com.muqingbfq.xm x) {
+    public static void downloadFile(Context context, String url, MP3 x) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)

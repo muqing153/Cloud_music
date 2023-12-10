@@ -132,10 +132,10 @@
             <ImageView
                 android:id="@+id/like"
                 android:layout_width="36dp"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:layout_marginEnd="26dp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:src="@mipmap/like"
+                android:src="@drawable/like"
                 app:tint="@color/text"
                 tools:ignore="ContentDescription" />
         </LinearLayout>

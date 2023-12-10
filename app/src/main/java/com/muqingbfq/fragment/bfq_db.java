@@ -12,8 +12,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.muqingbfq.MP3;
+import com.muqingbfq.MediaPlayer;
 import com.muqingbfq.R;
+import com.muqingbfq.api.url;
 import com.muqingbfq.bfq;
 import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
@@ -35,10 +39,23 @@ public class bfq_db extends Fragment {
             String jsonList = this.getContext().getSharedPreferences("list", Context.MODE_PRIVATE)
                     .getString("listData", null); // 获取保存的 JSON 字符串
             if (jsonList != null) {
-                Type type = new TypeToken<List<xm>>() {
+                Type type = new TypeToken<List<MP3>>() {
                 }.getType();
                 bfqkz.list = new com.google.gson.Gson().fromJson(jsonList, type);
                 // 将 JSON 字符串转换回列表数据
+            }
+
+            bfqkz.xm = wj.getMP3FromFile();
+            bfqkz.mt = new MediaPlayer();
+            if (bfqkz.xm != null) {
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        String hq = url.hq(bfqkz.xm);
+                        bfqkz.mt.DataSource(hq);
+                    }
+                }.start();
             }
         }
         view = inflater.inflate(R.layout.fragment_bfq_db, container, false);

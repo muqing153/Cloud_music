@@ -100,15 +100,16 @@ public class MediaPlayer {
                 Media.setbf(isPlaying);
             }
         });
+//        build.setShuffleModeEnabled(true);
     }
 
-    public void pause(){
+    public void pause() {
         if (build.isPlaying()) {
             build.pause();
         }
     }
 
-    public void start(){
+    public void start() {
         if (bfqkz.xm == null) {
             if (bfqkz.list != null && bfqkz.list.size() > 0) {
                 bfq_an.xyq();
@@ -118,14 +119,32 @@ public class MediaPlayer {
         build.play();
     }
 
+    // 创建 MediaItem 列表
+//    public static List<MediaItem> list = new ArrayList<>();
     @SuppressLint("NotifyDataSetChanged")
     public void setDataSource(String path) {
-        MediaItem mediaItem = MediaItem.fromUri(path);
+        DataSource(path);
         main.handler.post(() -> {
-            build.setMediaItem(mediaItem);
-            build.prepare();
             build.setPlayWhenReady(true);
             start();
+        });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void DataSource(String path) {
+        if (path == null) {
+            return;
+        }
+        MediaItem mediaItem = MediaItem.fromUri(path);
+/*        if (!list.contains(mediaItem)) {
+            list.add(mediaItem);
+        }*/
+        main.handler.post(() -> {
+//            build.setMediaItems(list);
+//            build.seekToDefaultPosition(getmti(bfqkz.ms));
+            build.setMediaItem(mediaItem);
+            build.prepare();
+            gj.sc(build.getMediaItemCount());
         });
     }
 
@@ -153,6 +172,7 @@ public class MediaPlayer {
                         bfqkz.notify.setBitmap();
                         return false;
                     }
+
                     @Override
                     public boolean onResourceReady(@NonNull Bitmap bitmap, @NonNull Object model, Target<Bitmap> target,
                                                    @NonNull DataSource dataSource, boolean isFirstResource) {
@@ -169,7 +189,7 @@ public class MediaPlayer {
             Media.setzz(zz);
             bfq_an.islike();
         }
-        bfq_db.setname(name+"/"+zz);
+        bfq_db.setname(name + "/" + zz);
         if (com.muqingbfq.fragment.mp3.lbspq != null) {
             com.muqingbfq.fragment.mp3.lbspq.notifyDataSetChanged();
         }

@@ -2,6 +2,7 @@ package com.muqingbfq.api;
 
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
+import com.muqingbfq.MP3;
 import com.muqingbfq.fragment.Media;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
@@ -25,20 +26,23 @@ import okhttp3.ResponseBody;
 
 public class url extends Thread {
     public static String api = "/song/url/v1";
-    xm x;
+    MP3 x;
 
-    public url(xm x) {
+    public url(MP3 x) {
         this.x = x;
         start();
     }
 
-    public static String hq(xm x) {
+    public static String hq(MP3 x) {
         if (Media.lrcview != null) {
             gc(x.id);
         }
         try {
             if (wj.cz(wj.filesdri + "hc/" + x.id)) {
                 return wj.filesdri + "hc/" + x.id;
+            }
+            if (wj.cz(wj.mp3+x.id)) {
+                return wj.mp3 + x.id;
             }
             String level = "standard";
             boolean wiFiConnected = gj.isWiFiConnected();
