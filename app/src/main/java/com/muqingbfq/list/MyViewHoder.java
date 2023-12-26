@@ -16,7 +16,6 @@ public class MyViewHoder extends RecyclerView.ViewHolder {
         name = itemView.findViewById(R.id.wb1);
         zz = itemView.findViewById(R.id.zz);
     }
-
     public Context getContext() {
         return itemView.getContext();
     }

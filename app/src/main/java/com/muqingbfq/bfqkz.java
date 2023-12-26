@@ -58,14 +58,7 @@ public class bfqkz extends Service {
                 }
                 bfqkz.list.remove(bfqkz.xm);
                 bfqkz.xm = bfqkz.list.get(bfqkz.getmti(bfqkz.ms));
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        bfqkz.mp3(com.muqingbfq.api.
-                                url.hq(bfqkz.xm));
-                    }
-                }.start();
+                new mp3(id);
                 return;
             }
             if (TextUtils.isEmpty(xm.picurl)) {
@@ -74,17 +67,28 @@ public class bfqkz extends Service {
             if (bfqkz.lishi_list.size() >= 100) {
                 bfqkz.lishi_list.remove(0);
             }
-            bfqkz.lishi_list.remove(bfqkz.xm);
-            bfqkz.lishi_list.add(0, bfqkz.xm);
-            wj.xrwb(wj.gd + "mp3_hc.json", new com.google.gson.Gson().toJson(bfqkz.lishi_list));
+            if (bfqkz.lishi_list.size() > 0) {
+                bfqkz.lishi_list.remove(bfqkz.xm);
+                bfqkz.lishi_list.add(0, bfqkz.xm);
+                wj.xrwb(wj.gd + "mp3_hc.json", new com.google.gson.Gson().toJson(bfqkz.lishi_list));
+            }
             mt.setDataSource(id);
         } catch (Exception e) {
             yc.start(home.appCompatActivity, "bfqkz mp3(" + id + ") :" + e);
         }
     }
 
-    public static void mp3(Uri id) {
-        mp3(id.toString());
+    public static class mp3 extends Thread {
+        String id;
+        public mp3(String id) {
+            this.id = id;
+            start();
+        }
+        @Override
+        public void run() {
+            super.run();
+            mp3(id);
+        }
     }
 
 
@@ -147,7 +151,7 @@ public class bfqkz extends Service {
                     case PlaybackStateCompat.STATE_PLAYING:
                     case PlaybackStateCompat.STATE_PAUSED:
                     case PlaybackStateCompat.STATE_NONE:
-                        mp3(uri);
+//                        mp3(uri);/
                         playback = new PlaybackStateCompat.Builder()
                                 .setState(PlaybackStateCompat.STATE_CONNECTING, 0, 1.0f)
                                 .build();

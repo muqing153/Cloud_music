@@ -19,25 +19,26 @@ public class resource {
 
     public static void recommend(List<xm> list) {
         try {
-            String hq = wj.dqwb(wj.gd_json);
+            list.clear();
+            String hq;
             JSONObject json;
-            if (hq != null) {
-                json = new JSONObject(hq);
-                if (json.getInt("code") == 200) {
-                    wj.xrwb(wj.gd_json, hq);
-                    JSONArray recommend = json.getJSONArray("recommend");
-                    int length = recommend.length();
-                    for (int i = 0; i < length; i++) {
-                        JSONObject jsonObject = recommend.getJSONObject(i);
-                        add(jsonObject, list);
-                    }
-                }
-            }
             hq = wl.hq("/recommend/resource?cookie=" + wl.Cookie);
             if (hq == null) {
+                hq = wj.dqwb(wj.gd_json);
+                if (hq != null) {
+                    json = new JSONObject(hq);
+                    if (json.getInt("code") == 200) {
+                        wj.xrwb(wj.gd_json, hq);
+                        JSONArray recommend = json.getJSONArray("recommend");
+                        int length = recommend.length();
+                        for (int i = 0; i < length; i++) {
+                            JSONObject jsonObject = recommend.getJSONObject(i);
+                            add(jsonObject, list);
+                        }
+                    }
+                }
                 return;
             }
-            list.clear();
             json = new JSONObject(hq);
             if (json.getInt("code") == 200) {
                 wj.xrwb(wj.gd_json, hq);

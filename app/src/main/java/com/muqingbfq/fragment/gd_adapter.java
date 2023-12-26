@@ -47,12 +47,12 @@ public class gd_adapter extends Fragment {
             public void run() {
                 super.run();
                 resource.recommend(list);
-                main.handler.postDelayed(new sx(baseadapter),500);
+                main.handler.post(new sx(baseadapter));
             }
         }.start();
         return layout;
     }
-    private static class sx implements Runnable {
+    private class sx implements Runnable {
         gd.baseadapter baseadapter;
 
         public sx(gd.baseadapter baseadapter) {
