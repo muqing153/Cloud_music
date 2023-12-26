@@ -77,6 +77,9 @@ public class wj {
     public static String dqwb(String url) {
         try {
             File file = new File(url);
+            if (!file.exists()) {
+                return null;
+            }
             FileInputStream fis = new FileInputStream(file);
             BufferedReader br = new BufferedReader(new InputStreamReader(fis));
             StringBuilder str = new StringBuilder();
@@ -97,9 +100,6 @@ public class wj {
         return new File(url).exists();
     }
 
-    public static boolean cz(File file) {
-        return file.exists();
-    }
 
     public static boolean sc(String url) {
         File file = new File(url);

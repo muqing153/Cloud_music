@@ -120,6 +120,6 @@ public class bfq_an {
             }
         }
         bfqkz.like_bool = contains;
-        Media.setlike(contains);
+        bfq.setlike(contains);
     }
 }

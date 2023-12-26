@@ -31,7 +31,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
     public Runnable updateSeekBar = new Runnable() {
         @Override
         public void run() {
-            if (isPlaying() && Media.view != null) {
+            if (isPlaying() && Media.lrcview != null) {
                 long position = getCurrentPosition();
                 Media.setProgress((int) position);
             }
@@ -110,7 +110,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
         start();
         main.handler.post(() -> {
             bfui();
-            if (Media.view != null) {
+            if (bfq.inflate != null) {
                 main.handler.removeCallbacks(updateSeekBar); // 在播放开始时启动更新进度
                 long duration = getDuration();
                 Media.setMax((int) getDuration());
@@ -167,10 +167,10 @@ public class MediaPlayer extends android.media.MediaPlayer {
     public void bfui() {
         setTX();
         String name = xm.name, zz = bfqkz.xm.zz;
-        if (Media.view != null) {
+        if (bfq.inflate != null) {
             Media.setProgress(0);
-            Media.setname(name);
-            Media.setzz(zz);
+            bfq.setname(name);
+            bfq.setzz(zz);
             bfq_an.islike();
         }
         bfq_db.setname(name + "/" + zz);

@@ -40,23 +40,29 @@ import java.util.List;
 
 public class bfq extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
-    public static AppCompatActivity context;
-    public ActivityBfqBinding inflate;
+    public static ActivityBfqBinding inflate;
     public static String lrc;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        context = this;
         inflate = ActivityBfqBinding.inflate(getLayoutInflater());
+        new Media(inflate);
+        Media.lrcview.setCurrentColor(ContextCompat.getColor(this,R.color.text));
+        Media.lrcview.setLabel(getString(R.string.app_name));
+        Media.lrcview.setCurrentTextSize(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
+//            lrcView.setLrcPadding(16);
+        Media.lrcview.setCurrentTextSize(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP, 20, getResources().getDisplayMetrics()));
+        Media.lrcview.setTimelineTextColor(ContextCompat.getColor(this,R.color.text_tm));
+
         LinearLayout root = inflate.getRoot();
         TypedValue typedValue = new TypedValue();
         home.appCompatActivity.getTheme().resolveAttribute(android.R.attr.windowBackground, typedValue, true);
         // 设置背景颜色
         root.setBackgroundColor(typedValue.data);
         setContentView(root);
-        Media media = (Media) getSupportFragmentManager().findFragmentById(R.id.fragment_bfq);
-        media.setBfq(this);
         Toolbar toolbar = inflate.toolbar;
         toolbar.setNavigationOnClickListener(view1 -> finish());
         toolbar.setOnMenuItemClickListener(item -> {
@@ -106,12 +112,6 @@ public class bfq extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
-        if (bfqkz.xm != null) {
-            Media.setname(bfqkz.xm.name);
-            Media.setzz(bfqkz.xm.zz);
-            bfq_an.islike();
-            bfqkz.mt.setTX();
-        }
         inflate.download.setOnClickListener(view -> {
             if (wj.cz(wj.mp3 + bfqkz.xm.id)) {
                 gj.ts(this, "你已经下载过这首歌曲了");
@@ -140,8 +140,27 @@ public class bfq extends AppCompatActivity {
                 }.start();
             }
         });
+        if (bfqkz.xm != null) {
+            setname(bfqkz.xm.name);
+            setzz(bfqkz.xm.zz);
+            bfq_an.islike();
+            bfqkz.mt.setTX();
+        }
     }
 
+    public static void setname(String str) {
+        if (inflate == null) {
+            return;
+        }
+        inflate.name.setText(str);
+    }
+
+    public static void setzz(String str) {
+        if (inflate == null) {
+            return;
+        }
+        inflate.zz.setText(str);
+    }
 
     public static Bitmap bitmap;
 
@@ -152,7 +171,7 @@ public class bfq extends AppCompatActivity {
         context.startActivity(intent);
     }
 
-    public void kgsetImageResource(int a) {
+    public static void kgsetImageResource(int a) {
         if (inflate == null) {
             return;
         }
@@ -206,5 +225,16 @@ public class bfq extends AppCompatActivity {
             }
             return true;
         });
+    }
+    public static void setlike(boolean bool) {
+        if (inflate == null) {
+            return;
+        }
+        int color = R.color.text;
+        if (bool) {
+            color = android.R.color.holo_red_dark;
+        }
+        inflate.like.setImageTintList(ContextCompat.
+                getColorStateList(inflate.getRoot().getContext(), color));
     }
 }

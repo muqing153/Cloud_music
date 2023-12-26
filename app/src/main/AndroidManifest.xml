@@ -53,7 +53,7 @@
         <activity android:name=".activity_search" />
         <activity
             android:name=".bfq"
-            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:configChanges="keyboardHidden|screenSize"
             android:theme="@style/fragment_dialog" />
 
         <activity android:name=".fragment.mp3" />

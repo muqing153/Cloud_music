@@ -38,13 +38,69 @@
         </LinearLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <androidx.fragment.app.FragmentContainerView
+    <LinearLayout
         android:id="@+id/fragment_bfq"
-        android:name="com.muqingbfq.fragment.Media"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        tools:layout="@layout/fragment_bfq" />
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <RelativeLayout
+                android:id="@+id/kp1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                tools:ignore="NestedWeights">
+                <com.muqingbfq.view.CardImage
+                    android:id="@+id/cardview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cardCornerRadius="16dp"
+                    app:cardUseCompatPadding="true" />
+            </RelativeLayout>
+            <me.wcy.lrcview.LrcView
+                android:id="@+id/lrcView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bj"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp">
+
+            <TextView
+                android:id="@+id/time_a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_00_00" />
+
+            <SeekBar
+                android:id="@+id/tdt"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="6dp" />
+
+            <TextView
+                android:id="@+id/time_b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_00_00" />
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

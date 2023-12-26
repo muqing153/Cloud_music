@@ -38,8 +38,9 @@ public class url extends Thread {
     }
 
     public static String hq(MP3 x) {
+        getLrc(x.id);
         if (Media.lrcview != null) {
-            gc(x.id);
+            Media.loadLyric();
         }
         try {
             if (wj.cz(wj.mp3 + x.id)) {
@@ -136,7 +137,7 @@ public class url extends Thread {
     }
 
 
-    public static void gc(String id) {
+    public static void getLrc(String id) {
         String file = wj.mp3 + id;
         if (wj.cz(file)) {
             try {
@@ -154,7 +155,6 @@ public class url extends Thread {
         }else {
             bfq.lrc = wl.hq("/lyric?id=" + id);
         }
-        Media.loadLyric();
     }
 
     public static String picurl(String id) {

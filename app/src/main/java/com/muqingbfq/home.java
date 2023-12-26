@@ -38,46 +38,17 @@ import me.wcy.lrcview.LrcView;
 public class home extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     public static AppCompatActivity appCompatActivity;
-    @SuppressLint("StaticFieldLeak")
-    public static ImageView imageView;
     ActivityHomeBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         appCompatActivity = this;
         setTheme(R.style.Theme_muqing);
         super.onCreate(savedInstanceState);
-        if (false) {
-            com.muqingbfq.mq.floating.start(this);
-        }
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         DisplayMetrics dm = getResources().getDisplayMetrics();
         main.k = dm.widthPixels;
         main.g = dm.heightPixels;
-        if (imageView == null) {
-            imageView = new ImageView(this);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            if (bfq.bitmap == null) {
-                imageView.setImageResource(R.drawable.icon);
-            } else {
-                Media.setImageBitmap();
-            }
-        }
-        if (Media.lrcview == null) {
-            // 在合适的位置初始化LrcView
-            Media.lrcview = new LrcView(this);
-            // 请将Context替换为实际的上下文对象
-            // 设置LrcView的属性
-            Media.lrcview.setCurrentColor(ContextCompat.getColor(this,R.color.text));
-            Media.lrcview.setLabel(getString(R.string.app_name));
-            Media.lrcview.setCurrentTextSize(TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
-//            lrcView.setLrcPadding(16);
-            Media.lrcview.setCurrentTextSize(TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_SP, 20, getResources().getDisplayMetrics()));
-            Media.lrcview.setTimelineTextColor(ContextCompat.getColor(this,R.color.text_tm));
-        }
         try {
             //初始化工具栏
             setSupportActionBar(binding.toolbar);
@@ -108,7 +79,6 @@ public class home extends AppCompatActivity {
     }
 
     List<Fragment> list = new ArrayList<>();
-
     private class adaper extends FragmentStateAdapter {
         public adaper(@NonNull FragmentActivity fragmentActivity) {
             super(fragmentActivity);
