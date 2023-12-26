@@ -171,6 +171,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
             Media.setProgress(0);
             Media.setname(name);
             Media.setzz(zz);
+            bfq_an.islike();
         }
         bfq_db.setname(name + "/" + zz);
         if (com.muqingbfq.fragment.mp3.lbspq != null) {

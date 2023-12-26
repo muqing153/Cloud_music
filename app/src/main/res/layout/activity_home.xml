@@ -24,33 +24,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize">
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/editView"
+                    android:background="@drawable/ui_editview"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/editview"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp">
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="6dp"
                         android:autofillHints=""
-                        android:background="@drawable/ui_editview"
-                        android:hint="@string/search"
+                        android:enabled="false"
                         android:gravity="center"
-                        android:imeOptions="actionSearch"
-                        android:inputType="text"
+                        android:text="@string/search"
                         android:minHeight="48dp"
                         android:paddingStart="3dp"
-                        android:paddingEnd="3dp" />
-                </LinearLayout>
+                        android:paddingEnd="3dp"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.appbar.MaterialToolbar>
 
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/gd"
-                android:name="com.muqingbfq.fragment.gd"
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                tools:layout="@layout/fragment_gd" />
+                android:layout_weight="1"/>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/bfq_db"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_bfq_db" />
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/tablayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/Playlist"
+                app:menu="@menu/bottom_gd"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.google.android.material.navigation.NavigationView

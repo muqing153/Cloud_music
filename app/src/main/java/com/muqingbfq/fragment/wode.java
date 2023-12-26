@@ -42,6 +42,7 @@ public class wode extends Fragment {
 
     FragmentWdBinding binding;
     private final List<com.muqingbfq.xm> list = new ArrayList<>();
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,26 +52,26 @@ public class wode extends Fragment {
         jieshao = binding.text2;
         imageView = binding.imageView;
         binding.cardview.setOnClickListener(v -> {
-                    if (main.getToken() == null) {
-                        startActivity(new Intent(getContext(), user_logs.class));
-                    } else {
-                        startActivity(new Intent(getContext(), user_editing.class));
-                    }
-                });
+            if (main.getToken() == null) {
+                startActivity(new Intent(getContext(), user_logs.class));
+            } else {
+                startActivity(new Intent(getContext(), user_editing.class));
+            }
+        });
 
         new user_message();
-        int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), k / 120);
+//        int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
         binding.recyclerview1.setLayoutManager(gridLayoutManager);
-        final Object[][] lista ={
-                {R.drawable.bf,"最近播放"},
-                {R.drawable.download,"下载音乐"},
-                {R.drawable.like,"喜欢音乐"},
-                {R.drawable.icon,"本地搜索"},
-                {R.drawable.icon,"我的歌单"},
-                {R.drawable.icon,"导入歌单"},
-                {R.drawable.icon,"开发中"},
-                {R.drawable.icon,"开发者"}
+        final Object[][] lista = {
+                {R.drawable.bf, "最近播放", "mp3_hc.json"},
+                {R.drawable.download, "下载音乐", "mp3_xz.json"},
+                {R.drawable.like, "喜欢音乐", "mp3_like.json"},
+                {R.drawable.icon, "本地搜索", ""},
+                {R.drawable.icon, "我的歌单", ""},
+                {R.drawable.icon, "导入歌单", ""},
+                {R.drawable.paihangbang, "排行榜", "排行榜"},
+                {R.drawable.icon, "开发中", ""}
         };
         binding.recyclerview1.setAdapter(new RecyclerView.Adapter<VH>() {
             @NonNull
@@ -87,27 +88,23 @@ public class wode extends Fragment {
                 Glide.with(getContext())
                         .load(lista[position][0])
                         .into(holder.imageView);
+                String data = lista[position][2].toString();
                 holder.itemView.setOnClickListener(view -> {
-                    Intent a = new Intent(getContext(), com.muqingbfq.fragment.mp3.class);
-                    switch (position) {
-                        case 0:
-                            a.putExtra("id", "mp3_hc.json");
+                    switch (data) {
+                        case "mp3_hc.json":
+                        case "mp3_xz.json":
+                        case "mp3_like.json":
+                            Intent a = new Intent(getContext(), com.muqingbfq.fragment.mp3.class);
+                            a.putExtra("id", data);
                             a.putExtra("name", s);
                             getContext().startActivity(a);
                             break;
-                        case 1:
-                            a.putExtra("id", "mp3_xz.json");
-                            a.putExtra("name", s);
-                            getContext().startActivity(a);
+                        case "排行榜":
+                            Intent b = new Intent(getContext(), com.muqingbfq.fragment.gd.class);
+                            b.putExtra("id", data);
+                            b.putExtra("name", s);
+                            getContext().startActivity(b);
                             break;
-                        case 2:
-                            a.putExtra("id", "mp3_like.json");
-                            a.putExtra("name", s);
-                            getContext().startActivity(a);
-                            break;
-                        case 3:
-                            break;
-
                     }
                 });
             }
@@ -118,20 +115,21 @@ public class wode extends Fragment {
             }
         });
         sx();
-        binding.recyclerview2.setLayoutManager(new LinearLayoutManager(getContext()){
+        binding.recyclerview2.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
                 return false;//禁止滑动
             }
         });
         binding.recyclerview2.setFocusable(false);
-        binding.recyclerview2.setAdapter(new gd.baseadapter(getContext(),list));
+        binding.recyclerview2.setAdapter(new gd.baseadapter(getContext(), list, true));
         return view;
     }
 
     class VH extends RecyclerView.ViewHolder {
         public ImageView imageView;
         public TextView textView;
+
         public VH(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image);
@@ -139,8 +137,10 @@ public class wode extends Fragment {
         }
     }
 
-    public void sx(){
+    @SuppressLint("NotifyDataSetChanged")
+    public void sx() {
         try {
+            List<xm> a = new ArrayList<>(list);
             list.clear();
             JSONObject date = new JSONObject(wj.dqwb(wj.gd_xz));
             for (Iterator<String> it = date.keys(); it.hasNext(); ) {
@@ -151,14 +151,19 @@ public class wode extends Fragment {
                 String picUrl = jsonObject.getString("picUrl");
                 list.add(new xm(id, name, picUrl, cz));
             }
-            binding.recyclerview2.getAdapter().notifyDataSetChanged();
+            if (list.equals(a)) {
+                return;
+            }
+            main.handler.post(() -> binding.recyclerview2.getAdapter().notifyDataSetChanged());
         } catch (Exception e) {
             gj.sc(e);
         }
     }
+
     public static void setname(String string) {
         main.handler.post(() -> name.setText(string));
     }
+
     public static void setqianming(String string) {
         main.handler.post(() -> {
             if (string == null) {

@@ -5,10 +5,6 @@
         android:icon="@drawable/zhuye"
         android:title="推荐" />
     <item
-        android:id="@+id/b"
-        android:icon="@drawable/paihangbang"
-        android:title="排行榜" />
-    <item
         android:id="@+id/c"
         android:icon="@drawable/user"
         android:title="我的" />

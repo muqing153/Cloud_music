@@ -11,20 +11,27 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.navigation.NavigationView;
+import com.muqingbfq.databinding.ActivityHomeBinding;
 import com.muqingbfq.fragment.Media;
 import com.muqingbfq.fragment.bfq_db;
 import com.muqingbfq.fragment.gd;
+import com.muqingbfq.fragment.gd_adapter;
+import com.muqingbfq.fragment.wode;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import me.wcy.lrcview.LrcView;
 
@@ -33,16 +40,18 @@ public class home extends AppCompatActivity {
     public static AppCompatActivity appCompatActivity;
     @SuppressLint("StaticFieldLeak")
     public static ImageView imageView;
+    ActivityHomeBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         appCompatActivity = this;
         setTheme(R.style.Theme_muqing);
         super.onCreate(savedInstanceState);
-        if (true) {
+        if (false) {
             com.muqingbfq.mq.floating.start(this);
         }
-        setContentView(R.layout.activity_home);
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         DisplayMetrics dm = getResources().getDisplayMetrics();
         main.k = dm.widthPixels;
         main.g = dm.heightPixels;
@@ -60,27 +69,25 @@ public class home extends AppCompatActivity {
             Media.lrcview = new LrcView(this);
             // 请将Context替换为实际的上下文对象
             // 设置LrcView的属性
-            Media.lrcview.setCurrentColor(getResources().getColor(R.color.text));
+            Media.lrcview.setCurrentColor(ContextCompat.getColor(this,R.color.text));
             Media.lrcview.setLabel(getString(R.string.app_name));
             Media.lrcview.setCurrentTextSize(TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
 //            lrcView.setLrcPadding(16);
             Media.lrcview.setCurrentTextSize(TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_SP, 20, getResources().getDisplayMetrics()));
-            Media.lrcview.setTimelineTextColor(getResources().getColor(R.color.text_tm));
+            Media.lrcview.setTimelineTextColor(ContextCompat.getColor(this,R.color.text_tm));
         }
         try {
             //初始化工具栏
-            Toolbar toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
+            setSupportActionBar(binding.toolbar);
             DrawerLayout drawerLayout = findViewById(R.id.chct);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
+                    this, drawerLayout, binding.toolbar, R.string.app_name, R.string.app_name);
             drawerLayout.addDrawerListener(toggle);
             toggle.syncState();
             //初始化侧滑
-            NavigationView chb = findViewById(R.id.chb);
-            chb.setNavigationItemSelectedListener(item -> {
+            binding.chb.setNavigationItemSelectedListener(item -> {
                 com.muqingbfq.fragment.sz.switch_sz(home.this, item.getItemId());
                 return false;
             });
@@ -92,10 +99,73 @@ public class home extends AppCompatActivity {
             }
             //检测更新
             new gj.jianchagengxin(this);
-
+            binding.editView.setOnClickListener(view ->
+                    startActivity(new Intent(this, activity_search.class)));
+            UI();
         } catch (Exception e) {
             yc.tc(this, e);
         }
+    }
+
+    List<Fragment> list = new ArrayList<>();
+
+    private class adaper extends FragmentStateAdapter {
+        public adaper(@NonNull FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
+            list.add(new gd_adapter());
+            list.add(new wode());
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return list.get(position);
+        }
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+    }
+
+    public void UI() {
+        binding.viewPager.setAdapter(new adaper(this));
+
+// 将 ViewPager2 绑定到 TabLayout
+        binding.tablayout.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.a) {
+                binding.viewPager.setCurrentItem(0);
+            } else if (itemId == R.id.c) {
+                binding.viewPager.setCurrentItem(1);
+            }
+            return true;
+        });
+        binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        binding.tablayout.setSelectedItemId(R.id.a);
+                        break;
+                    case 1:
+                        binding.tablayout.setSelectedItemId(R.id.c);
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                super.run();
+                                try {
+                                    sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.toString();
+                                }
+                                wode fragment = (wode) list.get(position);
+                                fragment.sx();
+                            }
+                        }.start();
+                        break;
+                }
+            }
+        });
     }
 
     private static Intent serviceIntent;
@@ -114,6 +184,13 @@ public class home extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.bfq_db, new bfq_db())
+                .commit();
+    }
     private long time;
 
     @Override

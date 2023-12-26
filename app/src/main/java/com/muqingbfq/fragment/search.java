@@ -178,7 +178,6 @@ public class search extends Fragment {
                 xmList.add(new xm(id, name, coverImgUrl, false));
 
             }
-
         } catch (Exception e) {
             gj.sc(e);
         }

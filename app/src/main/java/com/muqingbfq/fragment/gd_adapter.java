@@ -52,34 +52,6 @@ public class gd_adapter extends Fragment {
         }.start();
         return layout;
     }
-
-    public static class paihangbang extends Fragment {
-        List<xm> list = new ArrayList<>();
-        gd.baseadapter baseadapter;
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                                 @Nullable Bundle savedInstanceState) {
-            FrameLayout layout = new FrameLayout(getContext());
-            RecyclerView recyclerView = new RecyclerView(layout.getContext());
-            int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(layout.getContext(), k / 120);
-            recyclerView.setLayoutManager(gridLayoutManager);
-            layout.addView(recyclerView);
-            baseadapter = new gd.baseadapter(getContext(), list);
-            recyclerView.setAdapter(baseadapter);
-            new Thread() {
-                @SuppressLint("NotifyDataSetChanged")
-                @Override
-                public void run() {
-                    super.run();
-                    resource.排行榜(list);
-                    main.handler.postDelayed(new sx(baseadapter),500);
-                }
-            }.start();
-            return layout;
-        }
-    }
     private static class sx implements Runnable {
         gd.baseadapter baseadapter;
 
