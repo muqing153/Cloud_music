@@ -42,7 +42,7 @@ public class bfq extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     public static AppCompatActivity context;
     public ActivityBfqBinding inflate;
-
+    public static String lrc;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +75,7 @@ public class bfq extends AppCompatActivity {
         inflate.bfqListMp3.
                 setOnClickListener(view1 -> com.muqingbfq.fragment.bflb_db.start(this));
         inflate.control.setOnClickListener(new bfq_an.control(inflate.control));
-        if (bfqkz.mt != null && bfqkz.mt.build.isPlaying()) {
+        if (bfqkz.mt != null && bfqkz.mt.isPlaying()) {
             inflate.kg.setImageResource(R.drawable.bf);
 
         }
@@ -110,6 +110,7 @@ public class bfq extends AppCompatActivity {
             Media.setname(bfqkz.xm.name);
             Media.setzz(bfqkz.xm.zz);
             bfq_an.islike();
+            bfqkz.mt.setTX();
         }
         inflate.download.setOnClickListener(view -> {
             if (wj.cz(wj.mp3 + bfqkz.xm.id)) {

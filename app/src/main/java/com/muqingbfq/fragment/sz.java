@@ -4,56 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.muqingbfq.R;
 import com.muqingbfq.activity_about_software;
 import com.muqingbfq.clean.fragment_clean;
 import com.muqingbfq.login.cookie;
-import com.muqingbfq.login.user_editing;
-import com.muqingbfq.login.user_logs;
-import com.muqingbfq.login.user_message;
-import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
 
 public class sz {
-    @SuppressLint("StaticFieldLeak")
-    public static TextView name, jieshao;
-    @SuppressLint("StaticFieldLeak")
-    public static ImageView imageView;
-    Context context;
-
-    public sz(Context context, View view) {
-        this.context = context;
-        name = view.findViewById(R.id.sz_text1);
-        jieshao = view.findViewById(R.id.sz_text2);
-        imageView = view.findViewById(R.id.image);
-        view.findViewById(R.id.xdbj).
-                setOnClickListener(v -> {
-                    if (main.getToken() == null) {
-                        context.startActivity(new Intent(context, user_logs.class));
-                    } else {
-                        context.startActivity(new Intent(context, user_editing.class));
-                    }
-                });
-        new user_message();
-    }
-
-    public static void setname(String string) {
-        main.handler.post(() -> name.setText(string));
-    }
-    public static void setqianming(String string) {
-        main.handler.post(() -> {
-            if (string == null) {
-                jieshao.setText("");
-            } else {
-                jieshao.setText(string);
-            }
-        });
-    }
     @SuppressLint("NonConstantResourceId")
     public static void switch_sz(Context context, int id) {
         if (id == R.id.a) {

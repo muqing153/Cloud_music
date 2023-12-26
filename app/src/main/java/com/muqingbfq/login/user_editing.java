@@ -152,9 +152,9 @@ public class user_editing extends FragmentActivity {
         binding.userEnd.setOnClickListener(view ->{
             finish();
             main.settoken(null, null);
-            sz.setname("未登录");
-            sz.setqianming(null);
-            sz.imageView.setImageResource(R.drawable.icon);
+            com.muqingbfq.fragment.wode.setname("未登录");
+            com.muqingbfq.fragment.wode.setqianming(null);
+            com.muqingbfq.fragment.wode.imageView.setImageResource(R.drawable.icon);
         });
         findViewById(R.id.button1).setOnClickListener(view -> {
             // 创建OkHttpClient实例

@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import androidx.annotation.Nullable;
-import androidx.media3.common.MediaItem;
 
 import com.muqingbfq.api.url;
 import com.muqingbfq.mq.BluetoothMusicController;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.Random;
 
 public class bfqkz extends Service {
-    public static MediaPlayer mt;
+    public static MediaPlayer mt = new MediaPlayer();
     public static List<MP3> list = new ArrayList<>();
     public static List<MP3> lishi_list = new ArrayList<>();
     public static int ms;
@@ -46,7 +45,6 @@ public class bfqkz extends Service {
         } else if (s == 2) {
             i = new Random().nextInt(bfqkz.list.size());
         }
-        mt.build.seekToDefaultPosition(i);
         return i;
     }
 
@@ -54,9 +52,23 @@ public class bfqkz extends Service {
     public static void mp3(String id) {
         try {
             if (TextUtils.isEmpty(id)) {
+                //针对错误进行相应的处理
+                if (bfqkz.list.size() < 1) {
+                    return;
+                }
+                bfqkz.list.remove(bfqkz.xm);
+                bfqkz.xm = bfqkz.list.get(bfqkz.getmti(bfqkz.ms));
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        bfqkz.mp3(com.muqingbfq.api.
+                                url.hq(bfqkz.xm));
+                    }
+                }.start();
                 return;
             }
-            if (TextUtils.isEmpty(xm.picurl.toString())) {
+            if (TextUtils.isEmpty(xm.picurl)) {
                 xm.picurl = url.picurl(xm.id);
             }
             if (bfqkz.lishi_list.size() >= 100) {

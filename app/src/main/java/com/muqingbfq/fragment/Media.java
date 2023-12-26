@@ -25,6 +25,9 @@ import com.muqingbfq.home;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import me.wcy.lrcview.LrcView;
 
 public class Media extends Fragment {
@@ -114,7 +117,7 @@ public class Media extends Fragment {
         time_b = inflate.timeB;
         //初始化歌词组件
         lrcview.setDraggable(true, (view, time) -> {
-            bfqkz.mt.build.seekTo(Math.toIntExact(time));
+            bfqkz.mt.seekTo(Math.toIntExact(time));
             return false;
         });
         if (!isTablet(com.muqingbfq.bfq.context)) {
@@ -139,10 +142,10 @@ public class Media extends Fragment {
         //初始化播放器列表
         if (bfqkz.xm != null) {
             main.handler.removeCallbacks(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度
-            long duration = bfqkz.mt.build.getDuration();
-            tdt.setMax((int) bfqkz.mt.build.getDuration());
+            long duration = bfqkz.mt.getDuration();
+            tdt.setMax((int) bfqkz.mt.getDuration());
             setTime_a(bfq_an.getTime(duration));
-            long position = bfqkz.mt.build.getCurrentPosition();
+            long position = bfqkz.mt.getCurrentPosition();
             setProgress((int) position);
             main.handler.post(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度
         }
@@ -155,9 +158,18 @@ public class Media extends Fragment {
                 Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
-    public static void loadLyric(String a, String b) {
-        if (lrcview == null || a == null) {
+    public static void loadLyric() {
+        if (lrcview == null || com.muqingbfq.bfq.lrc == null) {
             return;
+        }
+        JSONObject jsonObject;
+        String a = null, b = null;
+        try {
+            jsonObject = new JSONObject(com.muqingbfq.bfq.lrc);
+            a = jsonObject.getJSONObject("lrc").getString("lyric");
+            b = jsonObject.getJSONObject("tlyric").getString("lyric");
+        } catch (Exception e) {
+            gj.sc(e);
         }
         lrcview.loadLrc(a, b);
     }

@@ -87,25 +87,6 @@ public class resource {
         }
     }
 
-    public static void 下载(List<xm> list) {
-        list.add(new xm("mp3_hc.json", "最近播放", R.drawable.zt, true));
-        list.add(new xm("mp3_like.json", "喜欢", R.drawable.like, true));
-        list.add(new xm("mp3_xz.json", "下载", R.drawable.download, true));
-        try {
-            JSONObject date = new JSONObject(wj.dqwb(wj.gd_xz));
-            for (Iterator<String> it = date.keys(); it.hasNext(); ) {
-                String id = it.next();
-                boolean cz = wj.cz(wj.gd + id);
-                JSONObject jsonObject = date.getJSONObject(id);
-                String name = jsonObject.getString("name");
-                String picUrl = jsonObject.getString("picUrl");
-                list.add(new xm(id, name, picUrl, cz));
-            }
-        } catch (Exception e) {
-            gj.sc(e);
-        }
-    }
-
     private static void add(JSONObject jsonObject, List<xm> list) throws Exception {
         String id = jsonObject.getString("id");
         boolean cz = wj.cz(wj.gd + id);

@@ -2,6 +2,7 @@ package com.muqingbfq.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.muqingbfq.R;
 import com.muqingbfq.api.resource;
+import com.muqingbfq.databinding.FragmentWdBinding;
+import com.muqingbfq.login.user_editing;
+import com.muqingbfq.login.user_logs;
 import com.muqingbfq.main;
 import com.muqingbfq.xm;
 
@@ -50,10 +54,8 @@ public class gd_adapter extends Fragment {
     }
 
     public static class paihangbang extends Fragment {
-
         List<xm> list = new ArrayList<>();
         gd.baseadapter baseadapter;
-
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -78,35 +80,6 @@ public class gd_adapter extends Fragment {
             return layout;
         }
     }
-
-    public static class wuode extends Fragment {
-        List<xm> list = new ArrayList<>();
-        gd.baseadapter baseadapter;
-
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            FrameLayout layout = new FrameLayout(getContext());
-            RecyclerView recyclerView = new RecyclerView(layout.getContext());
-            int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(layout.getContext(), k / 120);
-            recyclerView.setLayoutManager(gridLayoutManager);
-            layout.addView(recyclerView);
-            baseadapter = new gd.baseadapter(getContext(), list);
-            recyclerView.setAdapter(baseadapter);
-            new Thread() {
-                @SuppressLint("NotifyDataSetChanged")
-                @Override
-                public void run() {
-                    super.run();
-                    resource.下载(list);
-                    main.handler.postDelayed(new sx(baseadapter),500);
-                }
-            }.start();
-            return layout;
-        }
-    }
-
     private static class sx implements Runnable {
         gd.baseadapter baseadapter;
 

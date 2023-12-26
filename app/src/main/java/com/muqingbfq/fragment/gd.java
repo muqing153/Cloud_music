@@ -2,6 +2,7 @@ package com.muqingbfq.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -20,22 +22,30 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.card.MaterialCardView;
-import com.muqingbfq.MP3;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.muqingbfq.R;
 import com.muqingbfq.api.playlist;
 import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
 import com.muqingbfq.databinding.FragmentGdBinding;
-import com.muqingbfq.list.list_gd;
 import com.muqingbfq.main;
+import com.muqingbfq.mq.gj;
+import com.muqingbfq.mq.wj;
+import com.muqingbfq.mq.wl;
 import com.muqingbfq.xm;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class gd extends Fragment {
     public static String gdid;
     FragmentGdBinding binding;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -49,27 +59,8 @@ public class gd extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentGdBinding.inflate(inflater, container, false);
-        binding.viewPager.setAdapter(new FragmentStateAdapter(getActivity()) {
-            @NonNull
-            @Override
-            public Fragment createFragment(int position) {
-                switch (position) {
-                    case 0:
-                        return new gd_adapter();
-                    case 1:
-                        return new gd_adapter.paihangbang();
-                    case 2:
-                        return new gd_adapter.wuode();
-                    default:
-                        return new Fragment();
-                }
-            }
+        binding.viewPager.setAdapter(new adaper(getActivity()));
 
-            @Override
-            public int getItemCount() {
-                return 3;
-            }
-        });
 // 将 ViewPager2 绑定到 TabLayout
         binding.tablayout.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
@@ -81,7 +72,8 @@ public class gd extends Fragment {
                 binding.viewPager.setCurrentItem(2);
             }
             return true;
-        });binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+        });
+        binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 switch (position) {
@@ -93,12 +85,36 @@ public class gd extends Fragment {
                         break;
                     case 2:
                         binding.tablayout.setSelectedItemId(R.id.c);
+                        wode fragment = (wode) list.get(position);
+                        fragment.sx();
                         break;
                 }
             }
         });
         return binding.getRoot();
     }
+
+    List<Fragment> list = new ArrayList<>();
+
+    private class adaper extends FragmentStateAdapter {
+        public adaper(@NonNull FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
+            list.add(new gd_adapter());
+            list.add(new gd_adapter.paihangbang());
+            list.add(new wode());
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return list.get(position);
+        }
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+    }
+
     public static class baseadapter extends RecyclerView.Adapter<VH> {
         Context context;
         List<xm> list;
@@ -123,9 +139,63 @@ public class gd extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull VH holder, int position) {
             xm xm = list.get(position);
-            list_gd gd = new list_gd(xm,this);
-            holder.cardView.setOnClickListener(gd);
-            holder.cardView.setOnLongClickListener(gd);
+            holder.cardView.setOnClickListener(view -> {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, mp3.class);
+                intent.putExtra("id", xm.id);
+                intent.putExtra("name", xm.name);
+                context.startActivity(intent);
+            });
+            holder.cardView.setOnLongClickListener(view -> {
+                String[] stringArray = view.getResources()
+                        .getStringArray(R.array.gd_list);
+                new MaterialAlertDialogBuilder(view.getContext()).setItems(stringArray, (dialog, id) -> {
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            if (id == 0) {
+                                String hq = wl.hq(playlist.api + xm.id + "&limit=30");
+                                if (hq != null) {
+                                    wj.xrwb(wj.gd + xm.id, hq);
+                                    xm.cz = true;
+                                    try {
+                                        JSONObject jsonObject = new JSONObject();
+                                        if (wj.cz(wj.gd_xz)) {
+                                            jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
+                                        }
+                                        JSONObject json = new JSONObject();
+                                        json.put("name", xm.name);
+                                        json.put("picUrl", xm.picurl);
+                                        jsonObject.put(xm.id, json);
+                                        wj.xrwb(wj.gd_xz, jsonObject.toString());
+                                    } catch (JSONException e) {
+                                        gj.sc("list gd onclick thear " + e);
+                                    }
+                                }
+
+                            } else if (id == 2) {
+                                wj.sc(wj.gd + xm.id);
+                                if (xm.id.equals("mp3_xz.json")) {
+                                    wj.sc(new File(wj.mp3));
+                                }
+                                xm.cz = false;
+                                try {
+                                    JSONObject jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
+                                    jsonObject.remove(xm.id);
+                                    list.remove(xm);
+                                    wj.xrwb(wj.gd_xz, jsonObject.toString());
+                                } catch (JSONException e) {
+                                    gj.sc(e);
+                                }
+                            }
+                            main.handler.post(() -> notifyDataSetChanged());
+                        }
+                    }.start();
+                    // 在这里处理菜单项的点击事件
+                    dialog.dismiss();
+                }).show();
+                return false;
+            });
             holder.textView.setText(xm.name);
             holder.kg.setOnClickListener(view1 -> {
                 ImageView tx = (ImageView) view1;

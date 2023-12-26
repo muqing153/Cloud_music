@@ -18,7 +18,7 @@ android {
         //noinspection OldTargetApi
         targetSdk 31
         versionCode 1
-        versionName "1.7.6"
+        versionName "1.7.8"
 
     }
     compileOptions {
@@ -56,7 +56,6 @@ dependencies {
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
-    implementation("androidx.media3:media3-exoplayer:1.2.0")
 //修改音乐标签库
     implementation 'com.mpatric:mp3agic:0.9.1'
 }

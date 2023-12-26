@@ -22,9 +22,11 @@ import com.muqingbfq.bfq;
 import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
 import com.muqingbfq.home;
+import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.xm;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -46,14 +48,20 @@ public class bfq_db extends Fragment {
             }
 
             bfqkz.xm = wj.getMP3FromFile();
-            bfqkz.mt = new MediaPlayer();
             if (bfqkz.xm != null) {
                 new Thread(){
                     @Override
                     public void run() {
                         super.run();
                         String hq = url.hq(bfqkz.xm);
-                        bfqkz.mt.DataSource(hq);
+                        if (hq == null) {
+                            return;
+                        }
+                        try {
+                            bfqkz.mt.DataSource(hq);
+                        } catch (Exception e) {
+                            gj.sc(e);
+                        }
                     }
                 }.start();
             }

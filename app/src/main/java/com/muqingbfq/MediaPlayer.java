@@ -4,33 +4,35 @@ import static com.muqingbfq.bfqkz.xm;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.AudioAttributes;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.media3.common.MediaItem;
-import androidx.media3.common.PlaybackException;
-import androidx.media3.common.Player;
-import androidx.media3.exoplayer.ExoPlayer;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.Mp3File;
 import com.muqingbfq.fragment.Media;
 import com.muqingbfq.fragment.bflb_db;
 import com.muqingbfq.fragment.bfq_db;
 import com.muqingbfq.fragment.search;
 import com.muqingbfq.mq.gj;
+import com.muqingbfq.mq.wj;
 
-public class MediaPlayer {
-    public ExoPlayer build;
+import java.io.IOException;
+
+public class MediaPlayer extends android.media.MediaPlayer {
     // 每秒更新一次进度
     public Runnable updateSeekBar = new Runnable() {
         @Override
         public void run() {
-            if (build != null && build.isPlaying() && Media.lrcview != null) {
-                long position = build.getCurrentPosition();
+            if (isPlaying() && Media.view != null) {
+                long position = getCurrentPosition();
                 Media.setProgress((int) position);
             }
             main.handler.postDelayed(this, 1000); // 每秒更新一次进度
@@ -39,50 +41,26 @@ public class MediaPlayer {
 
     @SuppressLint("UnsafeOptInUsageError")
     public MediaPlayer() {
-        build = new ExoPlayer.Builder(home.appCompatActivity).build();
-        build.addListener(new Player.Listener() {
+        setOnErrorListener(new OnErrorListener() {
             @Override
-            public void onPlaybackStateChanged(@Player.State int state) {
-                switch (state) {
-                    case Player.STATE_READY:
-                        bfui();
-                        break;
-
-                    case Player.STATE_ENDED:
-                        int i = bfqkz.getmti(bfqkz.ms);
-                        bfqkz.xm = bfqkz.list.get(i);
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                super.run();
-                                bfqkz.mp3(com.muqingbfq.api.
-                                        url.hq(bfqkz.xm));
-                            }
-                        }.start();
-                        break;
-
-                    case Player.STATE_BUFFERING:
-                    case Player.STATE_IDLE:
-                        break;
-                }
-                if (Media.view != null) {
-                    main.handler.removeCallbacks(updateSeekBar); // 在播放开始时启动更新进度
-                    long duration = build.getDuration();
-                    Media.setMax((int) build.getDuration());
-                    Media.setTime_a(bfq_an.getTime(duration));
-                    long position = build.getCurrentPosition();
-                    Media.setProgress((int) position);
-                    main.handler.post(updateSeekBar); // 在播放开始时启动更新进度
-                }
-                // 在这里将进度更新到UI上
-            }
-
-
-            @Override
-            public void onPlayerError(@NonNull PlaybackException error) {
-                gj.sc(error);
+            public boolean onError(android.media.MediaPlayer mediaPlayer, int i, int i1) {
+                //针对错误进行相应的处理
                 bfqkz.list.remove(bfqkz.xm);
-                Player.Listener.super.onPlayerError(error);
+                bfqkz.xm = bfqkz.list.get(bfqkz.getmti(bfqkz.ms));
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        bfqkz.mp3(com.muqingbfq.api.
+                                url.hq(bfqkz.xm));
+                    }
+                }.start();
+                return false;
+            }
+        });
+        setOnCompletionListener(new OnCompletionListener() {
+            @Override
+            public void onCompletion(android.media.MediaPlayer mediaPlayer) {
                 int i = bfqkz.getmti(bfqkz.ms);
                 bfqkz.xm = bfqkz.list.get(i);
                 new Thread() {
@@ -94,73 +72,64 @@ public class MediaPlayer {
                     }
                 }.start();
             }
-
-            @Override
-            public void onIsPlayingChanged(boolean isPlaying) {
-                Media.setbf(isPlaying);
-            }
         });
-//        build.setShuffleModeEnabled(true);
+        setAudioAttributes(new AudioAttributes
+                .Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build());
+        main.handler.post(updateSeekBar); // 在播放开始时启动更新进度
     }
 
-    public void pause() {
-        if (build.isPlaying()) {
-            build.pause();
+    @Override
+    public void pause() throws IllegalStateException {
+        if (isPlaying()) {
+            super.pause();
+            Media.setbf(false);
         }
     }
 
-    public void start() {
+    @Override
+    public void start() throws IllegalStateException {
         if (bfqkz.xm == null) {
             if (bfqkz.list != null && bfqkz.list.size() > 0) {
                 bfq_an.xyq();
             }
             return;
         }
-        build.play();
+        super.start();
+        Media.setbf(true);
     }
 
     // 创建 MediaItem 列表
 //    public static List<MediaItem> list = new ArrayList<>();
-    @SuppressLint("NotifyDataSetChanged")
-    public void setDataSource(String path) {
-        DataSource(path);
+    @Override
+    public void setDataSource(String path) throws IOException {
+        reset();
+        super.setDataSource(path);
+        prepare();
+        start();
         main.handler.post(() -> {
-            build.setPlayWhenReady(true);
-            start();
+            bfui();
+            if (Media.view != null) {
+                main.handler.removeCallbacks(updateSeekBar); // 在播放开始时启动更新进度
+                long duration = getDuration();
+                Media.setMax((int) getDuration());
+                Media.setTime_a(bfq_an.getTime(duration));
+                long position = getCurrentPosition();
+                Media.setProgress((int) position);
+                main.handler.post(updateSeekBar); // 在播放开始时启动更新进度
+            }
+            // 在这里将进度更新到UI上
         });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void DataSource(String path) {
-        if (path == null) {
-            return;
-        }
-        MediaItem mediaItem = MediaItem.fromUri(path);
-/*        if (!list.contains(mediaItem)) {
-            list.add(mediaItem);
-        }*/
-        main.handler.post(() -> {
-//            build.setMediaItems(list);
-//            build.seekToDefaultPosition(getmti(bfqkz.ms));
-            build.setMediaItem(mediaItem);
-            build.prepare();
-            gj.sc(build.getMediaItemCount());
-        });
+    public void DataSource(String path) throws Exception {
+        reset();
+        super.setDataSource(path);
+        prepare();
     }
 
-    public boolean isPlaying() {
-        if (build == null) {
-            return false;
-        }
-        return build.isPlaying();
-    }
-
-    public void seekTo(long a) {
-        build.seekTo(a);
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void bfui() {
+    public void setTX() {
         Glide.with(main.application)
                 .asBitmap()
                 .load(bfqkz.xm.picurl)
@@ -169,6 +138,17 @@ public class MediaPlayer {
                     public boolean onLoadFailed(@Nullable GlideException e, Object model,
                                                 @NonNull Target<Bitmap> target, boolean isFirstResource) {
                         bfq.bitmap = null;
+                        try {
+                            Mp3File mp3file = new Mp3File(wj.mp3 + bfqkz.xm.id);
+                            if (mp3file.hasId3v2Tag()) {
+                                ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                                byte[] albumImage = id3v2Tag.getAlbumImage();
+                                bfq.bitmap=
+                                        BitmapFactory.decodeByteArray(albumImage, 0, albumImage.length);
+                            }
+                        } catch (Exception a) {
+                            gj.sc(a);
+                        }
                         bfqkz.notify.setBitmap();
                         return false;
                     }
@@ -182,12 +162,15 @@ public class MediaPlayer {
                     }
                 })
                 .submit();
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    public void bfui() {
+        setTX();
         String name = xm.name, zz = bfqkz.xm.zz;
         if (Media.view != null) {
             Media.setProgress(0);
             Media.setname(name);
             Media.setzz(zz);
-            bfq_an.islike();
         }
         bfq_db.setname(name + "/" + zz);
         if (com.muqingbfq.fragment.mp3.lbspq != null) {
@@ -198,7 +181,6 @@ public class MediaPlayer {
         }
         if (bflb_db.adapter != null) {
             bflb_db.adapter.notifyDataSetChanged();
-            gj.sc(1);
         }
     }
 }

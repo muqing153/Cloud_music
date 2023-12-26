@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
@@ -19,9 +20,11 @@ import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
 import com.muqingbfq.MP3;
 import com.muqingbfq.R;
+import com.muqingbfq.bfq;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -58,7 +61,6 @@ public class FileDownloader {
                     // 下载失败处理
                     return;
                 }
-
                 File outputFile = new File(wj.mp3, "nihao");
                 File parentFile = outputFile.getParentFile();
                 if (!parentFile.isDirectory()) {
@@ -89,7 +91,12 @@ public class FileDownloader {
                             id3v2Tag.setTitle(x.name);
                             id3v2Tag.setArtist(x.zz);
                             id3v2Tag.setAlbum(x.zz);
-                            id3v2Tag.setUrl(x.picurl.toString());
+                            id3v2Tag.setLyrics(bfq.lrc);
+                            ByteArrayOutputStream o = new ByteArrayOutputStream();
+                            bfq.bitmap.compress(Bitmap.CompressFormat.JPEG, 100, o);
+                            byte[] imageData = o.toByteArray();
+                            id3v2Tag.setAlbumImage(imageData, "image/jpeg");
+                            o.close();
                             mp3file.save(wj.mp3 + x.id);
                             outputFile.delete();
                         }

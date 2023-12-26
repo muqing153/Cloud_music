@@ -30,16 +30,16 @@ public class user_message extends Thread {
             string strings = get();
             main.handler.post(() -> {
                 com.muqingbfq.fragment.
-                        sz.setname(strings.userName());
+                        wode.setname(strings.userName());
                 com.muqingbfq.fragment.
-                        sz.setqianming(strings.introduce());
+                        wode.setqianming(strings.introduce());
                 com.bumptech.glide.Glide.with(com.muqingbfq.fragment.
-                                sz.imageView)
+                                wode.imageView)
                         .load(strings.headIcon())
                         .placeholder(R.drawable.icon)//图片加载出来前，显示的图片
                         .error(R.drawable.icon)//图片加载失败后，显示的图片
                         .into(com.muqingbfq.fragment.
-                                        sz.imageView);
+                                        wode.imageView);
             });
         } catch (Exception e) {
             gj.sc(e);

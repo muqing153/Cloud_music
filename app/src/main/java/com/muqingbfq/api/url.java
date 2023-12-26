@@ -1,8 +1,11 @@
 package com.muqingbfq.api;
 
 import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.UnsupportedTagException;
 import com.muqingbfq.MP3;
+import com.muqingbfq.bfq;
 import com.muqingbfq.fragment.Media;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
@@ -16,6 +19,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import okhttp3.Call;
@@ -38,11 +42,11 @@ public class url extends Thread {
             gc(x.id);
         }
         try {
+            if (wj.cz(wj.mp3 + x.id)) {
+                return wj.mp3 + x.id;
+            }
             if (wj.cz(wj.filesdri + "hc/" + x.id)) {
                 return wj.filesdri + "hc/" + x.id;
-            }
-            if (wj.cz(wj.mp3+x.id)) {
-                return wj.mp3 + x.id;
             }
             String level = "standard";
             boolean wiFiConnected = gj.isWiFiConnected();
@@ -106,7 +110,6 @@ public class url extends Thread {
                                         id3v2Tag.setTitle(x.name);
                                         id3v2Tag.setArtist(x.zz);
                                         id3v2Tag.setAlbum(x.zz);
-                                        id3v2Tag.setUrl(x.picurl.toString());
                                         mp3file.save(wj.filesdri + "hc/" + x.id);
                                         file.delete();
                                         // 保存修改后的音乐文件，删除原来的文件
@@ -134,15 +137,24 @@ public class url extends Thread {
 
 
     public static void gc(String id) {
-        String lrc = null, tlyric = null;
-        try {
-            JSONObject jsonObject = new JSONObject(wl.hq("/lyric?id=" + id));
-            lrc = jsonObject.getJSONObject("lrc").getString("lyric");
-            tlyric = jsonObject.getJSONObject("tlyric").getString("lyric");
-        } catch (Exception e) {
-            gj.sc("url gc(int id) lrc: " + e);
+        String file = wj.mp3 + id;
+        if (wj.cz(file)) {
+            try {
+                Mp3File mp3file = new Mp3File(file);
+                if (mp3file.hasId3v2Tag()) {
+                    ID3v2 id3v2Tag = mp3file.getId3v2Tag();
+                    bfq.lrc = id3v2Tag.getLyrics();
+                }
+                if (bfq.lrc == null) {
+                    bfq.lrc = wl.hq("/lyric?id=" + id);
+                }
+            } catch (Exception e) {
+                gj.sc(e);
+            }
+        }else {
+            bfq.lrc = wl.hq("/lyric?id=" + id);
         }
-        Media.loadLyric(lrc, tlyric);
+        Media.loadLyric();
     }
 
     public static String picurl(String id) {
@@ -151,7 +163,7 @@ public class url extends Thread {
             return new JSONObject(hq).getJSONArray("songs").getJSONObject(0)
                     .getJSONObject("al").getString("picUrl");
         } catch (Exception e) {
-            yc.start(e);
+            gj.sc(e);
         }
         return null;
     }

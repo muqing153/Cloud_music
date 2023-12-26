@@ -39,6 +39,9 @@ public class home extends AppCompatActivity {
         appCompatActivity = this;
         setTheme(R.style.Theme_muqing);
         super.onCreate(savedInstanceState);
+        if (true) {
+            com.muqingbfq.mq.floating.start(this);
+        }
         setContentView(R.layout.activity_home);
         DisplayMetrics dm = getResources().getDisplayMetrics();
         main.k = dm.widthPixels;
@@ -81,7 +84,6 @@ public class home extends AppCompatActivity {
                 com.muqingbfq.fragment.sz.switch_sz(home.this, item.getItemId());
                 return false;
             });
-            new com.muqingbfq.fragment.sz(this, chb.getHeaderView(0));
             //初始化播放器组件
             // 启动Service
             if (serviceIntent == null) {

@@ -19,15 +19,31 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.google.android.material.appbar.AppBarLayout
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize">
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="?attr/actionBarSize"/>
-            </com.google.android.material.appbar.AppBarLayout>
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/editview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:autofillHints=""
+                        android:background="@drawable/ui_editview"
+                        android:hint="@string/search"
+                        android:gravity="center"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:minHeight="48dp"
+                        android:paddingStart="3dp"
+                        android:paddingEnd="3dp" />
+                </LinearLayout>
+            </com.google.android.material.appbar.MaterialToolbar>
+
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/gd"
                 android:name="com.muqingbfq.fragment.gd"

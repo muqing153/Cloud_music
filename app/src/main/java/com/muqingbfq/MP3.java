@@ -5,7 +5,7 @@ import java.util.Objects;
 public class MP3 {
     public String id, name, zz;
 //    音乐的贴图
-    public Object picurl;
+    public String picurl;
     public MP3(String id, String name, String zz, String picurl) {
         this.id = id;
         this.name = name;
