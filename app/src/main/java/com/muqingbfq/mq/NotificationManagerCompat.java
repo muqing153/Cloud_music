@@ -62,15 +62,9 @@ public class NotificationManagerCompat {
                     setAction("syq"));
             pendingIntent_xyq = getBroadcast(context, my.
                     setAction("xyq"));
-            // 取消操作的PendingIntent
-// 取消操作的PendingIntent
-/*            PendingIntent cancelIntent = MediaButtonReceiver.buildMediaButtonPendingIntent(context,
-                    PlaybackStateCompat.ACTION_STOP);*/
             style = new androidx.media.app.NotificationCompat.MediaStyle()
                     .setShowActionsInCompactView(0, 1, 2)
                     .setMediaSession(bfqkz.mSession.getSessionToken());
-//                            .setShowCancelButton(true)
-//                            .setCancelButtonIntent(cancelIntent);
             notificationManager = androidx.core.app.NotificationManagerCompat.from(context);
             notificationBuilder = getNotificationBuilder(context)
                     .setSmallIcon(R.drawable.icon)
@@ -96,11 +90,6 @@ public class NotificationManagerCompat {
             name = bfqkz.xm.name;
             zz = bfqkz.xm.zz;
         }
-        bfqkz.build = new MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, name)
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, zz)
-                .build();
-        bfqkz.mSession.setMetadata(bfqkz.build);
         notificationBuilder.mActions.clear();
         notificationBuilder.addAction(android.R.drawable.ic_media_previous, "syq", pendingIntent_syq) // #0
                 .addAction(bfqkz.mt.isPlaying() ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play
@@ -111,6 +100,7 @@ public class NotificationManagerCompat {
                 .setOngoing(bfqkz.mt.isPlaying());
         notificationManager_notify();
     }
+
     private PendingIntent pendingIntent_kg,
             pendingIntent_syq,
             pendingIntent_xyq;
@@ -123,17 +113,22 @@ public class NotificationManagerCompat {
         notificationManager.notify(1, notificationBuilder.build());
     }
 
-    @SuppressLint({"MissingPermission", "RestrictedApi", "NotifyDataSetChanged"})
     public void setBitmap() {
-        if (bfq.bitmap == null) {
-            bfq.bitmap = BitmapFactory.decodeResource(context.getResources(),
-                    R.drawable.icon);
-        }
+        Media.setImageBitmap();
         if (notificationManager != null) {
+            if (ActivityCompat.checkSelfPermission(home.appCompatActivity, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
             notificationBuilder.setLargeIcon(bfq.bitmap);
             notificationManager.notify(1, notificationBuilder.build());
         }
-        Media.setImageBitmap();
     }
 
     private NotificationCompat.Builder getNotificationBuilder(Context context) {
@@ -152,7 +147,9 @@ public class NotificationManagerCompat {
         return PendingIntent.getBroadcast(context, 0, intent, flag);
     }
 
-    private PendingIntent getActivity(Context context, Intent intent) {
+
+
+    public static PendingIntent getActivity(Context context, Intent intent) {
         int flag;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             flag = PendingIntent.FLAG_IMMUTABLE;

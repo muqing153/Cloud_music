@@ -61,7 +61,12 @@ public class wode extends Fragment {
 
         new user_message();
 //        int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4){
+            @Override
+            public boolean canScrollVertically() {
+                return false;//禁止滑动
+            }
+        };
         binding.recyclerview1.setLayoutManager(gridLayoutManager);
         final Object[][] lista = {
                 {R.drawable.bf, "最近播放", "mp3_hc.json"},
@@ -73,6 +78,7 @@ public class wode extends Fragment {
                 {R.drawable.paihangbang, "排行榜", "排行榜"},
                 {R.drawable.icon, "开发中", ""}
         };
+        binding.recyclerview1.setFocusable(false);
         binding.recyclerview1.setAdapter(new RecyclerView.Adapter<VH>() {
             @NonNull
             @Override

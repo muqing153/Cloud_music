@@ -113,12 +113,14 @@ public class MediaPlayer extends android.media.MediaPlayer {
         reset();
         super.setDataSource(path);
         prepare();
+        setTX();
     }
 
     public void setTX() {
         Glide.with(main.application)
                 .asBitmap()
                 .load(bfqkz.xm.picurl)
+                .error(R.drawable.icon)
                 .listener(new RequestListener<Bitmap>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model,

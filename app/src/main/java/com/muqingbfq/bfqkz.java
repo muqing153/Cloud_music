@@ -1,17 +1,22 @@
 package com.muqingbfq;
 
 import android.annotation.SuppressLint;
-import android.app.Service;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.media.MediaBrowserServiceCompat;
 
 import com.muqingbfq.api.url;
 import com.muqingbfq.mq.BluetoothMusicController;
@@ -22,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class bfqkz extends Service {
+public class bfqkz extends MediaBrowserServiceCompat {
     public static MediaPlayer mt = new MediaPlayer();
     public static List<MP3> list = new ArrayList<>();
     public static List<MP3> lishi_list = new ArrayList<>();
@@ -32,6 +37,7 @@ public class bfqkz extends Service {
     public static boolean like_bool;
     @SuppressLint("StaticFieldLeak")
     public static com.muqingbfq.mq.NotificationManagerCompat notify;
+
     public static int getmti(int s) {
         int i = bfqkz.list.indexOf(xm);
         if (s == 1) {
@@ -77,10 +83,12 @@ public class bfqkz extends Service {
 
     public static class mp3 extends Thread {
         String id;
+
         public mp3(String id) {
             this.id = id;
             start();
         }
+
         @Override
         public void run() {
             super.run();
@@ -90,7 +98,6 @@ public class bfqkz extends Service {
 
 
     public static MediaSessionCompat mSession;
-    public static MediaMetadataCompat build;
     public static PlaybackStateCompat playback;
 
     @Override
@@ -98,15 +105,24 @@ public class bfqkz extends Service {
         super.onCreate();
         com.muqingbfq.api.playlist.hq_hc(bfqkz.lishi_list);
         new BluetoothMusicController(this);
-        mSession = new MediaSessionCompat(this, "MusicService");
         playback = new PlaybackStateCompat.Builder()
                 .setState(PlaybackStateCompat.STATE_NONE, 0, 1.0f)
                 .build();
+
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        intent.setComponent(new ComponentName(this, home.class));//用ComponentName得到class对象
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
+        PendingIntent pendingIntent = com.muqingbfq.mq.NotificationManagerCompat.getActivity(this, intent);
+        mSession = new MediaSessionCompat(this, "MusicService",
+                home.componentName, pendingIntent);
         mSession.setCallback(new callback());
         mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         mSession.setPlaybackState(playback);
-        mSession.setMetadata(build);
-        mSession.setActive(true);
+//            mSession.setActive(true);
+        setSessionToken(mSession.getSessionToken());
+
         notify = new com.muqingbfq.mq.NotificationManagerCompat(this);
     }
 
@@ -172,6 +188,17 @@ public class bfqkz extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    @Nullable
+    @Override
+    public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
+        return null;
+    }
+
+    @Override
+    public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
+
+    }
 /*
 
     public class MyBinder extends Binder {
@@ -184,7 +211,7 @@ public class bfqkz extends Service {
     public static void updateNotification() {
         try {
             // 更新通知栏的播放状态
-            if (notify.notificationBuilder != null) {
+            if (bfqkz.notify != null && notify.notificationBuilder != null) {
                 notify.tzl();
             }
         } catch (Exception e) {
