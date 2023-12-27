@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
@@ -38,32 +39,56 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.wcy.lrcview.LrcView;
+
 public class bfq extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
-    public static ActivityBfqBinding inflate;
+    public static ActivityBfqBinding binding;
     public static String lrc;
+
+    public static LrcView lrcview;
+    private void setLrc(){
+        lrcview = binding.lrcView;
+        lrcview.setCurrentColor(ContextCompat.getColor(this,R.color.text));
+        lrcview.setLabel(getString(R.string.app_name));
+        lrcview.setCurrentTextSize(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
+//            lrcView.setLrcPadding(16);
+        lrcview.setCurrentTextSize(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP, 20, getResources().getDisplayMetrics()));
+        lrcview.setTimelineTextColor(ContextCompat.getColor(this,R.color.text_tm));
+        lrcview.setDraggable(true, (view, time) -> {
+            bfqkz.mt.seekTo(Math.toIntExact(time));
+            return false;
+        });
+        if (!gj.isTablet(this)) {
+            lrcview.setOnTapListener((view, x, y) -> {
+                View kp = binding.kp1;
+                if (kp.getVisibility() == View.VISIBLE) {
+                    kp.setVisibility(View.GONE);
+                } else {
+                    kp.setVisibility(View.VISIBLE);
+                }
+            });
+        } else {
+            lrcview.setOnTapListener((view, x, y) -> {
+            });
+        }
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        inflate = ActivityBfqBinding.inflate(getLayoutInflater());
-        new Media(inflate);
-        Media.lrcview.setCurrentColor(ContextCompat.getColor(this,R.color.text));
-        Media.lrcview.setLabel(getString(R.string.app_name));
-        Media.lrcview.setCurrentTextSize(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
-//            lrcView.setLrcPadding(16);
-        Media.lrcview.setCurrentTextSize(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_SP, 20, getResources().getDisplayMetrics()));
-        Media.lrcview.setTimelineTextColor(ContextCompat.getColor(this,R.color.text_tm));
-
-        LinearLayout root = inflate.getRoot();
+        binding = ActivityBfqBinding.inflate(getLayoutInflater());
+        setLrc();
+        new Media(binding);
+        LinearLayout root = binding.getRoot();
         TypedValue typedValue = new TypedValue();
         home.appCompatActivity.getTheme().resolveAttribute(android.R.attr.windowBackground, typedValue, true);
         // 设置背景颜色
         root.setBackgroundColor(typedValue.data);
         setContentView(root);
-        Toolbar toolbar = inflate.toolbar;
+        Toolbar toolbar = binding.toolbar;
         toolbar.setNavigationOnClickListener(view1 -> finish());
         toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.fx && bfqkz.xm != null) {
@@ -75,18 +100,18 @@ public class bfq extends AppCompatActivity {
             return false;
         });
         bfq_an.kz kz = new bfq_an.kz();
-        inflate.kg.setOnClickListener(kz);
-        inflate.xyq.setOnClickListener(kz);
-        inflate.syq.setOnClickListener(kz);
-        inflate.bfqListMp3.
+        binding.kg.setOnClickListener(kz);
+        binding.xyq.setOnClickListener(kz);
+        binding.syq.setOnClickListener(kz);
+        binding.bfqListMp3.
                 setOnClickListener(view1 -> com.muqingbfq.fragment.bflb_db.start(this));
-        inflate.control.setOnClickListener(new bfq_an.control(inflate.control));
+        binding.control.setOnClickListener(new bfq_an.control(binding.control));
         if (bfqkz.mt != null && bfqkz.mt.isPlaying()) {
-            inflate.kg.setImageResource(R.drawable.bf);
+            binding.kg.setImageResource(R.drawable.bf);
 
         }
         text();
-        inflate.like.setOnClickListener(view1 -> {
+        binding.like.setOnClickListener(view1 -> {
             try {
                 Gson gson = new Gson();
                 Type type = new TypeToken<List<MP3>>() {
@@ -97,12 +122,12 @@ public class bfq extends AppCompatActivity {
                 }
                 if (bfqkz.like_bool) {
                     list.remove(bfqkz.xm);
-                    inflate.like
+                    binding.like
                             .setImageTintList(ContextCompat.getColorStateList(bfq.this, R.color.text));
                 } else {
                     if (!list.contains(bfqkz.xm)) {
                         list.add(bfqkz.xm);
-                        inflate.like.setImageTintList(ContextCompat.
+                        binding.like.setImageTintList(ContextCompat.
                                 getColorStateList(bfq.this, android.R.color.holo_red_dark));
                     }
                 }
@@ -112,7 +137,7 @@ public class bfq extends AppCompatActivity {
                 e.printStackTrace();
             }
         });
-        inflate.download.setOnClickListener(view -> {
+        binding.download.setOnClickListener(view -> {
             if (wj.cz(wj.mp3 + bfqkz.xm.id)) {
                 gj.ts(this, "你已经下载过这首歌曲了");
                 return;
@@ -149,17 +174,17 @@ public class bfq extends AppCompatActivity {
     }
 
     public static void setname(String str) {
-        if (inflate == null) {
+        if (binding == null) {
             return;
         }
-        inflate.name.setText(str);
+        binding.name.setText(str);
     }
 
     public static void setzz(String str) {
-        if (inflate == null) {
+        if (binding == null) {
             return;
         }
-        inflate.zz.setText(str);
+        binding.zz.setText(str);
     }
 
     public static Bitmap bitmap;
@@ -172,10 +197,10 @@ public class bfq extends AppCompatActivity {
     }
 
     public static void kgsetImageResource(int a) {
-        if (inflate == null) {
+        if (binding == null) {
             return;
         }
-        inflate.kg.setImageResource(a);
+        binding.kg.setImageResource(a);
     }
 
     @Override
@@ -187,8 +212,8 @@ public class bfq extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     public void text() {
-        inflate.toolbar.setOnTouchListener((view, motionEvent) -> {
-            LinearLayout root = inflate.getRoot();
+        binding.toolbar.setOnTouchListener((view, motionEvent) -> {
+            LinearLayout root = binding.getRoot();
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     downY = motionEvent.getRawY();
@@ -208,7 +233,7 @@ public class bfq extends AppCompatActivity {
                     root.setTranslationY(dy);
                     break;
                 case MotionEvent.ACTION_UP:
-                    if (inflate.getRoot().getY() > main.g - main.g / 1.5) {
+                    if (binding.getRoot().getY() > main.g - main.g / 1.5) {
                         finish();
                         return true;
                     }
@@ -227,14 +252,14 @@ public class bfq extends AppCompatActivity {
         });
     }
     public static void setlike(boolean bool) {
-        if (inflate == null) {
+        if (binding == null) {
             return;
         }
         int color = R.color.text;
         if (bool) {
             color = android.R.color.holo_red_dark;
         }
-        inflate.like.setImageTintList(ContextCompat.
-                getColorStateList(inflate.getRoot().getContext(), color));
+        binding.like.setImageTintList(ContextCompat.
+                getColorStateList(binding.getRoot().getContext(), color));
     }
 }

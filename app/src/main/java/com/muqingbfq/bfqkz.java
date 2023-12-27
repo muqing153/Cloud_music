@@ -4,14 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 
 import androidx.annotation.Nullable;
 
@@ -67,8 +65,8 @@ public class bfqkz extends Service {
             if (bfqkz.lishi_list.size() >= 100) {
                 bfqkz.lishi_list.remove(0);
             }
-            if (bfqkz.lishi_list.size() > 0) {
-                bfqkz.lishi_list.remove(bfqkz.xm);
+            bfqkz.lishi_list.remove(bfqkz.xm);
+            if (!bfqkz.lishi_list.contains(bfqkz.xm)) {
                 bfqkz.lishi_list.add(0, bfqkz.xm);
                 wj.xrwb(wj.gd + "mp3_hc.json", new com.google.gson.Gson().toJson(bfqkz.lishi_list));
             }
@@ -116,7 +114,7 @@ public class bfqkz extends Service {
     class callback extends MediaSessionCompat.Callback {
         @Override
         public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
-            KeyEvent event = (KeyEvent) mediaButtonEvent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+            mediaButtonEvent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
             return true;
         }
 
@@ -144,6 +142,7 @@ public class bfqkz extends Service {
             }
         }
 
+        @SuppressLint("SwitchIntDef")
         @Override
         public void onPlayFromUri(Uri uri, Bundle extras) {
             try {
@@ -174,12 +173,14 @@ public class bfqkz extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+/*
 
     public class MyBinder extends Binder {
         bfqkz getService() {
             return bfqkz.this;
         }
     }
+*/
 
     public static void updateNotification() {
         try {

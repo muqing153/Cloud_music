@@ -31,7 +31,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
     public Runnable updateSeekBar = new Runnable() {
         @Override
         public void run() {
-            if (isPlaying() && Media.lrcview != null) {
+            if (isPlaying() && bfq.lrcview != null) {
                 long position = getCurrentPosition();
                 Media.setProgress((int) position);
             }
@@ -41,37 +41,25 @@ public class MediaPlayer extends android.media.MediaPlayer {
 
     @SuppressLint("UnsafeOptInUsageError")
     public MediaPlayer() {
-        setOnErrorListener(new OnErrorListener() {
-            @Override
-            public boolean onError(android.media.MediaPlayer mediaPlayer, int i, int i1) {
-                //针对错误进行相应的处理
-                bfqkz.list.remove(bfqkz.xm);
-                bfqkz.xm = bfqkz.list.get(bfqkz.getmti(bfqkz.ms));
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        bfqkz.mp3(com.muqingbfq.api.
-                                url.hq(bfqkz.xm));
-                    }
-                }.start();
+        setOnErrorListener((mediaPlayer, i, i1) -> {
+            if (bfqkz.list.isEmpty()) {
                 return false;
             }
+            //针对错误进行相应的处理
+            bfqkz.list.remove(bfqkz.xm);
+            bfqkz.xm = bfqkz.list.get(bfqkz.getmti(bfqkz.ms));
+            new bfqkz.mp3(com.muqingbfq.api.
+                            url.hq(bfqkz.xm));
+            return false;
         });
-        setOnCompletionListener(new OnCompletionListener() {
-            @Override
-            public void onCompletion(android.media.MediaPlayer mediaPlayer) {
-                int i = bfqkz.getmti(bfqkz.ms);
-                bfqkz.xm = bfqkz.list.get(i);
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        bfqkz.mp3(com.muqingbfq.api.
-                                url.hq(bfqkz.xm));
-                    }
-                }.start();
+        setOnCompletionListener(mediaPlayer -> {
+            if (bfqkz.list.isEmpty()) {
+                return;
             }
+            int i = bfqkz.getmti(bfqkz.ms);
+            bfqkz.xm = bfqkz.list.get(i);
+            new bfqkz.mp3(com.muqingbfq.api.
+                            url.hq(bfqkz.xm));
         });
         setAudioAttributes(new AudioAttributes
                 .Builder()
@@ -110,7 +98,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
         start();
         main.handler.post(() -> {
             bfui();
-            if (bfq.inflate != null) {
+            if (bfq.binding != null) {
                 main.handler.removeCallbacks(updateSeekBar); // 在播放开始时启动更新进度
                 long duration = getDuration();
                 Media.setMax((int) getDuration());
@@ -121,6 +109,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
             }
             // 在这里将进度更新到UI上
         });
+        wj.setMP3ToFile(bfqkz.xm);
     }
 
     public void DataSource(String path) throws Exception {
@@ -167,7 +156,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
     public void bfui() {
         setTX();
         String name = xm.name, zz = bfqkz.xm.zz;
-        if (bfq.inflate != null) {
+        if (bfq.binding != null) {
             Media.setProgress(0);
             bfq.setname(name);
             bfq.setzz(zz);

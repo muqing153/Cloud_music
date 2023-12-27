@@ -39,7 +39,7 @@ public class url extends Thread {
 
     public static String hq(MP3 x) {
         getLrc(x.id);
-        if (Media.lrcview != null) {
+        if (bfq.lrcview != null) {
             Media.loadLyric();
         }
         try {

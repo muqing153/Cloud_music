@@ -34,6 +34,9 @@ public class bfq_an {
     }
 
     public static void syq() {
+        if (bfqkz.list.isEmpty()) {
+            return;
+        }
         bfqkz.mt.pause();
         int i = bfqkz.list.indexOf(bfqkz.xm) - 1;
         if (i < 0) {
@@ -44,7 +47,7 @@ public class bfq_an {
     }
 
     public static void xyq() {
-        if (bfqkz.list == null) {
+        if (bfqkz.list.isEmpty()) {
             return;
         }
         bfqkz.mt.pause();

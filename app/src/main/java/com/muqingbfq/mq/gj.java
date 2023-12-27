@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,6 +30,18 @@ public class gj {
 
     }
 
+    public static boolean isTablet(Context context) {
+        boolean b;
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        main.k = dm.widthPixels;
+        main.g = dm.heightPixels;
+        if (main.k > main.g) {
+            b = true;
+        } else {
+            b = false;
+        }
+        return b;
+    }
     public static void sc(Object a) {
         if (a == null) {
             a = "null";
