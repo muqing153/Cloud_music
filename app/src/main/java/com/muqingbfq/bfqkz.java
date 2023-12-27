@@ -32,7 +32,6 @@ public class bfqkz extends Service {
     public static boolean like_bool;
     @SuppressLint("StaticFieldLeak")
     public static com.muqingbfq.mq.NotificationManagerCompat notify;
-
     public static int getmti(int s) {
         int i = bfqkz.list.indexOf(xm);
         if (s == 1) {
@@ -51,12 +50,12 @@ public class bfqkz extends Service {
         try {
             if (TextUtils.isEmpty(id)) {
                 //针对错误进行相应的处理
-                if (bfqkz.list.size() < 1) {
+/*                if (bfqkz.list.size() < 1) {
                     return;
                 }
                 bfqkz.list.remove(bfqkz.xm);
                 bfqkz.xm = bfqkz.list.get(bfqkz.getmti(bfqkz.ms));
-                new mp3(id);
+                new mp3(id);*/
                 return;
             }
             if (TextUtils.isEmpty(xm.picurl)) {

@@ -1,15 +1,5 @@
 package com.muqingbfq.fragment;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.res.Configuration;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
-
-import androidx.fragment.app.Fragment;
-
 import com.muqingbfq.R;
 import com.muqingbfq.bfq;
 import com.muqingbfq.bfq_an;
@@ -17,38 +7,34 @@ import com.muqingbfq.bfqkz;
 import com.muqingbfq.databinding.ActivityBfqBinding;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
-import com.muqingbfq.view.CardImage;
-
 import org.json.JSONObject;
-
-import me.wcy.lrcview.LrcView;
-
 public class Media{
-    @SuppressLint("StaticFieldLeak")
-    private static TextView time_a, time_b;
-    @SuppressLint("StaticFieldLeak")
-    private static SeekBar tdt;
-
     public static void setTime_a(String str) {
-        if (time_a == null) {
+        if (bfq.view == null) {
             return;
         }
-        time_a.setText(str);
+        bfq.binding.timeA.setText(str);
     }
 
     public static void setTime_b(String str) {
-        if (time_b == null) {
+        if (bfq.view == null) {
             return;
         }
-        time_b.setText(str);
+        bfq.binding.timeB.setText(str);
     }
 
     public static void setMax(int max) {
-        tdt.setMax(max);
+        if (bfq.view == null) {
+            return;
+        }
+        bfq.binding.tdt.setMax(max);
     }
 
     public static void setProgress(int progress) {
-        tdt.setProgress(progress);
+        if (bfq.view == null) {
+            return;
+        }
+        bfq.binding.tdt.setProgress(progress);
         bfq.lrcview.updateTime(progress);
     }
 
@@ -65,9 +51,7 @@ public class Media{
     }
 
     public Media(ActivityBfqBinding binding) {
-        imageView = binding.cardview;
-        tdt = binding.tdt;
-        tdt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        binding.tdt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 setTime_b(bfq_an.getTime(progress));
@@ -84,15 +68,11 @@ public class Media{
                 bfqkz.mt.seekTo(seekBar.getProgress());
             }
         });
-        time_a = binding.timeA;
-        time_b = binding.timeB;
-        //初始化歌词组件
-
         //初始化播放器列表
         if (bfqkz.xm != null) {
 //            main.handler.removeCallbacks(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度
             long duration = bfqkz.mt.getDuration();
-            tdt.setMax((int) bfqkz.mt.getDuration());
+            binding.tdt.setMax((int) bfqkz.mt.getDuration());
             setTime_a(bfq_an.getTime(duration));
             long position = bfqkz.mt.getCurrentPosition();
 //            main.handler.post(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度
@@ -119,13 +99,10 @@ public class Media{
     }
 
 
-    @SuppressLint("StaticFieldLeak")
-    public static CardImage imageView;
-
     public static void setImageBitmap() {
-        if (imageView == null) {
+        if (bfq.view == null) {
             return;
         }
-        main.handler.post(() -> imageView.setImage(com.muqingbfq.bfq.bitmap));
+        main.handler.post(() -> bfq.binding.cardview.setImage(com.muqingbfq.bfq.bitmap));
     }
 }

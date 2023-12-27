@@ -44,8 +44,9 @@ import me.wcy.lrcview.LrcView;
 public class bfq extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     public static ActivityBfqBinding binding;
+    @SuppressLint("StaticFieldLeak")
+    public static View view;
     public static String lrc;
-
     public static LrcView lrcview;
     private void setLrc(){
         lrcview = binding.lrcView;
@@ -82,12 +83,12 @@ public class bfq extends AppCompatActivity {
         binding = ActivityBfqBinding.inflate(getLayoutInflater());
         setLrc();
         new Media(binding);
-        LinearLayout root = binding.getRoot();
+        view = binding.getRoot();
         TypedValue typedValue = new TypedValue();
         home.appCompatActivity.getTheme().resolveAttribute(android.R.attr.windowBackground, typedValue, true);
         // 设置背景颜色
-        root.setBackgroundColor(typedValue.data);
-        setContentView(root);
+        view.setBackgroundColor(typedValue.data);
+        setContentView(view);
         Toolbar toolbar = binding.toolbar;
         toolbar.setNavigationOnClickListener(view1 -> finish());
         toolbar.setOnMenuItemClickListener(item -> {
@@ -108,7 +109,6 @@ public class bfq extends AppCompatActivity {
         binding.control.setOnClickListener(new bfq_an.control(binding.control));
         if (bfqkz.mt != null && bfqkz.mt.isPlaying()) {
             binding.kg.setImageResource(R.drawable.bf);
-
         }
         text();
         binding.like.setOnClickListener(view1 -> {
@@ -208,8 +208,7 @@ public class bfq extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-    float downY, moveY;
-
+    private float downY, moveY;
     @SuppressLint("ClickableViewAccessibility")
     public void text() {
         binding.toolbar.setOnTouchListener((view, motionEvent) -> {
@@ -261,5 +260,12 @@ public class bfq extends AppCompatActivity {
         }
         binding.like.setImageTintList(ContextCompat.
                 getColorStateList(binding.getRoot().getContext(), color));
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        view = null;
+        lrcview = null;
     }
 }

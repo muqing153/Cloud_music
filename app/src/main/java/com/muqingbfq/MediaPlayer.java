@@ -56,10 +56,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
             if (bfqkz.list.isEmpty()) {
                 return;
             }
-            int i = bfqkz.getmti(bfqkz.ms);
-            bfqkz.xm = bfqkz.list.get(i);
-            new bfqkz.mp3(com.muqingbfq.api.
-                            url.hq(bfqkz.xm));
+            bfq_an.xyq();
         });
         setAudioAttributes(new AudioAttributes
                 .Builder()
@@ -98,7 +95,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
         start();
         main.handler.post(() -> {
             bfui();
-            if (bfq.binding != null) {
+            if (bfq.view != null) {
                 main.handler.removeCallbacks(updateSeekBar); // 在播放开始时启动更新进度
                 long duration = getDuration();
                 Media.setMax((int) getDuration());
@@ -156,7 +153,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
     public void bfui() {
         setTX();
         String name = xm.name, zz = bfqkz.xm.zz;
-        if (bfq.binding != null) {
+        if (bfq.view != null) {
             Media.setProgress(0);
             bfq.setname(name);
             bfq.setzz(zz);

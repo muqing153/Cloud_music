@@ -131,7 +131,6 @@ public class home extends AppCompatActivity {
     }
 
     private static Intent serviceIntent;
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -143,7 +142,6 @@ public class home extends AppCompatActivity {
         editor.putString("listData", jsonList);
         editor.apply();
     }
-
 
     @Override
     public void onResume() {
