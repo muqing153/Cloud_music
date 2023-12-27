@@ -68,6 +68,7 @@ public class home extends AppCompatActivity {
                     browserConnectionCallback,//设置连接回调
                     null
             );
+            mBrowser.connect();
             //检测更新
             new gj.jianchagengxin(this);
             binding.editView.setOnClickListener(view ->
@@ -79,20 +80,6 @@ public class home extends AppCompatActivity {
     }
 
     public static ComponentName componentName;
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //Browser发送连接请求
-        mBrowser.connect();
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mBrowser.disconnect();
-    }
-
     private final List<Fragment> list = new ArrayList<>();
     private class adaper extends FragmentStateAdapter {
         public adaper(@NonNull FragmentActivity fragmentActivity) {
