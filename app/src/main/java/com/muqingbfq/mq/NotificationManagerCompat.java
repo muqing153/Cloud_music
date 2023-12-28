@@ -24,12 +24,12 @@ import com.muqingbfq.home;
 import com.muqingbfq.yc;
 
 public class NotificationManagerCompat {
-    MediaBrowserServiceCompat context;
+    bfqkz context;
     public NotificationCompat.Builder notificationBuilder;
     public androidx.core.app.NotificationManagerCompat notificationManager;
     private String name, zz;
 
-    public NotificationManagerCompat(MediaBrowserServiceCompat context) {
+    public NotificationManagerCompat(bfqkz context) {
         this.context = context;
         name = context.getString(R.string.app_name);
         zz = context.getString(R.string.zz);
@@ -47,12 +47,6 @@ public class NotificationManagerCompat {
             // 适配12.0及以上
 
             // 设置启动的程序，如果存在则找出，否则新的启动
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            intent.setComponent(new ComponentName(context, home.class));//用ComponentName得到class对象
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
-            pendingIntent = getActivity(context, intent);
             Intent my = new Intent(context, MyButtonClickReceiver.class);
             pendingIntent_kg = getBroadcast(context, my.
                     setAction("kg"));
@@ -70,15 +64,13 @@ public class NotificationManagerCompat {
                     .setPriority(NotificationCompat.PRIORITY_LOW)
                     .setOngoing(true).setAutoCancel(false).setOnlyAlertOnce(true)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    .setContentIntent(pendingIntent)
+                    .setContentIntent(context.pendingIntent)
                     .setStyle(style);
             tzl();
         } catch (Exception e) {
             yc.start(context, e);
         }
     }
-
-    PendingIntent pendingIntent;
     androidx.media.app.NotificationCompat.MediaStyle style;
     @SuppressLint("RestrictedApi")
     public void tzl() {

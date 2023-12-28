@@ -1,6 +1,7 @@
 package com.muqingbfq;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -114,7 +115,7 @@ public class activity_search extends FragmentActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (TextUtils.isEmpty(s)) {
-                    dismiss();
+                    listPopupWindow.setVisibility(View.GONE);
                     return;
                 }
                 list.clear();
@@ -148,10 +149,20 @@ public class activity_search extends FragmentActivity {
             public void afterTextChanged(Editable s) {
             }
         });
+
+        inflate.editview.requestFocus();//获取焦点
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        //if (!imm.isActive()) //没有显示键盘，弹出
+        imm.showSoftInput(inflate.editview, 0);
     }
 
     public void dismiss() {
+        inflate.editview.clearFocus();
         listPopupWindow.setVisibility(View.GONE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) //有显示键盘，隐藏
+            imm.hideSoftInputFromWindow(inflate.editview.getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void addSearchRecord(String name) {

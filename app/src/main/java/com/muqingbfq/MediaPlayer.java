@@ -106,7 +106,21 @@ public class MediaPlayer extends android.media.MediaPlayer {
             }
             // 在这里将进度更新到UI上
         });
-        wj.setMP3ToFile(bfqkz.xm);
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                if (bfqkz.lishi_list.size() >= 100) {
+                    bfqkz.lishi_list.remove(0);
+                }
+                bfqkz.lishi_list.remove(bfqkz.xm);
+                if (!bfqkz.lishi_list.contains(bfqkz.xm)) {
+                    bfqkz.lishi_list.add(0, bfqkz.xm);
+                    wj.xrwb(wj.gd + "mp3_hc.json", new com.google.gson.Gson().toJson(bfqkz.lishi_list));
+                }
+                wj.setMP3ToFile(bfqkz.xm);
+            }
+        }.start();
     }
 
     public void DataSource(String path) throws Exception {

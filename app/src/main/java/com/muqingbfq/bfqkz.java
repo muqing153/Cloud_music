@@ -55,23 +55,12 @@ public class bfqkz extends MediaBrowserServiceCompat {
         try {
             if (TextUtils.isEmpty(id)) {
                 //针对错误进行相应的处理
-                if (bfqkz.list.size() < 1) {
-                    return;
-                }
                 bfqkz.list.remove(bfqkz.xm);
                 bfq_an.xyq();
                 return;
             }
             if (TextUtils.isEmpty(xm.picurl)) {
                 xm.picurl = url.picurl(xm.id);
-            }
-            if (bfqkz.lishi_list.size() >= 100) {
-                bfqkz.lishi_list.remove(0);
-            }
-            bfqkz.lishi_list.remove(bfqkz.xm);
-            if (!bfqkz.lishi_list.contains(bfqkz.xm)) {
-                bfqkz.lishi_list.add(0, bfqkz.xm);
-                wj.xrwb(wj.gd + "mp3_hc.json", new com.google.gson.Gson().toJson(bfqkz.lishi_list));
             }
             mt.setDataSource(id);
         } catch (Exception e) {
@@ -97,7 +86,7 @@ public class bfqkz extends MediaBrowserServiceCompat {
 
     public static MediaSessionCompat mSession;
     public static PlaybackStateCompat playback;
-
+    public PendingIntent pendingIntent;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -112,7 +101,7 @@ public class bfqkz extends MediaBrowserServiceCompat {
         intent.setComponent(new ComponentName(this, home.class));//用ComponentName得到class对象
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
-        PendingIntent pendingIntent = com.muqingbfq.mq.NotificationManagerCompat.getActivity(this, intent);
+        pendingIntent = com.muqingbfq.mq.NotificationManagerCompat.getActivity(this, intent);
         mSession = new MediaSessionCompat(this, "MusicService",
                 home.componentName, pendingIntent);
         mSession.setCallback(new callback());
