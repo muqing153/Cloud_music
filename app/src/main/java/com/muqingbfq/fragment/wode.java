@@ -39,15 +39,23 @@ public class wode extends Fragment {
     public static TextView name, jieshao;
     @SuppressLint("StaticFieldLeak")
     public static ImageView imageView;
-
     FragmentWdBinding binding;
+    private final Object[][] lista = {
+            {R.drawable.bf, "最近播放", "mp3_hc.json"},
+            {R.drawable.download, "下载音乐", "mp3_xz.json"},
+            {R.drawable.like, "喜欢音乐", "mp3_like.json"},
+            {R.drawable.icon, "本地搜索", ""},
+            {R.drawable.icon, "我的歌单", ""},
+            {R.drawable.icon, "导入歌单", ""},
+            {R.drawable.paihangbang, "排行榜", "排行榜"},
+            {R.drawable.icon, "开发中", ""}
+    };
     private final List<com.muqingbfq.xm> list = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentWdBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
         name = binding.text1;
         jieshao = binding.text2;
         imageView = binding.imageView;
@@ -58,26 +66,16 @@ public class wode extends Fragment {
                 startActivity(new Intent(getContext(), user_editing.class));
             }
         });
-
         new user_message();
 //        int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4){
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4) {
             @Override
             public boolean canScrollVertically() {
                 return false;//禁止滑动
             }
         };
         binding.recyclerview1.setLayoutManager(gridLayoutManager);
-        final Object[][] lista = {
-                {R.drawable.bf, "最近播放", "mp3_hc.json"},
-                {R.drawable.download, "下载音乐", "mp3_xz.json"},
-                {R.drawable.like, "喜欢音乐", "mp3_like.json"},
-                {R.drawable.icon, "本地搜索", ""},
-                {R.drawable.icon, "我的歌单", ""},
-                {R.drawable.icon, "导入歌单", ""},
-                {R.drawable.paihangbang, "排行榜", "排行榜"},
-                {R.drawable.icon, "开发中", ""}
-        };
+
         binding.recyclerview1.setFocusable(false);
         binding.recyclerview1.setAdapter(new RecyclerView.Adapter<VH>() {
             @NonNull
@@ -120,7 +118,6 @@ public class wode extends Fragment {
                 return lista.length;
             }
         });
-        sx();
         binding.recyclerview2.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
@@ -129,7 +126,8 @@ public class wode extends Fragment {
         });
         binding.recyclerview2.setFocusable(false);
         binding.recyclerview2.setAdapter(new gd.baseadapter(getContext(), list, true));
-        return view;
+        sx();
+        return binding.getRoot();
     }
 
     class VH extends RecyclerView.ViewHolder {
@@ -146,7 +144,6 @@ public class wode extends Fragment {
     @SuppressLint("NotifyDataSetChanged")
     public void sx() {
         try {
-            List<xm> a = new ArrayList<>(list);
             list.clear();
             JSONObject date = new JSONObject(wj.dqwb(wj.gd_xz));
             for (Iterator<String> it = date.keys(); it.hasNext(); ) {
@@ -156,9 +153,6 @@ public class wode extends Fragment {
                 String name = jsonObject.getString("name");
                 String picUrl = jsonObject.getString("picUrl");
                 list.add(new xm(id, name, picUrl, cz));
-            }
-            if (list.equals(a)) {
-                return;
             }
             main.handler.post(() -> binding.recyclerview2.getAdapter().notifyDataSetChanged());
         } catch (Exception e) {

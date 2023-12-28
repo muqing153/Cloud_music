@@ -35,6 +35,7 @@ public class home extends AppCompatActivity {
     ActivityHomeBinding binding;
 
     public MediaBrowserCompat mBrowser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         appCompatActivity = this;
@@ -61,14 +62,16 @@ public class home extends AppCompatActivity {
 
             //初始化播放器组件
             // 启动Service
-            componentName = new ComponentName(this, bfqkz.class);
-            mBrowser = new MediaBrowserCompat(
-                    this,componentName
-                    ,//绑定服务端
-                    browserConnectionCallback,//设置连接回调
-                    null
-            );
-            mBrowser.connect();
+            if (componentName == null) {
+                componentName = new ComponentName(this, bfqkz.class);
+                mBrowser = new MediaBrowserCompat(
+                        this, componentName
+                        ,//绑定服务端
+                        browserConnectionCallback,//设置连接回调
+                        null
+                );
+                mBrowser.connect();
+            }
             //检测更新
             new gj.jianchagengxin(this);
             binding.editView.setOnClickListener(view ->
@@ -80,9 +83,11 @@ public class home extends AppCompatActivity {
     }
 
     public static ComponentName componentName;
-    private final List<Fragment> list = new ArrayList<>();
-    private class adaper extends FragmentStateAdapter {
-        public adaper(@NonNull FragmentActivity fragmentActivity) {
+    private Adaper adapter;
+
+    private class Adaper extends FragmentStateAdapter {
+        List<Fragment> list = new ArrayList<>();
+        public Adaper(@NonNull FragmentActivity fragmentActivity) {
             super(fragmentActivity);
             list.add(new gd_adapter());
             list.add(new wode());
@@ -97,9 +102,10 @@ public class home extends AppCompatActivity {
             return list.size();
         }
     }
-
     public void UI() {
-        binding.viewPager.setAdapter(new adaper(this));
+        adapter = new Adaper(this);
+        binding.viewPager.setAdapter(adapter);
+        binding.viewPager.setSaveEnabled(false);
 // 将 ViewPager2 绑定到 TabLayout
         binding.tablayout.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
@@ -128,7 +134,7 @@ public class home extends AppCompatActivity {
                                 } catch (InterruptedException e) {
                                     e.toString();
                                 }
-                                wode fragment = (wode) list.get(position);
+                                wode fragment = (wode) adapter.createFragment(position);
                                 fragment.sx();
                             }
                         }.start();
@@ -137,6 +143,7 @@ public class home extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -156,6 +163,7 @@ public class home extends AppCompatActivity {
                 .replace(R.id.bfq_db, new bfq_db())
                 .commit();
     }
+
     private long time;
 
     @Override
@@ -190,12 +198,11 @@ public class home extends AppCompatActivity {
     }
 
 
-
     /**
      * 连接状态的回调接口，连接成功时会调用onConnected()方法
      */
-    private MediaBrowserCompat.ConnectionCallback browserConnectionCallback=
-            new MediaBrowserCompat.ConnectionCallback(){
+    private final MediaBrowserCompat.ConnectionCallback browserConnectionCallback =
+            new MediaBrowserCompat.ConnectionCallback() {
                 @Override
                 public void onConnected() {
                     //必须在确保连接成功的前提下执行订阅的操作
@@ -233,7 +240,7 @@ public class home extends AppCompatActivity {
      * 向媒体服务器(MediaBrowserService)发起数据订阅请求的回调接口
      */
     private final MediaBrowserCompat.SubscriptionCallback browserSubscriptionCallback =
-            new MediaBrowserCompat.SubscriptionCallback(){
+            new MediaBrowserCompat.SubscriptionCallback() {
                 @Override
                 public void onChildrenLoaded(@NonNull String parentId,
                                              @NonNull List<MediaBrowserCompat.MediaItem> children) {

@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
@@ -76,22 +75,22 @@ public class bfq extends AppCompatActivity {
             });
         }
     }
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         binding = ActivityBfqBinding.inflate(getLayoutInflater());
+        view = binding.getRoot();
         setLrc();
         new Media(binding);
-        view = binding.getRoot();
         TypedValue typedValue = new TypedValue();
         home.appCompatActivity.getTheme().resolveAttribute(android.R.attr.windowBackground, typedValue, true);
         // 设置背景颜色
         view.setBackgroundColor(typedValue.data);
         setContentView(view);
-        Toolbar toolbar = binding.toolbar;
-        toolbar.setNavigationOnClickListener(view1 -> finish());
-        toolbar.setOnMenuItemClickListener(item -> {
+        binding.toolbar.setNavigationOnClickListener(view1 -> finish());
+        binding.toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.fx && bfqkz.xm != null) {
                 com.muqingbfq.mq.gj.fx(this,
                         "音乐名称：" + bfqkz.xm.name +
@@ -110,7 +109,9 @@ public class bfq extends AppCompatActivity {
         if (bfqkz.mt != null && bfqkz.mt.isPlaying()) {
             binding.kg.setImageResource(R.drawable.bf);
         }
-        text();
+        binding.toolbar.setOnTouchListener(new Touch());
+        view.setOnTouchListener(new Touch());
+
         binding.like.setOnClickListener(view1 -> {
             try {
                 Gson gson = new Gson();
@@ -208,11 +209,11 @@ public class bfq extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
     }
 
-    private float downY, moveY;
-    @SuppressLint("ClickableViewAccessibility")
-    public void text() {
-        binding.toolbar.setOnTouchListener((view, motionEvent) -> {
-            LinearLayout root = binding.getRoot();
+
+    public class Touch implements View.OnTouchListener {
+        private float downY, moveY;
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {LinearLayout root = binding.getRoot();
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     downY = motionEvent.getRawY();
@@ -248,7 +249,7 @@ public class bfq extends AppCompatActivity {
                     break;
             }
             return true;
-        });
+        }
     }
     public static void setlike(boolean bool) {
         if (binding == null) {

@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.media.MediaBrowserCompat;
@@ -56,12 +55,11 @@ public class bfqkz extends MediaBrowserServiceCompat {
         try {
             if (TextUtils.isEmpty(id)) {
                 //针对错误进行相应的处理
-/*                if (bfqkz.list.size() < 1) {
+                if (bfqkz.list.size() < 1) {
                     return;
                 }
                 bfqkz.list.remove(bfqkz.xm);
-                bfqkz.xm = bfqkz.list.get(bfqkz.getmti(bfqkz.ms));
-                new mp3(id);*/
+                bfq_an.xyq();
                 return;
             }
             if (TextUtils.isEmpty(xm.picurl)) {
@@ -199,15 +197,6 @@ public class bfqkz extends MediaBrowserServiceCompat {
     public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
 
     }
-/*
-
-    public class MyBinder extends Binder {
-        bfqkz getService() {
-            return bfqkz.this;
-        }
-    }
-*/
-
     public static void updateNotification() {
         try {
             // 更新通知栏的播放状态

@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.muqingbfq.R;
 import com.muqingbfq.databinding.CleanBinding;
 import com.muqingbfq.mq.FragmentActivity;
@@ -41,6 +42,9 @@ public class fragment_clean extends FragmentActivity {
         list.add(new String[]{"下载的音乐", wj.mp3});
         list.add(new String[]{"下载的歌单",wj.gd});
         list.add(new String[]{"缓存的音乐",wj.filesdri+"hc"});
+        list.add(new String[]{"内部缓存", getCacheDir().toString()});
+        String s = Glide.getPhotoCacheDir(this).toString();
+        list.add(new String[]{"Glide缓存", s});
         binding.toolbar.setTitle("储存清理");
         binding.recyclerview.setAdapter(adapter);
     }
@@ -70,62 +74,15 @@ public class fragment_clean extends FragmentActivity {
             } else {
                 holder.checkBox.setEnabled(false);
             }
-
-/*            GestureDetector gestureDetector=new GestureDetector(fragment_clean.this,
-                    new GestureDetector.OnGestureListener() {
-                @Override
-                public boolean onDown(@NonNull MotionEvent motionEvent) {
-                    return true;
-                }
-
-                @Override
-                public void onShowPress(@NonNull MotionEvent motionEvent) {
-
-                }
-
-                @Override
-                public boolean onSingleTapUp(@NonNull MotionEvent motionEvent) {
-                    return false;
-                }
-
-                @Override
-                public boolean onScroll(@Nullable MotionEvent motionEvent, @NonNull MotionEvent motionEvent1, float v, float v1) {
-                    return false;
-                }
-
-                @Override
-                public void onLongPress(@NonNull MotionEvent motionEvent) {
-
-                }
-                @Override
-                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-                    // 计算水平方向滑动的距离
-                    float deltaX = e2.getX() - e1.getX();
-                    holder.checkBox.setX(deltaX);
-                    // 判断是否是从左向右滑动，并且滑动距离超过一定阈值
-                    if (deltaX > 0 && Math.abs(deltaX) > 100) {
-                        // 执行删除操作
-                        gj.sc("sc");
-                        return true;
-                    }
-                    return true;
-                }
-            });*/
             String s1 = Formatter.formatFileSize(fragment_clean.this, leng);
             holder.checkBox.setText(s[0] + ":" + s1 + "  共计:" + size+" 个文件");
-/*            holder.checkBox.setOnTouchListener((view, motionEvent) ->
-                    gestureDetector.onTouchEvent(motionEvent));*/
             holder.checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
                 if (b) {
                     list_box.add(file.toString());
                 }else {
                     list_box.remove(file.toString());
                 }
-                if (list_box.size() > 0) {
-                    menu_deleat.setVisible(true);
-                } else {
-                    menu_deleat.setVisible(false);
-                }
+                menu_deleat.setVisible(list_box.size() > 0);
             });
         }
 

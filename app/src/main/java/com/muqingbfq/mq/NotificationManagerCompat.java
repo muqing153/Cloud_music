@@ -5,17 +5,15 @@ import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.support.v4.media.MediaMetadataCompat;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.media.MediaBrowserServiceCompat;
 
 import com.muqingbfq.MyButtonClickReceiver;
 import com.muqingbfq.R;
@@ -26,12 +24,12 @@ import com.muqingbfq.home;
 import com.muqingbfq.yc;
 
 public class NotificationManagerCompat {
-    Service context;
+    MediaBrowserServiceCompat context;
     public NotificationCompat.Builder notificationBuilder;
     public androidx.core.app.NotificationManagerCompat notificationManager;
     private String name, zz;
 
-    public NotificationManagerCompat(Service context) {
+    public NotificationManagerCompat(MediaBrowserServiceCompat context) {
         this.context = context;
         name = context.getString(R.string.app_name);
         zz = context.getString(R.string.zz);
@@ -75,7 +73,6 @@ public class NotificationManagerCompat {
                     .setContentIntent(pendingIntent)
                     .setStyle(style);
             tzl();
-//            context.startForeground(1, notificationBuilder.build());
         } catch (Exception e) {
             yc.start(context, e);
         }
@@ -83,7 +80,6 @@ public class NotificationManagerCompat {
 
     PendingIntent pendingIntent;
     androidx.media.app.NotificationCompat.MediaStyle style;
-
     @SuppressLint("RestrictedApi")
     public void tzl() {
         if (bfqkz.xm != null) {
