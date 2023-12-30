@@ -19,6 +19,7 @@ import androidx.media.MediaBrowserServiceCompat;
 
 import com.muqingbfq.api.url;
 import com.muqingbfq.mq.BluetoothMusicController;
+import com.muqingbfq.mq.FloatingLyricsService;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 
@@ -95,7 +96,6 @@ public class bfqkz extends MediaBrowserServiceCompat {
         playback = new PlaybackStateCompat.Builder()
                 .setState(PlaybackStateCompat.STATE_NONE, 0, 1.0f)
                 .build();
-
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         intent.setComponent(new ComponentName(this, home.class));//用ComponentName得到class对象
@@ -111,6 +111,7 @@ public class bfqkz extends MediaBrowserServiceCompat {
         setSessionToken(mSession.getSessionToken());
 
         notify = new com.muqingbfq.mq.NotificationManagerCompat(this);
+
     }
 
     class callback extends MediaSessionCompat.Callback {

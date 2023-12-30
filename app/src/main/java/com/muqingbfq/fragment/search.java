@@ -25,7 +25,6 @@ import com.muqingbfq.databinding.FragmentSearchBinding;
 import com.muqingbfq.list.MyViewHoder;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
-import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
 import com.muqingbfq.xm;
 
@@ -39,7 +38,6 @@ public class search extends Fragment {
     public static RecyclerView.Adapter<MyViewHoder> lbspq;
     List<MP3> list = new ArrayList<>();
     List<xm> xmList = new ArrayList<>();
-    gd.baseadapter adapter_gd;
     public String name;
 
     public FragmentSearchBinding inflate;
@@ -55,7 +53,6 @@ public class search extends Fragment {
         TypedValue typedValue = new TypedValue();
         requireContext().getTheme().resolveAttribute(android.R.attr.windowBackground, typedValue, true);
         // 设置背景颜色
-        adapter_gd = new gd.baseadapter(getContext(), xmList);
         view.setBackgroundColor(typedValue.data);
         inflate.tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -101,7 +98,7 @@ public class search extends Fragment {
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),
                     k);
             inflate.recyclerview.setLayoutManager(gridLayoutManager);
-            inflate.recyclerview.setAdapter(adapter_gd);
+            inflate.recyclerview.setAdapter(new gd.baseadapter(getContext(), xmList));
         }
         new start(name);
     }
@@ -123,14 +120,7 @@ public class search extends Fragment {
             } else if (i == 1) {
                 gd();
             }
-            main.handler.post(() -> {
-                if (i == 0) {
-                    lbspq.notifyDataSetChanged();
-                } else if (i == 1) {
-                    adapter_gd.notifyDataSetChanged();
-                }
-//                lbspq.notifyDataSetChanged();
-            });
+            main.handler.post(() -> inflate.recyclerview.getAdapter().notifyDataSetChanged());
         }
     }
 

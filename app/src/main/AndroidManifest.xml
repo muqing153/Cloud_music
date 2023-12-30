@@ -72,6 +72,7 @@
             </intent-filter>
         </service>
         <service android:name=".mq.floating" />
+        <service android:name=".mq.FloatingLyricsService" />
         <receiver
             android:name=".MyButtonClickReceiver"
             android:enabled="true"

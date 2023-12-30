@@ -4,8 +4,11 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 import android.view.KeyEvent;
 
+import com.muqingbfq.mq.FloatingLyricsService;
 import com.muqingbfq.mq.gj;
 
 import java.util.Timer;
@@ -73,6 +76,31 @@ public class MyButtonClickReceiver extends BroadcastReceiver {
                 break;
             case "xyq":
                 bfq_an.xyq();
+                break;
+            case "lrc":
+                if (FloatingLyricsService.lei == null) {
+                    if (!Settings.canDrawOverlays(home.appCompatActivity)) {
+                        // 无权限，需要申请权限
+                        home.appCompatActivity.startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                Uri.parse("package:" + home.appCompatActivity.getPackageName())));
+                    } else {
+                        home.appCompatActivity.startService(
+                                new Intent(home.appCompatActivity, FloatingLyricsService.class));
+                    }
+                    return;
+                }
+                FloatingLyricsService lei = FloatingLyricsService.lei;
+                gj.sc(lei.setup.i);
+                if (lei.setup.i == 0) {
+                    lei.show();
+                } else if (lei.setup.i == 1) {
+                    lei.setyc();
+                } else {
+                    lei.setup.i = 0;
+                    lei.baocun();
+                    home.appCompatActivity.stopService(
+                            new Intent(home.appCompatActivity, FloatingLyricsService.class));
+                }
                 break;
         }
         // 处理按钮点击事件的逻辑

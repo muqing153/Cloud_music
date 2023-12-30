@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LrcView">
+        <!--声明MyTextView需要使用系统定义过的text属性,注意前面需要加上android命名-->
+        <attr name="TextColor" format="color" />
+        <attr name="Lrcline" format="boolean" />
+    </declare-styleable>
+</resources>

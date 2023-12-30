@@ -39,9 +39,7 @@ public class url extends Thread {
 
     public static String hq(MP3 x) {
         getLrc(x.id);
-        if (bfq.lrcview != null) {
-            Media.loadLyric();
-        }
+        Media.loadLyric();
         try {
             if (wj.cz(wj.mp3 + x.id)) {
                 return wj.mp3 + x.id;
@@ -152,7 +150,7 @@ public class url extends Thread {
             } catch (Exception e) {
                 gj.sc(e);
             }
-        }else {
+        } else {
             bfq.lrc = wl.hq("/lyric?id=" + id);
         }
     }

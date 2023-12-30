@@ -64,10 +64,11 @@
                     app:cardCornerRadius="16dp"
                     app:cardUseCompatPadding="true" />
             </RelativeLayout>
-            <me.wcy.lrcview.LrcView
+            <com.muqingbfq.view.LrcView
                 android:id="@+id/lrcView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:Lrcline="false"
                 android:layout_weight="1"/>
         </LinearLayout>
         <LinearLayout

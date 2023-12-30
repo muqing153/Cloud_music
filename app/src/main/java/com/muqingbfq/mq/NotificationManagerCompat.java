@@ -54,8 +54,10 @@ public class NotificationManagerCompat {
                     setAction("syq"));
             pendingIntent_xyq = getBroadcast(context, my.
                     setAction("xyq"));
+            pendingIntent_lrc = getBroadcast(context, my.
+                    setAction("lrc"));
             style = new androidx.media.app.NotificationCompat.MediaStyle()
-                    .setShowActionsInCompactView(0, 1, 2)
+                    .setShowActionsInCompactView(1, 2, 3)
                     .setMediaSession(bfqkz.mSession.getSessionToken());
             notificationManager = androidx.core.app.NotificationManagerCompat.from(context);
             notificationBuilder = getNotificationBuilder(context)
@@ -79,10 +81,13 @@ public class NotificationManagerCompat {
             zz = bfqkz.xm.zz;
         }
         notificationBuilder.mActions.clear();
-        notificationBuilder.addAction(android.R.drawable.ic_media_previous, "syq", pendingIntent_syq) // #0
-                .addAction(bfqkz.mt.isPlaying() ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play
+        notificationBuilder
+                .addAction(R.drawable.like, "like", pendingIntent_kg) // #0
+                .addAction(R.drawable.syq, "syq", pendingIntent_syq) // #0
+                .addAction(bfqkz.mt.isPlaying() ? R.drawable.bf : R.drawable.zt
                         , "kg", pendingIntent_kg)  // #1
-                .addAction(android.R.drawable.ic_media_next, "xyq", pendingIntent_xyq)
+                .addAction(R.drawable.xyq, "xyq", pendingIntent_xyq)
+                .addAction(R.drawable.lock, "lrc", pendingIntent_lrc)
                 .setContentTitle(name)
                 .setContentText(zz)
                 .setOngoing(bfqkz.mt.isPlaying());
@@ -91,7 +96,8 @@ public class NotificationManagerCompat {
 
     private PendingIntent pendingIntent_kg,
             pendingIntent_syq,
-            pendingIntent_xyq;
+            pendingIntent_xyq,
+            pendingIntent_lrc;
     private final String CHANNEL_ID = "muqing_yy_id";
 
     public void notificationManager_notify() {

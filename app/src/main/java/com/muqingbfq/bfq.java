@@ -38,17 +38,15 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.wcy.lrcview.LrcView;
-
 public class bfq extends AppCompatActivity {
     @SuppressLint("StaticFieldLeak")
     public static ActivityBfqBinding binding;
     @SuppressLint("StaticFieldLeak")
     public static View view;
     public static String lrc;
-    public static LrcView lrcview;
+    public static com.muqingbfq.view.LrcView lrcView;
     private void setLrc(){
-        lrcview = binding.lrcView;
+        lrcView = binding.lrcView;/*
         lrcview.setCurrentColor(ContextCompat.getColor(this,R.color.text));
         lrcview.setLabel(getString(R.string.app_name));
         lrcview.setCurrentTextSize(TypedValue.applyDimension(
@@ -73,7 +71,7 @@ public class bfq extends AppCompatActivity {
         } else {
             lrcview.setOnTapListener((view, x, y) -> {
             });
-        }
+        }*/
     }
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -211,7 +209,9 @@ public class bfq extends AppCompatActivity {
 
 
     public class Touch implements View.OnTouchListener {
-        private float downY, moveY;
+        private float downY;
+
+        @SuppressLint("ClickableViewAccessibility")
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {LinearLayout root = binding.getRoot();
             switch (motionEvent.getAction()) {
@@ -220,7 +220,7 @@ public class bfq extends AppCompatActivity {
                     break;
                 case MotionEvent.ACTION_MOVE:
                     //长按事件，可以移动
-                    moveY = motionEvent.getRawY();
+                    float moveY = motionEvent.getRawY();
                     //移动的距离
                     float dy = moveY - downY;
                     //重新设置控件的位置。移动
@@ -267,6 +267,7 @@ public class bfq extends AppCompatActivity {
     public void finish() {
         super.finish();
         view = null;
-        lrcview = null;
+        lrcView = null;
+        main.handler.removeCallbacks(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度
     }
 }

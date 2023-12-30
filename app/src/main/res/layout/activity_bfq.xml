@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -37,8 +36,6 @@
                 android:textSize="20sp" />
         </LinearLayout>
     </com.google.android.material.appbar.MaterialToolbar>
-
-
     <LinearLayout
         android:id="@+id/fragment_bfq"
         android:layout_width="match_parent"
@@ -64,21 +61,115 @@
                     android:layout_height="256dp"
                     app:cardCornerRadius="16dp"
                     app:cardUseCompatPadding="true" />
+
             </RelativeLayout>
-            <me.wcy.lrcview.LrcView
+            <com.muqingbfq.view.LrcView
                 android:id="@+id/lrcView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="3"/>
+                android:layout_height="260dp"
+                android:layout_weight="2"/>
         </LinearLayout>
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:background="@color/bj"
+        android:paddingEnd="20dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="26dp">
+
+        <ImageView
+            android:id="@+id/like"
+            android:layout_width="30dp"
+            android:layout_height="42dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/like"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/text"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/download"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/download"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/text"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/control"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/mt_sx"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/syq"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/syq"
+            app:layout_constraintBottom_toBottomOf="@+id/kg"
+            app:layout_constraintEnd_toStartOf="@+id/kg"
+            app:layout_constraintTop_toTopOf="@+id/kg"
+            app:layout_constraintVertical_bias="0.5"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/kg"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/zt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/control"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/xyq"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:importantForAccessibility="no"
+            android:src="@drawable/xyq"
+            app:layout_constraintBottom_toBottomOf="@+id/kg"
+            app:layout_constraintStart_toEndOf="@+id/kg"
+            app:layout_constraintTop_toTopOf="@+id/kg"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <ImageView
+            android:id="@+id/bfq_list_mp3"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/cd"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="ContentDescription" />
+
         <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/bj"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="3dp"
-            android:paddingEnd="3dp">
+            app:layout_constraintBottom_toTopOf="@+id/kg"
+            tools:layout_editor_absoluteX="20dp">
 
             <TextView
                 android:id="@+id/time_a"
@@ -101,89 +192,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/_00_00" />
         </LinearLayout>
-    </LinearLayout>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bj"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
-
-        <ImageView
-            android:id="@+id/like"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/like"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:tint="@color/text"
-            tools:ignore="ContentDescription" />
-
-        <ImageView
-            android:id="@+id/download"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/download"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@color/text"
-            tools:ignore="ContentDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingStart="20dp"
-        android:background="@color/bj"
-        android:paddingEnd="20dp"
-        android:paddingBottom="26dp">
-
-        <ImageView
-            android:id="@+id/control"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="26dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/mt_sx"/>
-        <ImageView
-            android:id="@+id/syq"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="12dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/syq"
-            tools:ignore="ContentDescription" />
-
-        <ImageView
-            android:id="@+id/kg"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/zt"
-            tools:ignore="ContentDescription" />
-
-        <ImageView
-            android:id="@+id/xyq"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="12dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:importantForAccessibility="no"
-            android:src="@drawable/xyq" />
-
-        <ImageView
-            android:id="@+id/bfq_list_mp3"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="26dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/cd"
-            tools:ignore="ContentDescription" />
-    </LinearLayout>
 </LinearLayout>

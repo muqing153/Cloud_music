@@ -79,7 +79,8 @@ public class sz extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    ActivityResultLauncher<Intent> intent = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+    ActivityResultLauncher<Intent> intent = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (Settings.canDrawOverlays(this)) {
                     com.muqingbfq.mq.floating.start(sz.this);
