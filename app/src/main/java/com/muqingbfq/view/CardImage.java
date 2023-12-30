@@ -1,11 +1,11 @@
 package com.muqingbfq.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.card.MaterialCardView;
 import com.muqingbfq.R;
 
@@ -37,6 +37,15 @@ public class CardImage extends MaterialCardView {
     public void setImage(Object bitmap) {
         Glide.with(getContext())
                 .load(bitmap)
+//                .apply(new RequestOptions().placeholder(R.drawable.icon))
+                .into(imageView);
+    }
+
+    public void setImageapply(Object bitmap) {
+        Glide.with(getContext())
+                .load(bitmap)
+                .apply(new RequestOptions().placeholder(R.drawable.icon))
+//                .error(R.drawable.app_warning)
                 .into(imageView);
     }
 }

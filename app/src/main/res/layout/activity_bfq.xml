@@ -29,9 +29,10 @@
 
             <TextView
                 android:id="@+id/zz"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
+                android:maxLines="1"
+                android:gravity="center_horizontal"
                 android:text="@string/zz"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -66,7 +67,8 @@
             <com.muqingbfq.view.LrcView
                 android:id="@+id/lrcView"
                 android:layout_width="match_parent"
-                android:layout_height="260dp"
+                android:layout_height="wrap_content"
+                app:addOnGlobalLayoutListener="true"
                 android:layout_weight="2"/>
         </LinearLayout>
     </LinearLayout>

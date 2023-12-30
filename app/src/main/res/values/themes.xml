@@ -15,32 +15,33 @@
         <!--        <item name="android:colorControlActivated">#FF7F50</item>-->
         <!-- 设置文本颜色 -->
         <item name="android:textColorPrimary">@color/text</item>
-        <item name="android:colorPrimary">#00BCD4</item>
-        <item name="colorPrimaryDark">#8000BCD4</item>
+        <item name="android:colorPrimary">@color/bj</item>
+        <item name="colorPrimaryDark">@color/bj</item>
 
         <item name="tabStyle">@style/Widget.App.TabLayout</item>
         <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
-    </style>
-
-    <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar">
-        <item name="android:background">@drawable/background</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
     </style>
 
     <style name="ThemeOverlay.App.Toolbar" parent="">
         <item name="colorSurface">@color/bj</item>
         <item name="colorOnSurface">@color/bj</item>
     </style>
+    <style name="ThemeOverlay.App.TabLayout" parent="">
+        <item name="colorPrimary">@color/bj_tint</item>
+        <item name="colorSurface">@color/bj</item>
+<!--        <item name="colorOnSurface">@color/bj_tint</item>-->
+    </style>
 
     <style name="Widget.App.TabLayout" parent="Widget.Material3.TabLayout">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.TabLayout</item>
         <!--        <item name="tabTextAppearance">@style/TextAppearance.App.LabelLarge</item>-->
     </style>
-
-    <style name="ThemeOverlay.App.TabLayout" parent="">
-        <item name="colorPrimary">#00BCD4</item>
-        <item name="colorOnSurface">#ADD8E6</item>
+    <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@drawable/background</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
     </style>
+
+
 
 
     <style name="fragment_dialog" parent="Theme.muqing">
@@ -62,7 +63,7 @@
 
     <!--    按钮主题-->
     <style name="Button">
-        <item name="android:backgroundTint">#1C71A9</item>
-
+        <item name="android:textColor">@color/text</item>
+        <item name="android:backgroundTint">@color/bj</item>
     </style>
 </resources>

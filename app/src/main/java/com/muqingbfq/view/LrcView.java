@@ -3,21 +3,15 @@ package com.muqingbfq.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.text.Layout;
-import android.text.StaticLayout;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,17 +22,12 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.muqingbfq.R;
-import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
-import com.muqingbfq.yc;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LrcView extends RecyclerView {
-    private void sc(Object obj) {
-        gj.sc("LRC " + obj);
-    }
 
     static List<lrc> lrclist = new ArrayList<>();
 
@@ -91,10 +80,11 @@ public class LrcView extends RecyclerView {
             TextColor = ta.getColor(R.styleable.LrcView_TextColor,
                     ContextCompat.getColor(getContext(), R.color.text));
             Lrcline = ta.getBoolean(R.styleable.LrcView_Lrcline, true);
+            addOnGlobalLayoutListener = ta.
+                    getBoolean(R.styleable.LrcView_addOnGlobalLayoutListener, false);
             ta.recycle();
         }
         linearLayoutManager = new LinearLayoutManager(getContext()) {
-
             @Override
             public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
                 RecyclerView.SmoothScroller smoothScroller = new CenterSmoothScroller(recyclerView.getContext());
@@ -108,9 +98,9 @@ public class LrcView extends RecyclerView {
         setForeground(null);
         setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
         if (!Lrcline) {
-            addItemDecoration( new RecyclerView.ItemDecoration() {
+            addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
-                public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
 
                     int parentHeight = parent.getHeight();
@@ -166,7 +156,6 @@ public class LrcView extends RecyclerView {
                         long time = (long) minute * 60 * 1000 + second * 1000L + millisecond;
                         int currentLineIndex = getCurrentLineIndex(time);
                         lrclist.set(currentLineIndex, lrclist.get(currentLineIndex).setTlyric(lyric));
-//                        gj.sc(lyric);
                     }
                 }
             }
@@ -195,12 +184,14 @@ public class LrcView extends RecyclerView {
                         int millisecond = Integer.parseInt(secondParts[1]);
                         long time = (long) minute * 60 * 1000 + second * 1000L + millisecond;
                         lrclist.add(new lrc(lyric, time));
-//                        gj.sc(lyric);
                     }
                 }
             }
         }
     }
+
+    int index = -1;
+    boolean addOnGlobalLayoutListener;
 
     class adaper extends RecyclerView.Adapter<VH> {
 
@@ -218,11 +209,26 @@ public class LrcView extends RecyclerView {
 
         @Override
         public void onBindViewHolder(@NonNull VH holder, int position) {
-            if (lrclist.isEmpty()) {
-                holder.textView.setText("纯音乐，请欣赏");
-                return;
-            }
             if (Lrcline) {
+                if (addOnGlobalLayoutListener) {
+                    // 注册布局监听器
+                    holder.textView.getViewTreeObserver().addOnGlobalLayoutListener(
+                            new ViewTreeObserver.OnGlobalLayoutListener() {
+                                @Override
+                                public void onGlobalLayout() {
+                                    int height = holder.textView.getHeight();
+                                    ViewGroup.LayoutParams layoutParams = LrcView.this.getLayoutParams();
+                                    layoutParams.height = height * 5;
+                                    LrcView.this.setLayoutParams(layoutParams);
+                                    // 移除布局监听器
+                                    holder.textView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                                }
+                            });
+                }
+                if (lrclist.isEmpty()) {
+                    holder.textView.setText("纯音乐，请欣赏");
+                    return;
+                }
                 int currentLineIndex = getCurrentLineIndex();
                 if (currentLineIndex >= 0 && currentLineIndex < lrclist.size()) {
 
@@ -244,6 +250,10 @@ public class LrcView extends RecyclerView {
                     holder.textView.setText(text);
                 }
             } else {
+                if (lrclist.isEmpty()) {
+                    holder.textView.setText("纯音乐，请欣赏");
+                    return;
+                }
                 try {
                     lrc lrc = lrclist.get(position);
                     StringBuilder stringBuffer = new StringBuilder();
@@ -265,7 +275,6 @@ public class LrcView extends RecyclerView {
 
         @Override
         public int getItemCount() {
-            gj.sc(lrclist.size());
             if (lrclist.size() < 3) {
                 for (lrc a : lrclist) {
                     if (a.time == 5940000 && a.lrc.equals("纯音乐，请欣赏")) {
@@ -291,14 +300,9 @@ public class LrcView extends RecyclerView {
             textView = itemView.findViewById(R.id.text);
         }
     }
-/*    @Override
-    public void onDraw(@NonNull Canvas canvas) {
-        super.onDraw(canvas);
-        setTimeLrc(canvas);
-    }*/
 
     private int getCurrentLineIndex() {
-        int index = -1;
+        index = -1;
         for (int i = 0; i < lrclist.size(); i++) {
             lrc lineLrc = lrclist.get(i);
             if (lineLrc.time <= time) {
@@ -311,7 +315,7 @@ public class LrcView extends RecyclerView {
     }
 
     private static int getCurrentLineIndex(long time) {
-        int index = -1;
+        int index = 0;
         for (int i = 0; i < lrclist.size(); i++) {
             lrc lineLrc = lrclist.get(i);
             if (lineLrc.time <= time) {
@@ -331,22 +335,15 @@ public class LrcView extends RecyclerView {
         this.time = a;
         if (!Lrcline) {
             int currentLineIndex = getCurrentLineIndex(a);
-            if (currentLineIndex == -1) {
+            getAdapter().notifyDataSetChanged();
+            if (currentLineIndex < 3) {
                 return;
             }
+//            smoothScrollToPosition(getCurrentLineIndex(a));
             linearLayoutManager.smoothScrollToPosition(this,
                     new RecyclerView.State(), currentLineIndex);
-//            smoothScrollToPosition(getCurrentLineIndex(a));
-            getAdapter().notifyItemChanged(--currentLineIndex);
-            getAdapter().notifyItemChanged(getCurrentLineIndex(a));
             return;
         }
         getAdapter().notifyDataSetChanged();
-    }
-
-    public void getLrc() {
-        for (lrc a : lrclist) {
-            sc(a.time + ":" + a.lrc + ":" + a.tlyric);
-        }
     }
 }

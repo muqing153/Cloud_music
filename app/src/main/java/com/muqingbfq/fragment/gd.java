@@ -14,31 +14,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.muqingbfq.MP3;
 import com.muqingbfq.R;
 import com.muqingbfq.api.playlist;
 import com.muqingbfq.api.resource;
 import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
-import com.muqingbfq.databinding.FragmentGdBinding;
 import com.muqingbfq.databinding.FragmentMp3Binding;
-import com.muqingbfq.list.MyViewHoder;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
+import com.muqingbfq.view.CardImage;
 import com.muqingbfq.xm;
 
 import org.json.JSONArray;
@@ -100,7 +90,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
                         String id = jsonObject.getString("id");
                         String name = jsonObject.getString("name");
                         String coverImgUrl = jsonObject.getString("coverImgUrl");
-                        list.add(new xm(id, name, coverImgUrl, false));
+                        list.add(new xm(id, name, coverImgUrl));
                     }
                 } catch (Exception e) {
                     gj.sc(e);
@@ -110,7 +100,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
         }
     }
 
-    public static class baseadapter extends RecyclerView.Adapter<VH> {
+    public static class baseadapter extends RecyclerView.Adapter<VH>{
         Context context;
         List<xm> list;
 
@@ -144,63 +134,14 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
         @Override
         public void onBindViewHolder(@NonNull VH holder, int position) {
             xm xm = list.get(position);
-            holder.cardView.setOnClickListener(view -> {
-                Context context = view.getContext();
-                Intent intent = new Intent(context, mp3.class);
-                intent.putExtra("id", xm.id);
-                intent.putExtra("name", xm.name);
-                context.startActivity(intent);
-            });
-            holder.cardView.setOnLongClickListener(view -> {
-                String[] stringArray = view.getResources()
-                        .getStringArray(R.array.gd_list);
-                new MaterialAlertDialogBuilder(view.getContext()).setItems(stringArray, (dialog, id) -> {
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            if (id == 0) {
-                                String hq = wl.hq(playlist.api + xm.id + "&limit=30");
-                                if (hq != null) {
-                                    wj.xrwb(wj.gd + xm.id, hq);
-                                    xm.cz = true;
-                                    try {
-                                        JSONObject jsonObject = new JSONObject();
-                                        if (wj.cz(wj.gd_xz)) {
-                                            jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
-                                        }
-                                        JSONObject json = new JSONObject();
-                                        json.put("name", xm.name);
-                                        json.put("picUrl", xm.picurl);
-                                        jsonObject.put(xm.id, json);
-                                        wj.xrwb(wj.gd_xz, jsonObject.toString());
-                                    } catch (JSONException e) {
-                                        gj.sc("list gd onclick thear " + e);
-                                    }
-                                }
-
-                            } else if (id == 2) {
-                                wj.sc(wj.gd + xm.id);
-                                if (xm.id.equals("mp3_xz.json")) {
-                                    wj.sc(new File(wj.mp3));
-                                }
-                                xm.cz = false;
-                                try {
-                                    JSONObject jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
-                                    jsonObject.remove(xm.id);
-                                    list.remove(xm);
-                                    wj.xrwb(wj.gd_xz, jsonObject.toString());
-                                } catch (JSONException e) {
-                                    gj.sc(e);
-                                }
-                            }
-                            main.handler.post(() -> notifyDataSetChanged());
-                        }
-                    }.start();
-                    // 在这里处理菜单项的点击事件
-                    dialog.dismiss();
-                }).show();
-                return false;
-            });
+            CARD card = new CARD(xm);
+            if (bool) {
+                holder.itemView.setOnClickListener(card);
+                holder.itemView.setOnLongClickListener(card);
+            } else {
+                holder.image.setOnClickListener(card);
+                holder.image.setOnLongClickListener(card);
+            }
             holder.textView.setText(xm.name);
             holder.kg.setOnClickListener(view1 -> {
                 ImageView tx = (ImageView) view1;
@@ -228,8 +169,8 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
                 color_kg = ContextCompat.getDrawable(context, R.drawable.bf);
             }
             holder.kg.setImageDrawable(color_kg);
-            Glide.with(context).load(xm.picurl).apply(new RequestOptions().placeholder(R.drawable.icon))
-                    .into(holder.imageView);
+//            xm.picurl
+            holder.image.setImageapply(xm.picurl);
         }
 
         @Override
@@ -237,22 +178,99 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
             return list.size();
         }
 
+        class CARD implements View.OnClickListener
+                , View.OnLongClickListener {
+            xm xm;
+
+            public CARD(xm xm) {
+                this.xm = xm;
+            }
+            @Override
+            public void onClick(View view) {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, mp3.class);
+                intent.putExtra("id", xm.id);
+                intent.putExtra("name", xm.name);
+                context.startActivity(intent);
+            }
+
+            @Override
+            public boolean onLongClick(View view) {
+
+                String[] stringArray = view.getResources()
+                        .getStringArray(R.array.gd_list);
+                new MaterialAlertDialogBuilder(view.getContext()).setItems(stringArray, (dialog, id) -> {
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            if (id == 0) {
+                                String hq = wl.hq(playlist.api + xm.id + "&limit=100");
+                                if (hq != null) {
+                                    wj.xrwb(wj.gd + xm.id, hq);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject();
+                                        if (wj.cz(wj.gd_xz)) {
+                                            jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
+                                        }
+                                        xm fh=resource.Playlist_content(xm.id);
+                                        JSONObject json = new JSONObject();
+                                        json.put("name", fh.name);
+                                        json.put("picUrl", fh.picurl);
+                                        jsonObject.put(fh.id, json);
+                                        wj.xrwb(wj.gd_xz, jsonObject.toString());
+                                        main.handler.post(new sx());
+                                    } catch (JSONException e) {
+                                        gj.sc("list gd onclick thear " + e);
+                                    }
+                                }
+
+                            } else if (id == 2) {
+                                wj.sc(wj.gd + xm.id);
+                                if (xm.id.equals("mp3_xz.json")) {
+                                    wj.sc(new File(wj.mp3));
+                                }
+                                try {
+                                    JSONObject jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
+                                    jsonObject.remove(xm.id);
+                                    list.remove(xm);
+                                    wj.xrwb(wj.gd_xz, jsonObject.toString());
+                                } catch (JSONException e) {
+                                    gj.sc(e);
+                                }
+                            }
+                            main.handler.post(new sx());
+                        }
+                    }.start();
+                    // 在这里处理菜单项的点击事件
+                    dialog.dismiss();
+                }).show();
+                return false;
+            }
+
+        }
+
+        class sx implements Runnable {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        }
+
     }
 
     static class VH extends RecyclerView.ViewHolder {
         TextView textView;
-        ImageView imageView, kg;
-        MaterialCardView cardView;
+        ImageView kg;
+        CardImage image;
 
         public VH(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.wb1);
-            imageView = itemView.findViewById(R.id.fh);
-            cardView = itemView.findViewById(R.id.cardview);
+            image = itemView.findViewById(R.id.image);
             kg = itemView.findViewById(R.id.kg);
         }
     }
-
     private class lbspq_sx implements Runnable {
         @SuppressLint("NotifyDataSetChanged")
         @Override

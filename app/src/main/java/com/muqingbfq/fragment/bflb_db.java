@@ -1,6 +1,8 @@
 package com.muqingbfq.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,38 +13,47 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.muqingbfq.MP3;
 import com.muqingbfq.R;
 import com.muqingbfq.api.url;
 import com.muqingbfq.bfqkz;
+import com.muqingbfq.databinding.FragmentBflbDbBinding;
 import com.muqingbfq.list.MyViewHoder;
 import com.muqingbfq.main;
-import com.muqingbfq.mq.gj;
-import com.muqingbfq.xm;
 import com.muqingbfq.yc;
 
 public class bflb_db extends BottomSheetDialog {
     public static RecyclerView.Adapter<MyViewHoder> adapter;
-
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_bflb_db);
+        FragmentBflbDbBinding binding = FragmentBflbDbBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         int height = main.g - main.g / 2 / 2;
         getBehavior().setPeekHeight(height);
         getBehavior().setMaxHeight(height);
         try {
-            RecyclerView lb = findViewById(R.id.lb);
-            lb.setAdapter(new spq());
+            binding.lb.setAdapter(new spq());
             if (bfqkz.xm != null) {
-                lb.smoothScrollToPosition(getI());
+                binding.lb.smoothScrollToPosition(getI());
             }
-            findViewById(R.id.xxbj).
-                    setOnClickListener(v -> {
+            binding.xxbj.setOnClickListener(v -> {
                         if (bfqkz.xm != null) {
-                            lb.smoothScrollToPosition(getI());
+                            binding.lb.smoothScrollToPosition(getI());
                         }
                     });
+            binding.sc.setOnClickListener(view -> {
+                new MaterialAlertDialogBuilder(getContext())
+                        .setTitle("清空播放列表")
+                        .setPositiveButton("确定", (dialogInterface, i) -> {
+                            bfqkz.list.clear();
+                            adapter.notifyDataSetChanged();
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
+            });
         } catch (Exception e) {
             yc.start(getContext(), e);
         }

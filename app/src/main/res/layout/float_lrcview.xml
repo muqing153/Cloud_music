@@ -27,51 +27,56 @@
             android:layout_height="36dp"
             android:src="@drawable/like"
             android:text="喜欢"
+            android:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UseAppTint" />
 
 
         <ImageView
             android:id="@+id/syq"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/syq"
+            android:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/kg"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription,UseAppTint" />
 
         <ImageView
             android:id="@+id/kg"
             android:layout_width="46dp"
             android:layout_height="46dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:tint="@color/white"
             android:src="@drawable/zt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription,UseAppTint" />
 
         <ImageView
             android:id="@+id/xyq"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/xyq"
+            android:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/kg"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UseAppTint" />
 
-        <Button
+        <ImageView
             android:id="@+id/lock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="锁定"
+            android:src="@drawable/lock"
+            android:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="UseAppTint" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

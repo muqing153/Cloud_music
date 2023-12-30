@@ -149,7 +149,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
                                         BitmapFactory.decodeByteArray(albumImage, 0, albumImage.length);
                             }
                         } catch (Exception a) {
-                            gj.sc(a);
+                            gj.sc("yc:"+a);
                         }
                         bfqkz.notify.setBitmap();
                         return false;

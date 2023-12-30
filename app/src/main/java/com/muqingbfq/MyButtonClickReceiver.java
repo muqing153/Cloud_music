@@ -90,10 +90,7 @@ public class MyButtonClickReceiver extends BroadcastReceiver {
                     return;
                 }
                 FloatingLyricsService lei = FloatingLyricsService.lei;
-                gj.sc(lei.setup.i);
-                if (lei.setup.i == 0) {
-                    lei.show();
-                } else if (lei.setup.i == 1) {
+                if (lei.setup.i == 1) {
                     lei.setyc();
                 } else {
                     lei.setup.i = 0;
@@ -101,6 +98,8 @@ public class MyButtonClickReceiver extends BroadcastReceiver {
                     home.appCompatActivity.stopService(
                             new Intent(home.appCompatActivity, FloatingLyricsService.class));
                 }
+                break;
+            case "like":
                 break;
         }
         // 处理按钮点击事件的逻辑

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
@@ -46,19 +47,13 @@ public class bfq extends AppCompatActivity {
     public static String lrc;
     public static com.muqingbfq.view.LrcView lrcView;
     private void setLrc(){
-        lrcView = binding.lrcView;/*
-        lrcview.setCurrentColor(ContextCompat.getColor(this,R.color.text));
-        lrcview.setLabel(getString(R.string.app_name));
-        lrcview.setCurrentTextSize(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
-//            lrcView.setLrcPadding(16);
-        lrcview.setCurrentTextSize(TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_SP, 20, getResources().getDisplayMetrics()));
-        lrcview.setTimelineTextColor(ContextCompat.getColor(this,R.color.text_tm));
-        lrcview.setDraggable(true, (view, time) -> {
+        lrcView = binding.lrcView;
+
+        ViewGroup.LayoutParams layoutParams = binding.cardview.getLayoutParams();
+        layoutParams.height = main.k;
+        layoutParams.width = main.k;
+        binding.cardview.setLayoutParams(layoutParams);/*
             bfqkz.mt.seekTo(Math.toIntExact(time));
-            return false;
-        });
         if (!gj.isTablet(this)) {
             lrcview.setOnTapListener((view, x, y) -> {
                 View kp = binding.kp1;

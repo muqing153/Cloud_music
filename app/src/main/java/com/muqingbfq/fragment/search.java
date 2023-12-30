@@ -125,6 +125,13 @@ public class search extends Fragment {
     }
 
     private void mp3() {
+        try {
+            Long.parseLong(name);
+            com.muqingbfq.api.playlist.hq(list, name);
+            return;
+        } catch (NumberFormatException e) {
+            gj.sc(e);
+        }
         String hq = wl.hq("/search?keywords=" + name + "&type=1");
         try {
             JSONArray jsonArray = new JSONObject(hq).getJSONObject("result")
@@ -154,8 +161,21 @@ public class search extends Fragment {
     }
 
     private void gd() {
-        String hq = wl.hq("/search?keywords=" + name + "&limit=" + (k * 3) + "&type=1000");
         try {
+            Long.parseLong(name);
+            String hq = wl.hq("/playlist/detail?id=" + name);
+            JSONObject js = new JSONObject(hq).getJSONObject("playlist");
+                String id = js.getString("id");
+                String name = js.getString("name");
+                String coverImgUrl = js.getString("coverImgUrl");
+//                gj.sc(name);
+                xmList.add(new xm(id, name, coverImgUrl));
+            return;
+        } catch (Exception e) {
+            gj.sc(e);
+        }
+        try {
+            String hq = wl.hq("/search?keywords=" + name + "&limit=" + (k * 3) + "&type=1000");
             JSONArray jsonArray = new JSONObject(hq).getJSONObject("result")
                     .getJSONArray("playlists");
             int length = jsonArray.length();
@@ -165,8 +185,7 @@ public class search extends Fragment {
                 String name = jsonObject.getString("name");
                 String coverImgUrl = jsonObject.getString("coverImgUrl");
 //                gj.sc(name);
-                xmList.add(new xm(id, name, coverImgUrl, false));
-
+                xmList.add(new xm(id, name, coverImgUrl));
             }
         } catch (Exception e) {
             gj.sc(e);

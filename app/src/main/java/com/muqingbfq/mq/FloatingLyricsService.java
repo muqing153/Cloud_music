@@ -12,11 +12,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.muqingbfq.R;
 import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
 import com.muqingbfq.databinding.FloatLrcviewBinding;
@@ -52,9 +54,10 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
             SETUP setup = gson.fromJson(dqwb, type);
             return setup.i != 0;
         } else {
-            return true;
+            return false;
         }
     }
+
     Handler handler = new Handler();
     LrcView lrcView;
     WindowManager.LayoutParams params;
@@ -67,8 +70,6 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
     }
 
     public SETUP setup = new SETUP();
-    File file;
-
     public int lock() {
         if (setup != null && setup.i == 2) {
             return WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
@@ -77,13 +78,12 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
         return WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
     }
-
     @Override
     public void onCreate() {
         super.onCreate();
         lei = this;
+        File file = new File(wj.filesdri + "FloatingLyricsService.json");
         try {
-            file = new File(wj.filesdri + "FloatingLyricsService.json");
             if (file.exists() && file.isFile()) {
                 String dqwb = wj.dqwb(file.toString());
                 Gson gson = new Gson();
@@ -95,20 +95,15 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
                 setup.TOP = 0;
                 setup.Y = -main.g;
             }
-
-
         } catch (Exception e) {
             wj.sc(file.toString());
-            gj.sc(e);
+            gj.sc(getClass() + ":" + e);
         }
         // 创建悬浮窗歌词的 View
 //        FloatLrcviewBinding
         FloatLrcviewBinding binding = FloatLrcviewBinding.inflate(LayoutInflater.from(this));
         layout = binding.getRoot();
         layout.setOnTouchListener(this);
-//        ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
-//        layout.setLayoutParams(layoutParams);
-
 //        int i = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;FLAG_NOT_TOUCH_MODAL
         params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -124,7 +119,7 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
 
         lrcView = binding.lrcView;
         bfq_an.kz bfqAn = new bfq_an.kz();
-        binding.kg.setOnClickListener(bfqAn);
+        binding.kg.setOnClickListener(this);
         binding.syq.setOnClickListener(bfqAn);
         binding.xyq.setOnClickListener(bfqAn);
         binding.lock.setOnClickListener(this);
@@ -140,7 +135,10 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
             layout.findViewById(com.muqingbfq.R.id.controlLayout).setVisibility(View.GONE);
         }
         windowManager.addView(layout, params);
-        gj.sc("添加成功");
+        if (setup.i == 0) {
+            setup.i = 1;
+        }
+        baocun();
         handler.post(updateSeekBar); // 在播放开始时启动更新进度
     }
 
@@ -163,8 +161,8 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
     }
 
     public void baocun() {
-        String s = new Gson().toJson(setup);
-        wj.xrwb(new File(wj.filesdri + "FloatingLyricsService.json").toString(), s);
+        wj.xrwb(new File(wj.filesdri + "FloatingLyricsService.json").toString(),
+                new Gson().toJson(setup));
     }
 
     private int initialY;
@@ -196,7 +194,24 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        setyc();
+        int id = view.getId();
+        if (id == R.id.kg) {
+            ImageView kg = (ImageView) view;
+            if (bfqkz.mt == null) {
+                return;
+            }
+            if (bfqkz.mt.isPlaying()) {
+                bfqkz.mt.pause();
+                kg.setImageResource(R.drawable.zt);
+            } else {
+                bfqkz.mt.start();
+                kg.setImageResource(R.drawable.bf);
+            }
+        } else if (id==R.id.lock) {
+            setyc();
+        } else if (id == R.id.like) {
+//            bfq
+        }
     }
 
     public void setyc() {

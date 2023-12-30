@@ -2,18 +2,17 @@ package com.muqingbfq.api;
 
 import android.text.TextUtils;
 
-import com.muqingbfq.R;
+import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
+import com.muqingbfq.xm;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Iterator;
 import java.util.List;
-
-import com.muqingbfq.xm;
 
 public class resource {
 
@@ -54,6 +53,16 @@ public class resource {
         }
     }
 
+
+    public static xm Playlist_content(String UID) throws JSONException {
+        String hq = wl.get(main.api + "/playlist/detail?id=" + UID);
+        JSONObject js = new JSONObject(hq).getJSONObject("playlist");
+        String id = js.getString("id");
+        String name = js.getString("name");
+        String coverImgUrl = js.getString("coverImgUrl");
+        return new xm(id, name, coverImgUrl);
+    }
+
     public static void 排行榜(List<xm> list) {
         String hq;
         try {
@@ -78,9 +87,8 @@ public class resource {
                     if (!TextUtils.isEmpty(description) && !description.equals("null")) {
                         name += description;
                     }
-                    boolean cz = wj.cz(wj.gd + id);
                     String coverImgUrl = get.getString("coverImgUrl");
-                    list.add(new xm(id, name, coverImgUrl, cz));
+                    list.add(new xm(id, name, coverImgUrl));
                 }
             }
         } catch (Exception e) {
@@ -90,9 +98,8 @@ public class resource {
 
     private static void add(JSONObject jsonObject, List<xm> list) throws Exception {
         String id = jsonObject.getString("id");
-        boolean cz = wj.cz(wj.gd + id);
         String name = jsonObject.getString("name");
         String picUrl = jsonObject.getString("picUrl");
-        list.add(new xm(id, name, picUrl, cz));
+        list.add(new xm(id, name, picUrl));
     }
 }

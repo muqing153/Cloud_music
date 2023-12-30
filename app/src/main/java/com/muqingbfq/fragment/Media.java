@@ -100,7 +100,7 @@ public class Media {
             a = jsonObject.getJSONObject("lrc").getString("lyric");
             b = jsonObject.getJSONObject("tlyric").getString("lyric");
         } catch (Exception e) {
-            gj.sc(e);
+            gj.sc("Media loadLyric "+e);
         }
         LrcView.setLrc(a, b);
 //        bfq.lrcView.getLrc();

@@ -148,11 +148,10 @@ public class wode extends Fragment {
             JSONObject date = new JSONObject(wj.dqwb(wj.gd_xz));
             for (Iterator<String> it = date.keys(); it.hasNext(); ) {
                 String id = it.next();
-                boolean cz = wj.cz(wj.gd + id);
                 JSONObject jsonObject = date.getJSONObject(id);
                 String name = jsonObject.getString("name");
                 String picUrl = jsonObject.getString("picUrl");
-                list.add(new xm(id, name, picUrl, cz));
+                list.add(new xm(id, name, picUrl));
             }
             main.handler.post(() -> binding.recyclerview2.getAdapter().notifyDataSetChanged());
         } catch (Exception e) {

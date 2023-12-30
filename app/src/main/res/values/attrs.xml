@@ -4,5 +4,6 @@
         <!--声明MyTextView需要使用系统定义过的text属性,注意前面需要加上android命名-->
         <attr name="TextColor" format="color" />
         <attr name="Lrcline" format="boolean" />
+        <attr name="addOnGlobalLayoutListener" format="boolean" />
     </declare-styleable>
 </resources>

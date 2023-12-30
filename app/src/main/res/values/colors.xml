@@ -15,5 +15,6 @@
     <color name="tm">#00FFFFFF</color>
     <color name="bj">#F2ECF6</color>
 
-    <color name="button_bj">#B3E5FC</color>
+<!--    <color name="button_bj">@color/bj</color>-->
+    <color name="bj_tint">#FFCCCC</color>
 </resources>
