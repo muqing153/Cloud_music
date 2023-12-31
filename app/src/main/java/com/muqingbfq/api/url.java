@@ -1,16 +1,13 @@
 package com.muqingbfq.api;
 
 import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
-import com.mpatric.mp3agic.UnsupportedTagException;
 import com.muqingbfq.MP3;
 import com.muqingbfq.bfq;
 import com.muqingbfq.fragment.Media;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
-import com.muqingbfq.xm;
 import com.muqingbfq.yc;
 
 import org.json.JSONArray;
@@ -19,7 +16,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import okhttp3.Call;

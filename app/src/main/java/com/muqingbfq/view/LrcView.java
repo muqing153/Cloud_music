@@ -3,6 +3,7 @@ package com.muqingbfq.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -73,6 +74,15 @@ public class LrcView extends RecyclerView {
         this.attrs = attrs;
         init();
     }
+
+    public void setTextColor(int textColor) {
+        TextColor = textColor;
+    }
+    public void setTextColor(String textColor) {
+        TextColor = Color.parseColor(textColor);
+    }
+
+
 
     private void init() {
         if (attrs != null) {

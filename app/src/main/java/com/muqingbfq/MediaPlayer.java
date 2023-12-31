@@ -138,7 +138,8 @@ public class MediaPlayer extends android.media.MediaPlayer {
                 .listener(new RequestListener<Bitmap>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model,
-                                                @NonNull Target<Bitmap> target, boolean isFirstResource) {
+                                                @NonNull Target<Bitmap> target,
+                                                boolean isFirstResource) {
                         bfq.bitmap = null;
                         try {
                             Mp3File mp3file = new Mp3File(wj.mp3 + bfqkz.xm.id);
@@ -151,15 +152,22 @@ public class MediaPlayer extends android.media.MediaPlayer {
                         } catch (Exception a) {
                             gj.sc("yc:"+a);
                         }
-                        bfqkz.notify.setBitmap();
+                        if (bfqkz.notify != null) {
+                            bfqkz.notify.tzl();
+                        }
+                        Media.setImageBitmap();
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(@NonNull Bitmap bitmap, @NonNull Object model, Target<Bitmap> target,
-                                                   @NonNull DataSource dataSource, boolean isFirstResource) {
+                                                   @NonNull DataSource dataSource,
+                                                   boolean isFirstResource) {
                         bfq.bitmap = bitmap;
-                        bfqkz.notify.setBitmap();
+                        if (bfqkz.notify != null) {
+                            bfqkz.notify.tzl();
+                        }
+                        Media.setImageBitmap();
                         return false;
                     }
                 })
@@ -167,8 +175,8 @@ public class MediaPlayer extends android.media.MediaPlayer {
     }
     @SuppressLint("NotifyDataSetChanged")
     public void bfui() {
-        setTX();
         String name = xm.name, zz = bfqkz.xm.zz;
+        setTX();
         if (bfq.view != null) {
             Media.setProgress(0);
             bfq.setname(name);

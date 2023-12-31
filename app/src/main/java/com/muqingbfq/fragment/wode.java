@@ -25,7 +25,7 @@ import com.muqingbfq.login.user_message;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
-import com.muqingbfq.xm;
+import com.muqingbfq.XM;
 
 import org.json.JSONObject;
 
@@ -50,7 +50,7 @@ public class wode extends Fragment {
             {R.drawable.paihangbang, "排行榜", "排行榜"},
             {R.drawable.icon, "开发中", ""}
     };
-    private final List<com.muqingbfq.xm> list = new ArrayList<>();
+    private final List<XM> list = new ArrayList<>();
 
     @Nullable
     @Override
@@ -151,7 +151,7 @@ public class wode extends Fragment {
                 JSONObject jsonObject = date.getJSONObject(id);
                 String name = jsonObject.getString("name");
                 String picUrl = jsonObject.getString("picUrl");
-                list.add(new xm(id, name, picUrl));
+                list.add(new XM(id, name, picUrl));
             }
             main.handler.post(() -> binding.recyclerview2.getAdapter().notifyDataSetChanged());
         } catch (Exception e) {

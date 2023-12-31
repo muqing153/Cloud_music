@@ -6,7 +6,7 @@ import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
-import com.muqingbfq.xm;
+import com.muqingbfq.XM;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class resource {
 
-    public static void recommend(List<xm> list) {
+    public static void recommend(List<XM> list) {
         try {
             list.clear();
             String hq;
@@ -54,16 +54,16 @@ public class resource {
     }
 
 
-    public static xm Playlist_content(String UID) throws JSONException {
+    public static XM Playlist_content(String UID) throws JSONException {
         String hq = wl.get(main.api + "/playlist/detail?id=" + UID);
         JSONObject js = new JSONObject(hq).getJSONObject("playlist");
         String id = js.getString("id");
         String name = js.getString("name");
         String coverImgUrl = js.getString("coverImgUrl");
-        return new xm(id, name, coverImgUrl);
+        return new XM(id, name, coverImgUrl);
     }
 
-    public static void 排行榜(List<xm> list) {
+    public static void 排行榜(List<XM> list) {
         String hq;
         try {
             if (wj.cz(wj.gd_phb)) {
@@ -88,7 +88,7 @@ public class resource {
                         name += description;
                     }
                     String coverImgUrl = get.getString("coverImgUrl");
-                    list.add(new xm(id, name, coverImgUrl));
+                    list.add(new XM(id, name, coverImgUrl));
                 }
             }
         } catch (Exception e) {
@@ -96,10 +96,10 @@ public class resource {
         }
     }
 
-    private static void add(JSONObject jsonObject, List<xm> list) throws Exception {
+    private static void add(JSONObject jsonObject, List<XM> list) throws Exception {
         String id = jsonObject.getString("id");
         String name = jsonObject.getString("name");
         String picUrl = jsonObject.getString("picUrl");
-        list.add(new xm(id, name, picUrl));
+        list.add(new XM(id, name, picUrl));
     }
 }

@@ -26,7 +26,7 @@ import com.muqingbfq.list.MyViewHoder;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wl;
-import com.muqingbfq.xm;
+import com.muqingbfq.XM;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,7 +37,7 @@ import java.util.List;
 public class search extends Fragment {
     public static RecyclerView.Adapter<MyViewHoder> lbspq;
     List<MP3> list = new ArrayList<>();
-    List<xm> xmList = new ArrayList<>();
+    List<XM> xmList = new ArrayList<>();
     public String name;
 
     public FragmentSearchBinding inflate;
@@ -169,7 +169,7 @@ public class search extends Fragment {
                 String name = js.getString("name");
                 String coverImgUrl = js.getString("coverImgUrl");
 //                gj.sc(name);
-                xmList.add(new xm(id, name, coverImgUrl));
+                xmList.add(new XM(id, name, coverImgUrl));
             return;
         } catch (Exception e) {
             gj.sc(e);
@@ -185,7 +185,7 @@ public class search extends Fragment {
                 String name = jsonObject.getString("name");
                 String coverImgUrl = jsonObject.getString("coverImgUrl");
 //                gj.sc(name);
-                xmList.add(new xm(id, name, coverImgUrl));
+                xmList.add(new XM(id, name, coverImgUrl));
             }
         } catch (Exception e) {
             gj.sc(e);

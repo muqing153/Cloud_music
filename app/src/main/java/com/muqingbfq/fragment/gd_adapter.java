@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.muqingbfq.api.resource;
 import com.muqingbfq.main;
-import com.muqingbfq.xm;
+import com.muqingbfq.XM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class gd_adapter extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FrameLayout layout = new FrameLayout(getContext());
-        List<xm> list = new ArrayList<>();
+        List<XM> list = new ArrayList<>();
         RecyclerView recyclerView = new RecyclerView(layout.getContext());
         int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(layout.getContext(), k / 120);

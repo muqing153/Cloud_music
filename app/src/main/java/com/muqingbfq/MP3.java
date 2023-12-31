@@ -1,5 +1,11 @@
 package com.muqingbfq;
+import static android.support.v4.media.session.MediaSessionCompat.*;
+
+import android.support.v4.media.session.MediaSessionCompat;
+
 import java.util.Objects;
+import java.util.Queue;
+
 public class MP3 {
     public String id, name, zz;
     //    音乐的贴图

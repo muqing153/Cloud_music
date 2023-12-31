@@ -85,63 +85,62 @@ public class bfqkz extends MediaBrowserServiceCompat {
     }
 
 
-    public static MediaSessionCompat mSession;
-    public static PlaybackStateCompat playback;
+    public MediaSessionCompat mSession;
+    public PlaybackStateCompat.Builder playback;
+
     public PendingIntent pendingIntent;
+
+    public MediaMetadataCompat.Builder builder = new MediaMetadataCompat.Builder();
     @Override
     public void onCreate() {
         super.onCreate();
-        com.muqingbfq.api.playlist.hq_hc(bfqkz.lishi_list);
-        new BluetoothMusicController(this);
-        playback = new PlaybackStateCompat.Builder()
-                .setState(PlaybackStateCompat.STATE_NONE, 0, 1.0f)
-                .build();
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         intent.setComponent(new ComponentName(this, home.class));//用ComponentName得到class对象
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
         pendingIntent = com.muqingbfq.mq.NotificationManagerCompat.getActivity(this, intent);
-        mSession = new MediaSessionCompat(this, "MusicService",
+        com.muqingbfq.api.playlist.hq_hc(bfqkz.lishi_list);
+        new BluetoothMusicController(this);
+        mSession = new MediaSessionCompat(this, "MediaSessionCompat",
                 home.componentName, pendingIntent);
+        playback = new PlaybackStateCompat.Builder();
+        playback.setState(PlaybackStateCompat.STATE_NONE, 0, 1.0f)
+                .build();
         mSession.setCallback(new callback());
-        mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-        mSession.setPlaybackState(playback);
-//            mSession.setActive(true);
+        mSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        playback.setActions(PlaybackStateCompat.ACTION_PLAY);
+        playback.setActions(PlaybackStateCompat.ACTION_STOP);
+
+        mSession.setPlaybackState(playback.build());
         setSessionToken(mSession.getSessionToken());
-
+        mSession.setActive(true);
         notify = new com.muqingbfq.mq.NotificationManagerCompat(this);
-
     }
 
     class callback extends MediaSessionCompat.Callback {
         @Override
-        public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
-            mediaButtonEvent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-            return true;
-        }
-
-        @Override
         public void onPlay() {
             super.onPlay();
-            if (playback.getState() == PlaybackStateCompat.STATE_PAUSED) {
+            if (playback.build().getState() == PlaybackStateCompat.STATE_PAUSED) {
                 mt.start();
-                playback = new PlaybackStateCompat.Builder()
-                        .setState(PlaybackStateCompat.STATE_PLAYING, 0, 1.0f)
+                playback.setState(PlaybackStateCompat.STATE_PLAYING, 0, 1.0f)
                         .build();
-                mSession.setPlaybackState(playback);
+                mSession.setPlaybackState(playback.build());
             }
+            gj.sc(this.getClass());
+
         }
 
         @Override
         public void onPause() {
             super.onPause();
-            if (playback.getState() == PlaybackStateCompat.STATE_PLAYING) {
+            if (playback.build().getState() == PlaybackStateCompat.STATE_PLAYING) {
                 mt.pause();
-                playback = new PlaybackStateCompat.Builder()
-                        .setState(PlaybackStateCompat.STATE_PAUSED, 0, 1.0f)
+                playback.setState(PlaybackStateCompat.STATE_PAUSED, 0, 1.0f)
                         .build();
-                mSession.setPlaybackState(playback);
+                mSession.setPlaybackState(playback.build());
             }
         }
 
@@ -149,15 +148,14 @@ public class bfqkz extends MediaBrowserServiceCompat {
         @Override
         public void onPlayFromUri(Uri uri, Bundle extras) {
             try {
-                switch (playback.getState()) {
+                switch (playback.build().getState()) {
                     case PlaybackStateCompat.STATE_PLAYING:
                     case PlaybackStateCompat.STATE_PAUSED:
                     case PlaybackStateCompat.STATE_NONE:
 //                        mp3(uri);/
-                        playback = new PlaybackStateCompat.Builder()
-                                .setState(PlaybackStateCompat.STATE_CONNECTING, 0, 1.0f)
+                        playback.setState(PlaybackStateCompat.STATE_CONNECTING, 0, 1.0f)
                                 .build();
-                        mSession.setPlaybackState(playback);
+                        mSession.setPlaybackState(playback.build());
                         //我们可以保存当前播放音乐的信息，以便客户端刷新UI
                         mSession.setMetadata(new MediaMetadataCompat.Builder()
                                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, extras.getString("title"))
@@ -186,15 +184,5 @@ public class bfqkz extends MediaBrowserServiceCompat {
     @Override
     public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
 
-    }
-    public static void updateNotification() {
-        try {
-            // 更新通知栏的播放状态
-            if (bfqkz.notify != null && notify.notificationBuilder != null) {
-                notify.tzl();
-            }
-        } catch (Exception e) {
-            gj.sc("bfqkz updateNotification:" + e);
-        }
     }
 }

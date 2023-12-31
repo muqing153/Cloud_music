@@ -53,7 +53,10 @@ public class Media {
             bfq.kgsetImageResource(R.drawable.zt);
         }
         bfq_db.setkg(bool);
-        bfqkz.updateNotification();
+        if (bfqkz.notify != null) {
+            bfqkz.notify.tzl_button();
+        }
+
     }
 
     public Media(ActivityBfqBinding binding) {

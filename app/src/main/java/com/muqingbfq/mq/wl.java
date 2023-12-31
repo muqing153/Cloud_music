@@ -2,7 +2,7 @@ package com.muqingbfq.mq;
 
 
 import com.muqingbfq.main;
-import com.muqingbfq.xm;
+import com.muqingbfq.XM;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,9 +87,9 @@ public class wl {
 
     public static class xz extends Thread {
         String url;
-        xm x;
+        XM x;
 
-        public xz(String url, xm x) {
+        public xz(String url, XM x) {
             this.url = url;
             this.x = x;
             start();

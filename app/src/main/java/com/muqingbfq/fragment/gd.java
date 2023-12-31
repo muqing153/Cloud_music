@@ -29,7 +29,7 @@ import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
 import com.muqingbfq.view.CardImage;
-import com.muqingbfq.xm;
+import com.muqingbfq.XM;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,7 +42,7 @@ import java.util.Objects;
 
 public class gd extends com.muqingbfq.mq.FragmentActivity {
     public static String gdid;
-    private final List<xm> list = new ArrayList<>();
+    private final List<XM> list = new ArrayList<>();
     public static RecyclerView.Adapter<VH> adapter;
 
     int k;
@@ -90,7 +90,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
                         String id = jsonObject.getString("id");
                         String name = jsonObject.getString("name");
                         String coverImgUrl = jsonObject.getString("coverImgUrl");
-                        list.add(new xm(id, name, coverImgUrl));
+                        list.add(new XM(id, name, coverImgUrl));
                     }
                 } catch (Exception e) {
                     gj.sc(e);
@@ -102,15 +102,15 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
 
     public static class baseadapter extends RecyclerView.Adapter<VH>{
         Context context;
-        List<xm> list;
+        List<XM> list;
 
-        public baseadapter(Context context, List<xm> list) {
+        public baseadapter(Context context, List<XM> list) {
             this.context = context;
             this.list = list;
         }
 
         boolean bool = false;
-        public baseadapter(Context context, List<xm> list,boolean bool) {
+        public baseadapter(Context context, List<XM> list, boolean bool) {
             this.context = context;
             this.list = list;
             this.bool = bool;
@@ -127,13 +127,13 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
                     .inflate(R.layout.list_gd, parent, false));
         }
 
-        public void setList(List<xm> list) {
+        public void setList(List<XM> list) {
             this.list = list;
         }
 
         @Override
         public void onBindViewHolder(@NonNull VH holder, int position) {
-            xm xm = list.get(position);
+            XM xm = list.get(position);
             CARD card = new CARD(xm);
             if (bool) {
                 holder.itemView.setOnClickListener(card);
@@ -180,9 +180,9 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
 
         class CARD implements View.OnClickListener
                 , View.OnLongClickListener {
-            xm xm;
+            XM xm;
 
-            public CARD(xm xm) {
+            public CARD(XM xm) {
                 this.xm = xm;
             }
             @Override
@@ -212,7 +212,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
                                         if (wj.cz(wj.gd_xz)) {
                                             jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
                                         }
-                                        xm fh=resource.Playlist_content(xm.id);
+                                        XM fh=resource.Playlist_content(xm.id);
                                         JSONObject json = new JSONObject();
                                         json.put("name", fh.name);
                                         json.put("picUrl", fh.picurl);

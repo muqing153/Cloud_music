@@ -5,15 +5,14 @@ import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.v4.media.MediaMetadataCompat;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.media.MediaBrowserServiceCompat;
 
 import com.muqingbfq.MyButtonClickReceiver;
 import com.muqingbfq.R;
@@ -58,13 +57,12 @@ public class NotificationManagerCompat {
                     setAction("lrc"));
             style = new androidx.media.app.NotificationCompat.MediaStyle()
                     .setShowActionsInCompactView(1, 2, 3)
-                    .setMediaSession(bfqkz.mSession.getSessionToken());
+                    .setMediaSession(context.mSession.getSessionToken());
             notificationManager = androidx.core.app.NotificationManagerCompat.from(context);
             notificationBuilder = getNotificationBuilder(context)
                     .setSmallIcon(R.drawable.icon)
-                    .setContentTitle(name).setContentText(zz)
                     .setPriority(NotificationCompat.PRIORITY_LOW)
-                    .setOngoing(true).setAutoCancel(false).setOnlyAlertOnce(true)
+                    .setOngoing(true).setColorized(true).setShowWhen(false)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setContentIntent(context.pendingIntent)
                     .setStyle(style);
@@ -73,12 +71,13 @@ public class NotificationManagerCompat {
             yc.start(context, e);
         }
     }
+
     androidx.media.app.NotificationCompat.MediaStyle style;
+
     @SuppressLint("RestrictedApi")
-    public void tzl() {
-        if (bfqkz.xm != null) {
-            name = bfqkz.xm.name;
-            zz = bfqkz.xm.zz;
+    public void tzl_button() {
+        if (notificationBuilder == null) {
+            return;
         }
         notificationBuilder.mActions.clear();
         notificationBuilder
@@ -88,9 +87,39 @@ public class NotificationManagerCompat {
                         , "kg", pendingIntent_kg)  // #1
                 .addAction(R.drawable.xyq, "xyq", pendingIntent_xyq)
                 .addAction(R.drawable.lock, "lrc", pendingIntent_lrc)
+                .setOngoing(bfqkz.mt.isPlaying());
+        notificationManager_notify();
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void tzl() {
+        if (notificationBuilder == null) {
+            return;
+        }
+        if (bfqkz.xm != null) {
+            name = bfqkz.xm.name;
+            zz = bfqkz.xm.zz;
+        }
+        notificationBuilder.mActions.clear();
+        notificationBuilder
+                .setLargeIcon(bfq.bitmap)
+                .addAction(R.drawable.like, "like", pendingIntent_kg) // #0
+                .addAction(R.drawable.syq, "syq", pendingIntent_syq) // #0
+                .addAction(bfqkz.mt.isPlaying() ? R.drawable.bf : R.drawable.zt
+                        , "kg", pendingIntent_kg)  // #1
+                .addAction(R.drawable.xyq, "xyq", pendingIntent_xyq)
+                .addAction(R.drawable.lock, "lrc", pendingIntent_lrc)
                 .setContentTitle(name)
                 .setContentText(zz)
                 .setOngoing(bfqkz.mt.isPlaying());
+
+        context.builder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, name)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, zz)
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, zz)
+                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bfq.bitmap)
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 100);
+
+        context.mSession.setMetadata(context.builder.build());
         notificationManager_notify();
     }
 
@@ -98,31 +127,13 @@ public class NotificationManagerCompat {
             pendingIntent_syq,
             pendingIntent_xyq,
             pendingIntent_lrc;
-    private final String CHANNEL_ID = "muqing_yy_id";
+    private final String CHANNEL_ID = "MediaSessionCompat";
 
     public void notificationManager_notify() {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        notificationManager.notify(1, notificationBuilder.build());
-    }
-
-    public void setBitmap() {
-        Media.setImageBitmap();
-        if (notificationManager != null) {
-            if (ActivityCompat.checkSelfPermission(home.appCompatActivity, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            notificationBuilder.setLargeIcon(bfq.bitmap);
-            notificationManager.notify(1, notificationBuilder.build());
-        }
+        notificationManager.notify(0, notificationBuilder.build());
     }
 
     private NotificationCompat.Builder getNotificationBuilder(Context context) {
@@ -140,7 +151,6 @@ public class NotificationManagerCompat {
         }
         return PendingIntent.getBroadcast(context, 0, intent, flag);
     }
-
 
 
     public static PendingIntent getActivity(Context context, Intent intent) {

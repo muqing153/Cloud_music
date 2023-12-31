@@ -65,7 +65,8 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
     public static class SETUP {
         //0是关闭 1是打开 2是锁定
         public int i;
-        public float TOP;
+        public float TOP, Alpha;
+        public String Color;
         public int Y;
     }
 
@@ -94,6 +95,8 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
                 setup.i = 1;
                 setup.TOP = 0;
                 setup.Y = -main.g;
+                setup.Alpha = 0.9f;
+                setup.Color = "#0088FF";
             }
         } catch (Exception e) {
             wj.sc(file.toString());
@@ -118,6 +121,7 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
         params.y = setup.Y;
 
         lrcView = binding.lrcView;
+        lrcView.setTextColor(setup.Color);
         bfq_an.kz bfqAn = new bfq_an.kz();
         binding.kg.setOnClickListener(this);
         binding.syq.setOnClickListener(bfqAn);

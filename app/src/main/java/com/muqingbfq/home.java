@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.session.MediaSessionManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -25,7 +26,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.muqingbfq.databinding.ActivityHomeBinding;
-import com.muqingbfq.databinding.FloatLrcviewBinding;
 import com.muqingbfq.fragment.bfq_db;
 import com.muqingbfq.fragment.gd_adapter;
 import com.muqingbfq.fragment.wode;
@@ -69,9 +69,9 @@ public class home extends AppCompatActivity {
             //初始化播放器组件
             // 启动Service
             if (componentName == null) {
-                componentName = new ComponentName(this, bfqkz.class);
+                componentName = new ComponentName(getApplicationContext(), bfqkz.class);
                 mBrowser = new MediaBrowserCompat(
-                        this, componentName
+                        getApplicationContext(), componentName
                         ,//绑定服务端
                         browserConnectionCallback,//设置连接回调
                         null
@@ -269,6 +269,7 @@ public class home extends AppCompatActivity {
                         //当Service获取数据后会将数据发送回来，此时会触发SubscriptionCallback.onChildrenLoaded回调
                         mBrowser.subscribe(mediaId, browserSubscriptionCallback);
                     }
+                    gj.sc("连接成功");
                 }
 
                 @Override
@@ -284,6 +285,8 @@ public class home extends AppCompatActivity {
                 @Override
                 public void onChildrenLoaded(@NonNull String parentId,
                                              @NonNull List<MediaBrowserCompat.MediaItem> children) {
+
+                    gj.sc("onChildrenLoaded------");
                 }
             };
 }

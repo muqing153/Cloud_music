@@ -24,7 +24,6 @@
     <!--悬浮窗权限-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.SYSTEM_OVERLAY_WINDOW" />
-
     <application
         android:name=".main"
         android:allowBackup="true"
@@ -66,9 +65,11 @@
 
         <service
             android:name=".bfqkz"
-            android:exported="false">
+            android:exported="true"
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </service>
         <service android:name=".mq.floating" />

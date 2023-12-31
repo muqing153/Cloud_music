@@ -8,16 +8,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Environment;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
-import com.mpatric.mp3agic.UnsupportedTagException;
 import com.muqingbfq.MP3;
 import com.muqingbfq.R;
 import com.muqingbfq.bfq;
@@ -37,10 +35,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class FileDownloader {
-    private static final String CHANNEL_ID = "download_channel";
-    private static final int NOTIFICATION_ID = 3;
+    private final String CHANNEL_ID = "download_channel";
+    private final int NOTIFICATION_ID = 3;
 
-    public static void downloadFile(Context context, String url, MP3 x) {
+    public void downloadFile(Context context, String url, MP3 x) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
@@ -50,18 +48,18 @@ public class FileDownloader {
         // 发起请求
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 e.printStackTrace();
                 // 下载失败处理
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     // 下载失败处理
                     return;
                 }
-                File outputFile = new File(wj.mp3, "nihao");
+                File outputFile = new File(wj.mp3, x.id);
                 File parentFile = outputFile.getParentFile();
                 if (!parentFile.isDirectory()) {
                     parentFile.mkdirs();
@@ -122,7 +120,7 @@ public class FileDownloader {
         });
     }
 
-    private static void createNotificationChannel(Context context) {
+    private void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Download Channel";
             String description = "Channel for file download";
@@ -139,7 +137,7 @@ public class FileDownloader {
         }
     }
 
-    private static void updateNotificationProgress(Context context, long fileSize,
+    private void updateNotificationProgress(Context context, long fileSize,
                                                    long fileSizeDownloaded) {
         int progress = (int) ((fileSizeDownloaded * 100) / fileSize);
 

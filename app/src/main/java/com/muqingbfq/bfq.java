@@ -50,8 +50,8 @@ public class bfq extends AppCompatActivity {
         lrcView = binding.lrcView;
 
         ViewGroup.LayoutParams layoutParams = binding.cardview.getLayoutParams();
-        layoutParams.height = main.k;
-        layoutParams.width = main.k;
+        layoutParams.height = main.k - 100;
+        layoutParams.width = main.k - 100;
         binding.cardview.setLayoutParams(layoutParams);/*
             bfqkz.mt.seekTo(Math.toIntExact(time));
         if (!gj.isTablet(this)) {
@@ -151,7 +151,7 @@ public class bfq extends AppCompatActivity {
                             JSONArray data = json.getJSONArray("data");
                             JSONObject jsonObject = data.getJSONObject(0);
                             String url = jsonObject.getString("url");
-                            FileDownloader.downloadFile(bfq.this, url, bfqkz.xm);
+                            new FileDownloader().downloadFile(bfq.this, url, bfqkz.xm);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }

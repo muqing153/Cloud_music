@@ -25,6 +25,8 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.muqingbfq.databinding.ActivitySearchBinding;
 import com.muqingbfq.fragment.search;
 import com.muqingbfq.mq.FragmentActivity;
@@ -33,7 +35,6 @@ import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -42,28 +43,25 @@ import java.util.List;
 public class activity_search extends FragmentActivity {
     private EditText editText;
     private ArrayAdapter<String> adapter;
-    private SearchRecordAdapter recordAdapter;
-    private JSONObject json = new JSONObject();
-    private final List<String> json_list = new ArrayList<>();
+    private List<String> json_list = new ArrayList<>();
     private final List<String> list = new ArrayList<>();
     ListView listPopupWindow;
-    ActivitySearchBinding inflate;
+    ActivitySearchBinding binding;
+
     @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inflate = ActivitySearchBinding.inflate(getLayoutInflater());
-        setContentView(inflate.getRoot());
-        RecyclerView recyclerView = findViewById(R.id.list_recycler);
+        binding = ActivitySearchBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         FlexboxLayoutManager manager = new FlexboxLayoutManager(this);
         //设置主轴排列方式
         manager.setFlexDirection(FlexDirection.ROW);
         //设置是否换行
         manager.setFlexWrap(FlexWrap.WRAP);
         manager.setAlignItems(AlignItems.STRETCH);
-        recyclerView.setLayoutManager(manager);
-        new SearchRecordAdapter();
-        recyclerView.setAdapter(recordAdapter);
+        binding.listRecycler.setLayoutManager(manager);
+        binding.listRecycler.setAdapter(new SearchRecordAdapter());
 
         editText = findViewById(R.id.editview);
         editText.setOnEditorActionListener((v, actionId, event) -> {
@@ -75,15 +73,15 @@ public class activity_search extends FragmentActivity {
             }
             return false;
         });
-        inflate.deleat.setOnClickListener(v -> new MaterialAlertDialogBuilder(v.getContext())
+        binding.deleat.setOnClickListener(v -> new MaterialAlertDialogBuilder(
+                activity_search.this)
                 .setTitle("删除")
                 .setMessage("清空历史记录？")
                 .setNegativeButton("取消", null)
                 .setPositiveButton("确定", (dialogInterface, i) -> {
                     wj.sc(wj.filesdri + wj.lishi_json);
-                    json = new JSONObject();
                     json_list.clear();
-                    recordAdapter.notifyDataSetChanged();
+                    binding.listRecycler.getAdapter().notifyDataSetChanged();
                     findViewById(R.id.xxbj1).setVisibility(View.GONE);
                 })
                 .show());
@@ -150,38 +148,32 @@ public class activity_search extends FragmentActivity {
             }
         });
 
-        inflate.editview.requestFocus();//获取焦点
+        binding.editview.requestFocus();//获取焦点
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         //if (!imm.isActive()) //没有显示键盘，弹出
-        imm.showSoftInput(inflate.editview, 0);
+        imm.showSoftInput(binding.editview, 0);
     }
 
     public void dismiss() {
-        inflate.editview.clearFocus();
+        binding.editview.clearFocus();
         listPopupWindow.setVisibility(View.GONE);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm.isActive()) //有显示键盘，隐藏
-            imm.hideSoftInputFromWindow(inflate.editview.getWindowToken(),
+            imm.hideSoftInputFromWindow(binding.editview.getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void addSearchRecord(String name) {
         try {
-            if (!findViewById(R.id.xxbj1).isShown()) {
-                findViewById(R.id.xxbj1).setVisibility(View.VISIBLE);
+            if (!binding.xxbj1.isShown()) {
+                binding.xxbj1.setVisibility(View.VISIBLE);
             }
-            if (!json.has("list")) {
-                json.put("list", new JSONArray());
-            }
-            if (!json_list.contains(name)) {
-                json_list.add(name);
-                JSONObject record = new JSONObject();
-                record.put("name", name);
-                json.getJSONArray("list").put(record);
-                wj.xrwb(wj.filesdri + wj.lishi_json, json.toString());
-                adapter.notifyDataSetChanged();
-            }
-        } catch (JSONException e) {
+            json_list.remove(name);
+            json_list.add(0, name);
+            wj.xrwb(wj.filesdri + wj.lishi_json, new Gson().toJson(json_list));
+            binding.listRecycler.getAdapter().notifyDataSetChanged();
+        } catch (Exception e) {
             gj.sc(e);
         }
     }
@@ -222,21 +214,16 @@ public class activity_search extends FragmentActivity {
             String dqwb = wj.dqwb(wj.filesdri + wj.lishi_json);
             if (dqwb != null) {
                 try {
-                    json = new JSONObject(dqwb);
-                    JSONArray list1 = json.getJSONArray("list");
-                    int length = list1.length();
-                    for (int i = length - 1; i >= 0; i--) {
-                        json_list.add(list1.
-                                getJSONObject(i).getString("name"));
-                    }
-                } catch (JSONException e) {
+                    json_list = new Gson().fromJson(dqwb, new TypeToken<List<String>>() {
+                    }.getType());
+                } catch (Exception e) {
+                    wj.sc(wj.filesdri + wj.lishi_json);
                     yc.start(activity_search.this, e);
                 }
             }
             if (json_list.isEmpty()) {
-                inflate.xxbj1.setVisibility(View.INVISIBLE);
+                binding.xxbj1.setVisibility(View.INVISIBLE);
             }
-            recordAdapter = this;
         }
 
         @NonNull
@@ -253,6 +240,19 @@ public class activity_search extends FragmentActivity {
             holder.recordTextView.setOnClickListener(v -> {
                 editText.setText(keyword);
                 start(keyword);
+            });
+            holder.recordTextView.setOnLongClickListener(view -> {
+                new MaterialAlertDialogBuilder(activity_search.this).
+                        setTitle("删除此记录：" + keyword)
+                        .setPositiveButton("确定", (dialogInterface, i) -> {
+                            json_list.remove(keyword);
+                            wj.xrwb(wj.filesdri + wj.lishi_json, new Gson().toJson(json_list));
+                            notifyItemChanged(position);
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
+
+                return false;
             });
         }
 
@@ -285,6 +285,7 @@ public class activity_search extends FragmentActivity {
             finish();
         }
     }
+
     @Override
     public void finish() {
         super.finish();
