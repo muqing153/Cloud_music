@@ -28,7 +28,7 @@
 有问题反馈
 在使用中有任何问题，欢迎反馈给我，可以用以下联系方式跟我交流
 
-* 邮件(1966944300@qq.com)
+* [邮件](https://mail.qq.com/cgi-bin/frame_html?sid=HDAj98eJ5ttKEmcC&r=49fba830086199da57813771b9a2d469&lang=zh)
 * QQ:1966944300
 * 后台源码-Github: [网易云音乐 API](https://github.com/Binaryify/NeteaseCloudMusicApi)
 
