@@ -24,32 +24,43 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.muqingbfq.R;
 import com.muqingbfq.mq.gj;
+import com.muqingbfq.yc;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LrcView extends RecyclerView {
 
-    static List<lrc> lrclist = new ArrayList<>();
+    static List<LRC> lrclist = new ArrayList<>();
 
-    static class lrc {
+    static class LRC {
         String lrc, tlyric;
         long time;
 
-        public lrc(String lrc, long time) {
+        public LRC(String lrc, long time) {
             this.lrc = lrc;
             this.time = time;
         }
 
-        public lrc(String lrc, String tlyric, long time) {
-            this.lrc = lrc;
-            this.tlyric = tlyric;
-            this.time = time;
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+            LRC lrc = (LRC) obj;
+            return time == lrc.time;
         }
-
-        public lrc setTlyric(String str) {
+        public LRC setTlyric(String str) {
             this.tlyric = str;
             return this;
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hash(time);
         }
 
     }
@@ -81,8 +92,9 @@ public class LrcView extends RecyclerView {
     public void setTextColor(String textColor) {
         TextColor = Color.parseColor(textColor);
     }
-
-
+    public void setLrcline(boolean lrcline) {
+        Lrcline = lrcline;
+    }
 
     private void init() {
         if (attrs != null) {
@@ -145,40 +157,50 @@ public class LrcView extends RecyclerView {
     }
 
     public static void setLrc(String a, String b) {
-        setLrc(a);
-        if (TextUtils.isEmpty(b)) {
-            return;
-        }
-        b.trim();
-        String[] lines = b.split("\n");
-        for (String line : lines) {
-            String[] parts = line.split("]");
-            if (parts.length >= 2) {
-                String timeString = parts[0].substring(1);
-                String lyric = parts[1].trim();
-                String[] timeParts = timeString.split(":");
-                if (timeParts.length >= 2) {
-                    int minute = Integer.parseInt(timeParts[0]);
-                    String[] secondParts = timeParts[1].split("\\.");
-                    if (secondParts.length >= 2) {
-                        int second = Integer.parseInt(secondParts[0]);
-                        int millisecond = Integer.parseInt(secondParts[1]);
-                        long time = (long) minute * 60 * 1000 + second * 1000L + millisecond;
-                        int currentLineIndex = getCurrentLineIndex(time);
-                        lrclist.set(currentLineIndex, lrclist.get(currentLineIndex).setTlyric(lyric));
+        try {
+            lrclist.clear();
+            setLrc(a);
+            setLrc(b);
+            if (true) {
+                return;
+            }
+            if (TextUtils.isEmpty(b)) {
+                return;
+            }
+            b.trim();
+            String[] lines = b.split("\n");
+            for (String line : lines) {
+                String[] parts = line.split("]");
+                if (parts.length >= 2) {
+                    String timeString = parts[0].substring(1);
+                    String lyric = parts[1].trim();
+                    String[] timeParts = timeString.split(":");
+                    if (timeParts.length >= 2) {
+                        int minute = Integer.parseInt(timeParts[0]);
+                        String[] secondParts = timeParts[1].split("[.\\-]");
+                        if (secondParts.length >= 2) {
+                            int second = Integer.parseInt(secondParts[0]);
+                            int millisecond = Integer.parseInt(secondParts[1]);
+                            long time = (long) minute * 60 * 1000 + second * 1000L + millisecond;
+                            int currentLineIndex = getCurrentLineIndex(time);
+                            lrclist.set(currentLineIndex,
+                                    lrclist.get(currentLineIndex).setTlyric(lyric));
+                        }
+
                     }
                 }
             }
+        } catch (Exception e) {
+            yc.start("LrcView setLrc :" + e + a + b);
         }
     }
 
     public static void setLrc(String a) {
-        lrclist.clear();
         // 去除空格
-        a.trim();
         if (TextUtils.isEmpty(a)) {
             return;
         }
+        a.trim();
         String[] lines = a.split("\n");
         for (String line : lines) {
             String[] parts = line.split("]");
@@ -188,12 +210,18 @@ public class LrcView extends RecyclerView {
                 String[] timeParts = timeString.split(":");
                 if (timeParts.length >= 2) {
                     int minute = Integer.parseInt(timeParts[0]);
-                    String[] secondParts = timeParts[1].split("\\.");
+                    String[] secondParts = timeParts[1].split("[.\\-]");
                     if (secondParts.length >= 2) {
                         int second = Integer.parseInt(secondParts[0]);
                         int millisecond = Integer.parseInt(secondParts[1]);
                         long time = (long) minute * 60 * 1000 + second * 1000L + millisecond;
-                        lrclist.add(new lrc(lyric, time));
+                        LRC lrc = new LRC(lyric, time);
+                        if (lrclist.contains(lrc)) {
+                            int index = lrclist.indexOf(lrc);
+                            lrclist.get(index).setTlyric(lyric);
+                        } else {
+                            lrclist.add(lrc);
+                        }
                     }
                 }
             }
@@ -244,7 +272,7 @@ public class LrcView extends RecyclerView {
 
                     String text;
                     if (lrclist.size() <= 3) {
-                        for (lrc a : lrclist) {
+                        for (LRC a : lrclist) {
                             if (a.time == 5940000 && a.lrc.equals("纯音乐，请欣赏")) {
                                 text = "纯音乐，请欣赏";
                                 holder.textView.setText(text);
@@ -252,7 +280,7 @@ public class LrcView extends RecyclerView {
                             }
                         }
                     }
-                    lrc currentLrc = lrclist.get(currentLineIndex);
+                    LRC currentLrc = lrclist.get(currentLineIndex);
                     text = currentLrc.lrc;
                     if (currentLrc.tlyric != null) {
                         text += "\n" + currentLrc.tlyric;
@@ -265,7 +293,7 @@ public class LrcView extends RecyclerView {
                     return;
                 }
                 try {
-                    lrc lrc = lrclist.get(position);
+                    LRC lrc = lrclist.get(position);
                     StringBuilder stringBuffer = new StringBuilder();
                     stringBuffer.append(lrc.lrc);
                     if (lrc.tlyric != null) {
@@ -286,7 +314,7 @@ public class LrcView extends RecyclerView {
         @Override
         public int getItemCount() {
             if (lrclist.size() < 3) {
-                for (lrc a : lrclist) {
+                for (LRC a : lrclist) {
                     if (a.time == 5940000 && a.lrc.equals("纯音乐，请欣赏")) {
                         return 1;
                     }
@@ -314,7 +342,7 @@ public class LrcView extends RecyclerView {
     private int getCurrentLineIndex() {
         index = -1;
         for (int i = 0; i < lrclist.size(); i++) {
-            lrc lineLrc = lrclist.get(i);
+            LRC lineLrc = lrclist.get(i);
             if (lineLrc.time <= time) {
                 index = i;
             } else {
@@ -327,7 +355,7 @@ public class LrcView extends RecyclerView {
     private static int getCurrentLineIndex(long time) {
         int index = 0;
         for (int i = 0; i < lrclist.size(); i++) {
-            lrc lineLrc = lrclist.get(i);
+            LRC lineLrc = lrclist.get(i);
             if (lineLrc.time <= time) {
                 index = i;
             } else {

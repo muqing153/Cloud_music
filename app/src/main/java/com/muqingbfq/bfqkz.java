@@ -30,6 +30,9 @@ import java.util.Random;
 public class bfqkz extends MediaBrowserServiceCompat {
     public static MediaPlayer mt = new MediaPlayer();
     public static List<MP3> list = new ArrayList<>();
+
+    //保存原始list顺序
+    public static List<MP3> list_baocun = new ArrayList<>();
     public static List<MP3> lishi_list = new ArrayList<>();
     public static int ms;
     //    0 循环 1 顺序 2 随机
@@ -39,15 +42,10 @@ public class bfqkz extends MediaBrowserServiceCompat {
     public static com.muqingbfq.mq.NotificationManagerCompat notify;
 
     public static int getmti(int s) {
-        int i = bfqkz.list.indexOf(xm);
-        if (s == 1) {
-            i = bfqkz.list.indexOf(xm) + 1;
+        int i = bfqkz.list.indexOf(xm) + 1;
             if (i >= bfqkz.list.size()) {
                 i = 0;
             }
-        } else if (s == 2) {
-            i = new Random().nextInt(bfqkz.list.size());
-        }
         return i;
     }
 

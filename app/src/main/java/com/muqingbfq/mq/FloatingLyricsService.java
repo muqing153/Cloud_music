@@ -64,13 +64,14 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
 
     public static class SETUP {
         //0是关闭 1是打开 2是锁定
-        public int i;
-        public float TOP, Alpha;
-        public String Color;
-        public int Y;
+        public int i = 1;
+        public float Alpha = 0.9f;
+        public String Color = "#0088FF";
+        public int Y = -main.g;
     }
 
     public SETUP setup = new SETUP();
+
     public int lock() {
         if (setup != null && setup.i == 2) {
             return WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
@@ -79,6 +80,7 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
         return WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -91,59 +93,53 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
                 Type type = new TypeToken<SETUP>() {
                 }.getType();
                 setup = gson.fromJson(dqwb, type);
-            } else {
-                setup.i = 1;
-                setup.TOP = 0;
-                setup.Y = -main.g;
-                setup.Alpha = 0.9f;
-                setup.Color = "#0088FF";
             }
+            // 创建悬浮窗歌词的 View
+//        FloatLrcviewBinding
+            FloatLrcviewBinding binding = FloatLrcviewBinding.inflate(LayoutInflater.from(this));
+            layout = binding.getRoot();
+            layout.setOnTouchListener(this);
+//        int i = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;FLAG_NOT_TOUCH_MODAL
+            params = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ?
+                            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY :
+                            WindowManager.LayoutParams.TYPE_PHONE,
+                    lock(),
+                    PixelFormat.TRANSLUCENT
+            );
+
+            params.y = setup.Y;
+
+            lrcView = binding.lrcView;
+            lrcView.setTextColor(setup.Color);
+            bfq_an.kz bfqAn = new bfq_an.kz();
+            binding.kg.setOnClickListener(this);
+            binding.syq.setOnClickListener(bfqAn);
+            binding.xyq.setOnClickListener(bfqAn);
+            binding.lock.setOnClickListener(this);
+//        params.gravity = Gravity.CENTER;
+
+
+            // 获取 WindowManager 并将悬浮窗歌词添加到窗口中
+            windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+            if (setup.i == 2) {
+                params.flags = lock();
+                layout.setBackground(null);
+                lrcView.setAlpha(0.5f);
+                layout.findViewById(com.muqingbfq.R.id.controlLayout).setVisibility(View.GONE);
+            }
+            windowManager.addView(layout, params);
+            if (setup.i == 0) {
+                setup.i = 1;
+            }
+            baocun();
+            handler.post(updateSeekBar); // 在播放开始时启动更新进度
         } catch (Exception e) {
             wj.sc(file.toString());
             gj.sc(getClass() + ":" + e);
         }
-        // 创建悬浮窗歌词的 View
-//        FloatLrcviewBinding
-        FloatLrcviewBinding binding = FloatLrcviewBinding.inflate(LayoutInflater.from(this));
-        layout = binding.getRoot();
-        layout.setOnTouchListener(this);
-//        int i = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;FLAG_NOT_TOUCH_MODAL
-        params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ?
-                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY :
-                        WindowManager.LayoutParams.TYPE_PHONE,
-                lock(),
-                PixelFormat.TRANSLUCENT
-        );
-
-        params.y = setup.Y;
-
-        lrcView = binding.lrcView;
-        lrcView.setTextColor(setup.Color);
-        bfq_an.kz bfqAn = new bfq_an.kz();
-        binding.kg.setOnClickListener(this);
-        binding.syq.setOnClickListener(bfqAn);
-        binding.xyq.setOnClickListener(bfqAn);
-        binding.lock.setOnClickListener(this);
-//        params.gravity = Gravity.CENTER;
-
-
-        // 获取 WindowManager 并将悬浮窗歌词添加到窗口中
-        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        if (setup.i == 2) {
-            params.flags = lock();
-            layout.setBackground(null);
-            lrcView.setAlpha(0.5f);
-            layout.findViewById(com.muqingbfq.R.id.controlLayout).setVisibility(View.GONE);
-        }
-        windowManager.addView(layout, params);
-        if (setup.i == 0) {
-            setup.i = 1;
-        }
-        baocun();
-        handler.post(updateSeekBar); // 在播放开始时启动更新进度
     }
 
     @Override
@@ -211,7 +207,7 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
                 bfqkz.mt.start();
                 kg.setImageResource(R.drawable.bf);
             }
-        } else if (id==R.id.lock) {
+        } else if (id == R.id.lock) {
             setyc();
         } else if (id == R.id.like) {
 //            bfq
@@ -222,7 +218,7 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
         setup.i = 2;
         params.flags = lock();
         layout.setBackground(null);
-        lrcView.setAlpha(0.5f);
+        lrcView.setAlpha(setup.Alpha);
         layout.findViewById(com.muqingbfq.R.id.controlLayout).setVisibility(View.GONE);
         windowManager.updateViewLayout(layout, params);
         baocun();

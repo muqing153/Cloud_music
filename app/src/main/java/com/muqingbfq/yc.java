@@ -14,14 +14,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.muqingbfq.databinding.ActivityYcBinding;
+import com.muqingbfq.mq.gj;
 
 public class yc extends AppCompatActivity {
-    public static Object exception;
+    public Object exception;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityYcBinding binding = ActivityYcBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        Intent intent = getIntent();
+        exception = intent.getStringExtra("e");
 
         String deviceModel = Build.MODEL;
         String deviceManufacturer = Build.MANUFACTURER;
@@ -52,8 +55,10 @@ public class yc extends AppCompatActivity {
     }
 
     public static void start(Context context, Object e) {
-        yc.exception = e;
-        context.startActivity(new Intent(context, yc.class));
+        gj.sc(e);
+        Intent intent = new Intent(context, yc.class);
+        intent.putExtra("e",e.toString());
+        context.startActivity(intent);
     }
 
     public static void tc(Context context, Object exception) {

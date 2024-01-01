@@ -163,7 +163,8 @@ public class bfq extends AppCompatActivity {
             setname(bfqkz.xm.name);
             setzz(bfqkz.xm.zz);
             bfq_an.islike();
-            bfqkz.mt.setTX();
+            Media.setImageBitmap();
+//            bfqkz.mt.setTX();
         }
     }
 

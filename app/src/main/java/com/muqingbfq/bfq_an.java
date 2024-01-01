@@ -1,20 +1,18 @@
 package com.muqingbfq;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.muqingbfq.api.url;
-import com.muqingbfq.fragment.Media;
-import com.muqingbfq.fragment.gd;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -60,43 +58,60 @@ public class bfq_an {
     }
 
     public static class control implements View.OnClickListener {
+        ImageView imageView;
+
         public control(ImageView imageView) {
+            this.imageView = imageView;
+            setImage(-1);
+        }
+
+        private void setImage(int i) {
+            gj.sc(bfqkz.ms);
+
+            bfqkz.mt.setLooping(bfqkz.ms == 0);
             switch (bfqkz.ms) {
                 case 0:
                     imageView.setImageResource(R.drawable.mt_xh);
+                    if (i == -1) {
+                        break;
+                    }
+                    if (!bfqkz.list_baocun.isEmpty()) {
+                        bfqkz.list.clear();
+                        bfqkz.list.addAll(bfqkz.list_baocun);
+                    }
                     break;
                 case 1:
                     imageView.setImageResource(R.drawable.mt_sx);
+                    if (i == -1) {
+                        break;
+                    }
+                    if (!bfqkz.list_baocun.isEmpty()) {
+                        bfqkz.list.clear();
+                        bfqkz.list.addAll(bfqkz.list_baocun);
+                    }
                     break;
                 case 2:
                     imageView.setImageResource(R.drawable.mt_sj);
+                    if (i == -1) {
+                        break;
+                    }
+                    bfqkz.list_baocun.clear();
+                    bfqkz.list_baocun.addAll(bfqkz.list);
+                    Collections.shuffle(bfqkz.list);
                     break;
             }
         }
 
         @Override
         public void onClick(View v) {
-            ImageView imageView = (ImageView) v;
-            switch (bfqkz.ms) {
-                case 0:
-                    bfqkz.ms = 1;
-                    imageView.setImageResource(R.drawable.mt_sx);
-//                    顺序
-                    break;
-                case 1:
-                    bfqkz.ms = 2;
-                    imageView.setImageResource(R.drawable.mt_sj);
-//                    随机
-                    break;
-                case 2:
-                    bfqkz.ms = 0;
-                    imageView.setImageResource(R.drawable.mt_xh);
-//                    循环
-                    break;
+            if (bfqkz.ms == 2) {
+                bfqkz.ms = 0;
+            } else {
+                bfqkz.ms++;
             }
+            setImage(bfqkz.ms);
             main.edit.putInt("ms", bfqkz.ms);
             main.edit.commit();
-//            imageView.setImageDrawable();
         }
     }
 
