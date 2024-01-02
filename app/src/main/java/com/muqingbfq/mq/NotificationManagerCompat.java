@@ -18,8 +18,6 @@ import com.muqingbfq.MyButtonClickReceiver;
 import com.muqingbfq.R;
 import com.muqingbfq.bfq;
 import com.muqingbfq.bfqkz;
-import com.muqingbfq.fragment.Media;
-import com.muqingbfq.home;
 import com.muqingbfq.yc;
 
 public class NotificationManagerCompat {
@@ -55,6 +53,8 @@ public class NotificationManagerCompat {
                     setAction("xyq"));
             pendingIntent_lrc = getBroadcast(context, my.
                     setAction("lrc"));
+            pendingIntent_like = getBroadcast(context, my.
+                    setAction("like"));
             style = new androidx.media.app.NotificationCompat.MediaStyle()
                     .setShowActionsInCompactView(1, 2, 3)
                     .setMediaSession(context.mSession.getSessionToken());
@@ -81,7 +81,7 @@ public class NotificationManagerCompat {
         }
         notificationBuilder.mActions.clear();
         notificationBuilder
-                .addAction(R.drawable.like, "like", pendingIntent_kg) // #0
+                .addAction(R.drawable.like, "like", pendingIntent_like) // #0
                 .addAction(R.drawable.syq, "syq", pendingIntent_syq) // #0
                 .addAction(bfqkz.mt.isPlaying() ? R.drawable.bf : R.drawable.zt
                         , "kg", pendingIntent_kg)  // #1
@@ -103,7 +103,7 @@ public class NotificationManagerCompat {
         notificationBuilder.mActions.clear();
         notificationBuilder
                 .setLargeIcon(bfq.bitmap)
-                .addAction(R.drawable.like, "like", pendingIntent_kg) // #0
+                .addAction(R.drawable.like, "like", pendingIntent_like) // #0
                 .addAction(R.drawable.syq, "syq", pendingIntent_syq) // #0
                 .addAction(bfqkz.mt.isPlaying() ? R.drawable.bf : R.drawable.zt
                         , "kg", pendingIntent_kg)  // #1
@@ -126,7 +126,9 @@ public class NotificationManagerCompat {
     private PendingIntent pendingIntent_kg,
             pendingIntent_syq,
             pendingIntent_xyq,
-            pendingIntent_lrc;
+            pendingIntent_lrc,
+            pendingIntent_like;
+
     private final String CHANNEL_ID = "MediaSessionCompat";
 
     public void notificationManager_notify() {

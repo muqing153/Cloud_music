@@ -1,6 +1,7 @@
 package com.muqingbfq.view;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -31,11 +32,19 @@ import java.util.List;
 
 public class LrcView extends RecyclerView {
 
-    static List<LRC> lrclist = new ArrayList<>();
+    public static List<LRC> lrclist = new ArrayList<>();
 
-    static class LRC {
-        String lrc, tlyric;
-        long time;
+    View.OnClickListener onClickListener;
+
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener l) {
+        onClickListener = l;
+        super.setOnClickListener(l);
+    }
+
+    public static class LRC {
+        public String lrc, tlyric;
+        public long time;
 
         public LRC(String lrc, long time) {
             this.lrc = lrc;
@@ -53,6 +62,7 @@ public class LrcView extends RecyclerView {
             LRC lrc = (LRC) obj;
             return time == lrc.time;
         }
+
         public LRC setTlyric(String str) {
             this.tlyric = str;
             return this;
@@ -89,9 +99,11 @@ public class LrcView extends RecyclerView {
     public void setTextColor(int textColor) {
         TextColor = textColor;
     }
+
     public void setTextColor(String textColor) {
         TextColor = Color.parseColor(textColor);
     }
+
     public void setLrcline(boolean lrcline) {
         Lrcline = lrcline;
     }
@@ -124,6 +136,7 @@ public class LrcView extends RecyclerView {
                 @Override
                 public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
+                    view.setOnClickListener(onClickListener);
 
                     int parentHeight = parent.getHeight();
                     int childHeight = view.getHeight();
@@ -136,6 +149,8 @@ public class LrcView extends RecyclerView {
                     }
                 }
             });
+        } else {
+            setOnTouchListener(null);
         }
     }
 
@@ -161,35 +176,6 @@ public class LrcView extends RecyclerView {
             lrclist.clear();
             setLrc(a);
             setLrc(b);
-            if (true) {
-                return;
-            }
-            if (TextUtils.isEmpty(b)) {
-                return;
-            }
-            b.trim();
-            String[] lines = b.split("\n");
-            for (String line : lines) {
-                String[] parts = line.split("]");
-                if (parts.length >= 2) {
-                    String timeString = parts[0].substring(1);
-                    String lyric = parts[1].trim();
-                    String[] timeParts = timeString.split(":");
-                    if (timeParts.length >= 2) {
-                        int minute = Integer.parseInt(timeParts[0]);
-                        String[] secondParts = timeParts[1].split("[.\\-]");
-                        if (secondParts.length >= 2) {
-                            int second = Integer.parseInt(secondParts[0]);
-                            int millisecond = Integer.parseInt(secondParts[1]);
-                            long time = (long) minute * 60 * 1000 + second * 1000L + millisecond;
-                            int currentLineIndex = getCurrentLineIndex(time);
-                            lrclist.set(currentLineIndex,
-                                    lrclist.get(currentLineIndex).setTlyric(lyric));
-                        }
-
-                    }
-                }
-            }
         } catch (Exception e) {
             yc.start("LrcView setLrc :" + e + a + b);
         }
@@ -229,6 +215,19 @@ public class LrcView extends RecyclerView {
     }
 
     int index = -1;
+    int size = 20;
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    float alpha = 1.0f;
+
+    @Override
+    public void setAlpha(float alpha) {
+        this.alpha = alpha;
+    }
+
     boolean addOnGlobalLayoutListener;
 
     class adaper extends RecyclerView.Adapter<VH> {
@@ -240,8 +239,11 @@ public class LrcView extends RecyclerView {
             TextView textView = inflate.findViewById(R.id.text);
             textView.setTextColor(TextColor);
             textView.setTextSize(
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, 20,
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, size,
                             getResources().getDisplayMetrics()));
+            textView.setAlpha(alpha);
+            inflate.setOnClickListener(LrcView.this.onClickListener);
+
             return new VH(inflate);
         }
 
@@ -268,7 +270,7 @@ public class LrcView extends RecyclerView {
                     return;
                 }
                 int currentLineIndex = getCurrentLineIndex();
-                if (currentLineIndex >= 0 && currentLineIndex < lrclist.size()) {
+                if (currentLineIndex < lrclist.size()) {
 
                     String text;
                     if (lrclist.size() <= 3) {
@@ -340,7 +342,7 @@ public class LrcView extends RecyclerView {
     }
 
     private int getCurrentLineIndex() {
-        index = -1;
+        index = 0;
         for (int i = 0; i < lrclist.size(); i++) {
             LRC lineLrc = lrclist.get(i);
             if (lineLrc.time <= time) {

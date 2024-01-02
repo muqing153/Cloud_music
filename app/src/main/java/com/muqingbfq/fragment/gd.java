@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.muqingbfq.R;
+import com.muqingbfq.activity_about_software;
 import com.muqingbfq.api.playlist;
 import com.muqingbfq.api.resource;
 import com.muqingbfq.bfq_an;
@@ -44,16 +47,14 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
     public static String gdid;
     private final List<XM> list = new ArrayList<>();
     public static RecyclerView.Adapter<VH> adapter;
-
     int k;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FragmentMp3Binding binding = FragmentMp3Binding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         Intent intent = getIntent();
         binding.title.setText(intent.getStringExtra("name"));
-//        inflate.toolbar.setTitle(intent.getStringExtra("name"));
-        setContentView(binding.getRoot());
         adapter = new baseadapter(this,list);
         k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, k / 120);
@@ -196,7 +197,6 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
 
             @Override
             public boolean onLongClick(View view) {
-
                 String[] stringArray = view.getResources()
                         .getStringArray(R.array.gd_list);
                 new MaterialAlertDialogBuilder(view.getContext()).setItems(stringArray, (dialog, id) -> {

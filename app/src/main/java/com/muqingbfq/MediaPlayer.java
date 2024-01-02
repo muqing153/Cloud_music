@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
+import android.media.AudioManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +34,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
         public void run() {
             if (isPlaying() && bfq.lrcView != null) {
                 long position = getCurrentPosition();
+//                gj.sc(position);
                 Media.setProgress((int) position);
             }
             main.handler.postDelayed(this, 1000); // 每秒更新一次进度
@@ -47,7 +49,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
             }
             //针对错误进行相应的处理
             bfqkz.list.remove(bfqkz.xm);
-            bfqkz.xm = bfqkz.list.get(bfqkz.getmti(bfqkz.ms));
+            bfqkz.xm = bfqkz.list.get(bfqkz.getmti());
             new bfqkz.mp3(com.muqingbfq.api.
                             url.hq(bfqkz.xm));
             return false;
@@ -58,6 +60,7 @@ public class MediaPlayer extends android.media.MediaPlayer {
             }
             bfq_an.xyq();
         });
+//        setAudioStreamType(AudioManager.STREAM_MUSIC);
         setAudioAttributes(new AudioAttributes
                 .Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)

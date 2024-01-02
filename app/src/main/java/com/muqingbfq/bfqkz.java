@@ -41,7 +41,7 @@ public class bfqkz extends MediaBrowserServiceCompat {
     @SuppressLint("StaticFieldLeak")
     public static com.muqingbfq.mq.NotificationManagerCompat notify;
 
-    public static int getmti(int s) {
+    public static int getmti() {
         int i = bfqkz.list.indexOf(xm) + 1;
             if (i >= bfqkz.list.size()) {
                 i = 0;

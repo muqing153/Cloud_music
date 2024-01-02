@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="text">@color/white</color>
-    <color name="text_tm">#99FFFFFF</color>
+    <color name="text_tm">#CCC2DC</color>
     <color name="bj">#2A2831</color>
 </resources>

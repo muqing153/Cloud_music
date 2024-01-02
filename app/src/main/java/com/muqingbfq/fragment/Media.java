@@ -1,7 +1,8 @@
 package com.muqingbfq.fragment;
 
-import android.widget.SeekBar;
+import androidx.annotation.NonNull;
 
+import com.google.android.material.slider.Slider;
 import com.muqingbfq.R;
 import com.muqingbfq.bfq;
 import com.muqingbfq.bfq_an;
@@ -32,14 +33,15 @@ public class Media {
         if (bfq.view == null) {
             return;
         }
-        bfq.binding.tdt.setMax(max);
+        bfq.binding.tdt.setValueTo(max);
     }
 
     public static void setProgress(int progress) {
         if (bfq.view == null) {
             return;
         }
-        bfq.binding.tdt.setProgress(progress);
+//        gj.sc(progress);
+        bfq.binding.tdt.setValue(progress);
 //        bfq.lrcview.updateTime(progress);
         bfq.lrcView.setTimeLrc(progress);
     }
@@ -60,6 +62,28 @@ public class Media {
     }
 
     public Media(ActivityBfqBinding binding) {
+        binding.tdt.addOnChangeListener(new Slider.OnChangeListener() {
+            @Override
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                setTime_b(bfq_an.getTime((long) value));
+            }
+        });
+        binding.tdt.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
+            @Override
+            public void onStartTrackingTouch(@NonNull Slider slider) {
+
+                // 拖动条移动中
+                main.handler.removeCallbacks(bfqkz.mt.updateSeekBar);
+            }
+
+            @Override
+            public void onStopTrackingTouch(@NonNull Slider slider) {
+                // 播放音乐到指定位置
+                main.handler.post(bfqkz.mt.updateSeekBar);
+                bfqkz.mt.seekTo((int) slider.getValue());
+            }
+        });
+        /*
         binding.tdt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -78,11 +102,11 @@ public class Media {
                 main.handler.post(bfqkz.mt.updateSeekBar);
                 bfqkz.mt.seekTo(seekBar.getProgress());
             }
-        });
+        });*/
         //初始化播放器列表
         if (bfqkz.xm != null) {
             long duration = bfqkz.mt.getDuration();
-            binding.tdt.setMax(bfqkz.mt.getDuration());
+            binding.tdt.setValueTo(bfqkz.mt.getDuration());
             setTime_a(bfq_an.getTime(duration));
             long position = bfqkz.mt.getCurrentPosition();
             main.handler.post(bfqkz.mt.updateSeekBar); // 在播放开始时启动更新进度

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.muqingbfq.MP3;
 import com.muqingbfq.R;
+import com.muqingbfq.XM;
+import com.muqingbfq.api.FileDownloader;
 import com.muqingbfq.api.playlist;
 import com.muqingbfq.api.url;
 import com.muqingbfq.bfq;
@@ -24,6 +28,7 @@ import com.muqingbfq.databinding.FragmentMp3Binding;
 import com.muqingbfq.list.MyViewHoder;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.FragmentActivity;
+import com.muqingbfq.mq.gj;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +54,35 @@ public class mp3 extends FragmentActivity {
 
 //        inflate.bfqDb.setBackground(gd.color);
         new start(id);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem itemA = menu.add("下载所有歌曲");
+        itemA.setTitle("下载所有歌曲");
+        itemA.setIcon(R.drawable.download);
+        itemA.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        gj.sc(itemA.getItemId());
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == 0) {
+            FileDownloader fileDownloader = new FileDownloader(
+                    mp3.
+                            this);
+            for (MP3 mp3 : list) {
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        fileDownloader.downloadFile(mp3);
+                    }
+                }.start();
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @SuppressLint("NotifyDataSetChanged")

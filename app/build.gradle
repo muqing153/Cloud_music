@@ -59,4 +59,6 @@ dependencies {
 
 //修改音乐标签库
     implementation 'com.mpatric:mp3agic:0.9.1'
+
+    implementation 'com.github.QuadFlask:colorpicker:0.0.15'
 }

@@ -48,25 +48,24 @@ public class bfq extends AppCompatActivity {
     public static com.muqingbfq.view.LrcView lrcView;
     private void setLrc(){
         lrcView = binding.lrcView;
-
         ViewGroup.LayoutParams layoutParams = binding.cardview.getLayoutParams();
         layoutParams.height = main.k - 100;
         layoutParams.width = main.k - 100;
-        binding.cardview.setLayoutParams(layoutParams);/*
-            bfqkz.mt.seekTo(Math.toIntExact(time));
+        binding.cardview.setLayoutParams(layoutParams);
+//            bfqkz.mt.seekTo(Math.toIntExact(time));
         if (!gj.isTablet(this)) {
-            lrcview.setOnTapListener((view, x, y) -> {
+            lrcView.setOnClickListener((view) -> {
                 View kp = binding.kp1;
                 if (kp.getVisibility() == View.VISIBLE) {
                     kp.setVisibility(View.GONE);
                 } else {
                     kp.setVisibility(View.VISIBLE);
                 }
+                lrcView.setLrcline(kp.getVisibility() == View.VISIBLE);
             });
         } else {
-            lrcview.setOnTapListener((view, x, y) -> {
-            });
-        }*/
+            lrcView.setOnClickListener(null);
+        }
     }
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -116,13 +115,11 @@ public class bfq extends AppCompatActivity {
                 }
                 if (bfqkz.like_bool) {
                     list.remove(bfqkz.xm);
-                    binding.like
-                            .setImageTintList(ContextCompat.getColorStateList(bfq.this, R.color.text));
+                    setlike(false);
                 } else {
                     if (!list.contains(bfqkz.xm)) {
                         list.add(bfqkz.xm);
-                        binding.like.setImageTintList(ContextCompat.
-                                getColorStateList(bfq.this, android.R.color.holo_red_dark));
+                        setlike(true);
                     }
                 }
                 bfqkz.like_bool = !bfqkz.like_bool;
@@ -151,7 +148,7 @@ public class bfq extends AppCompatActivity {
                             JSONArray data = json.getJSONArray("data");
                             JSONObject jsonObject = data.getJSONObject(0);
                             String url = jsonObject.getString("url");
-                            new FileDownloader().downloadFile(bfq.this, url, bfqkz.xm);
+                            new FileDownloader(bfq.this).downloadFile(url, bfqkz.xm);
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }

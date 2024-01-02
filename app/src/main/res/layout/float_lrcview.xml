@@ -9,8 +9,7 @@
         android:id="@+id/lrcView"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/controlLayout"
@@ -18,20 +17,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/lrcView"
-        tools:layout_editor_absoluteX="16dp">
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/like"
-            android:text="喜欢"
-            android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="UseAppTint" />
-
+        tools:layout_editor_absoluteX="-36dp">
 
         <ImageView
             android:id="@+id/syq"
@@ -39,17 +25,17 @@
             android:layout_height="36dp"
             android:src="@drawable/syq"
             android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/kg"
             app:layout_constraintEnd_toStartOf="@+id/kg"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/kg"
             tools:ignore="ContentDescription,UseAppTint" />
 
         <ImageView
             android:id="@+id/kg"
             android:layout_width="46dp"
             android:layout_height="46dp"
-            android:tint="@color/white"
             android:src="@drawable/zt"
+            android:tint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -61,7 +47,7 @@
             android:layout_height="36dp"
             android:src="@drawable/xyq"
             android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/kg"
             app:layout_constraintStart_toEndOf="@+id/kg"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="UseAppTint" />
@@ -72,9 +58,9 @@
             android:layout_height="wrap_content"
             android:src="@drawable/lock"
             android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/kg"
             tools:ignore="UseAppTint" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

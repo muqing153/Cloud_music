@@ -49,11 +49,7 @@ public class bfq_an {
             return;
         }
         bfqkz.mt.pause();
-        int ms = bfqkz.ms;
-        if (bfqkz.ms == 0) {
-            ms = 1;
-        }
-        bfqkz.xm = bfqkz.list.get(bfqkz.getmti(ms));
+        bfqkz.xm = bfqkz.list.get(bfqkz.getmti());
         new url(bfqkz.xm);
     }
 

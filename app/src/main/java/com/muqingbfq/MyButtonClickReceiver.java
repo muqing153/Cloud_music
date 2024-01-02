@@ -8,9 +8,17 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.view.KeyEvent;
 
+import androidx.core.content.ContextCompat;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.muqingbfq.mq.FloatingLyricsService;
 import com.muqingbfq.mq.gj;
+import com.muqingbfq.mq.wj;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -100,6 +108,28 @@ public class MyButtonClickReceiver extends BroadcastReceiver {
                 }
                 break;
             case "like":
+                try {
+                    Gson gson = new Gson();
+                    Type type = new TypeToken<List<MP3>>() {
+                    }.getType();
+                    List<MP3> list = gson.fromJson(wj.dqwb(wj.gd + "mp3_like.json"), type);
+                    if (list == null) {
+                        list = new ArrayList<>();
+                    }
+                    if (bfqkz.like_bool) {
+                        list.remove(bfqkz.xm);
+                        bfq.setlike(false);
+                    } else {
+                        if (!list.contains(bfqkz.xm)) {
+                            list.add(bfqkz.xm);
+                            bfq.setlike(true);
+                        }
+                    }
+                    bfqkz.like_bool = !bfqkz.like_bool;
+                    wj.xrwb(wj.gd + "mp3_like.json", gson.toJson(list));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
         // 处理按钮点击事件的逻辑

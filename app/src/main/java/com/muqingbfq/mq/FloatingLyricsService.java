@@ -64,7 +64,7 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
 
     public static class SETUP {
         //0是关闭 1是打开 2是锁定
-        public int i = 1;
+        public int i = 1, size = 20;
         public float Alpha = 0.9f;
         public String Color = "#0088FF";
         public int Y = -main.g;
@@ -114,6 +114,9 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
 
             lrcView = binding.lrcView;
             lrcView.setTextColor(setup.Color);
+            lrcView.setSize(setup.size);
+            lrcView.setAlpha(setup.Alpha);
+
             bfq_an.kz bfqAn = new bfq_an.kz();
             binding.kg.setOnClickListener(this);
             binding.syq.setOnClickListener(bfqAn);
@@ -127,7 +130,7 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
             if (setup.i == 2) {
                 params.flags = lock();
                 layout.setBackground(null);
-                lrcView.setAlpha(0.5f);
+                lrcView.setAlpha(setup.Alpha);
                 layout.findViewById(com.muqingbfq.R.id.controlLayout).setVisibility(View.GONE);
             }
             windowManager.addView(layout, params);
@@ -161,6 +164,10 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
     }
 
     public void baocun() {
+        wj.xrwb(new File(wj.filesdri + "FloatingLyricsService.json").toString(),
+                new Gson().toJson(setup));
+    }
+    public static void baocun(SETUP setup) {
         wj.xrwb(new File(wj.filesdri + "FloatingLyricsService.json").toString(),
                 new Gson().toJson(setup));
     }

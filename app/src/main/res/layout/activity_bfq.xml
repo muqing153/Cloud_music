@@ -177,21 +177,23 @@
                 android:id="@+id/time_a"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="20sp"
                 android:text="@string/_00_00" />
 
-            <SeekBar
+            <com.google.android.material.slider.Slider
                 android:id="@+id/tdt"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="6dp" />
+                app:labelBehavior="gone"
+                app:thumbColor="@color/text_tm"
+                app:trackColorActive="@color/text_tm"/>
 
             <TextView
                 android:id="@+id/time_b"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="20sp"
                 android:text="@string/_00_00" />
         </LinearLayout>
 
