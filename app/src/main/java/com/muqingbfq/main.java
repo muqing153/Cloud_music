@@ -1,18 +1,28 @@
 package com.muqingbfq;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
+import android.text.TextUtils;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.muqingbfq.login.visitor;
 import com.muqingbfq.mq.FloatingLyricsService;
+import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
+
+import java.io.File;
 
 public class main extends Application {
     public static Application application;
@@ -24,16 +34,26 @@ public class main extends Application {
     public static SharedPreferences sp;
     public static SharedPreferences.Editor edit;
 
-    public static String mp3 = "mp3",
-     Cookie = "Cookie";
     public static String account,token;
 
+    public int count = 0;
     @SuppressLint("HardwareIds")
     @Override
     public void onCreate() {
         super.onCreate();
         if (wj.filesdri == null) {
             new wj(this);
+        }
+        File file = new File(wj.filesdri + "API.mq");
+        if (file.exists()&&file.isFile()) {
+            String dqwb = wj.dqwb(file.toString());
+            if (!TextUtils.isEmpty(dqwb) && dqwb.startsWith("http")) {
+                api = dqwb;
+            } else {
+                file.delete();
+            }
+        } else {
+            wj.xrwb(file.toString(), main.api);
         }
         application = this;
 //        UUID.randomUUID().toString();
@@ -48,9 +68,9 @@ public class main extends Application {
             com.muqingbfq.bfqkz.ms = 1;
         }
         try {
-            wl.Cookie = sp.getString(Cookie, "");
+            wl.Cookie = sp.getString("Cookie", "");
         } catch (Exception e) {
-            edit.putString(Cookie, "");
+            edit.putString("Cookie", "");
             wl.Cookie = "";
             bj = true;
         }
@@ -58,7 +78,7 @@ public class main extends Application {
             edit.commit();
         }
 
-        wl.Cookie = main.sp.getString(main.Cookie, "");
+        wl.Cookie = main.sp.getString("Cookie", "");
         if (wl.Cookie.equals("")) {
             new visitor();
         }
@@ -71,6 +91,70 @@ public class main extends Application {
             edit.apply();
         }
         AppCompatDelegate.setDefaultNightMode(i);
+
+
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+                if (count == 0) { //后台切换到前台
+                    gj.sc(">>>>>>>>>>>>>>>>>>>App切到前台");
+                    if (FloatingLyricsService.lei != null) {
+                        stopService(new Intent(main.this, FloatingLyricsService.class));
+                    }
+                }
+                count++;
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+                count--;
+                if (count == 0) { //后台切换到前台
+                    gj.sc(">>>>>>>>>>>>>>>>>>>App切到后台");
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            try {
+                                sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.toString();
+                            }
+//                            gj.sc(count);
+                            if (count != 0) {
+                                return;
+                            }
+                            if (!FloatingLyricsService.get()) {
+                                return;
+                            }
+                            if (Settings.canDrawOverlays(main.this)) {
+                                startService(new Intent(main.this, FloatingLyricsService.class));
+                            }
+                            super.run();
+                        }
+                    }.start();
+                }
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+            }
+        });
     }
 
     public static SharedPreferences getSharedPreferences(String string) {

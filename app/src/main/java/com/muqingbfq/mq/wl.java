@@ -19,7 +19,7 @@ public class wl {
 
     public static void setcookie(String cookie) {
         wl.Cookie = cookie;
-        main.edit.putString(main.Cookie, cookie);
+        main.edit.putString("Cookie", cookie);
         main.edit.commit();
     }
 

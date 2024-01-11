@@ -151,6 +151,10 @@ public class url extends Thread {
         }
     }
 
+    public static String Lrc(String id) {
+        return wl.hq("/lyric?id=" + id);
+    }
+
     public static String picurl(String id) {
         String hq = wl.hq("/song/detail?ids=" + id);
         try {

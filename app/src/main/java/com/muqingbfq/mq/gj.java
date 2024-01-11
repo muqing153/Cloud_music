@@ -1,10 +1,13 @@
 package com.muqingbfq.mq;
 
+import android.app.ActivityManager;
+import android.app.Service;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -19,6 +22,7 @@ import org.json.JSONObject;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Collections;
+import java.util.List;
 
 public class gj {
     public static void ts(Context a, Object b) {
@@ -29,17 +33,27 @@ public class gj {
         main.handler.post(() -> Toast.makeText(context, b.toString(), Toast.LENGTH_SHORT).show());
 
     }
+    public static boolean isAppInForeground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Service.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfoList = activityManager.getRunningAppProcesses();
 
+        if (runningAppProcessInfoList == null) {
+            Log.d("runningAppProcess:", "runningAppProcessInfoList is null!");
+            return false;
+        }
+        for (ActivityManager.RunningAppProcessInfo processInfo : runningAppProcessInfoList) {
+            if (processInfo.processName.equals(context.getPackageName()) && (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND)) {
+                return true;
+            }
+        }
+        return false;
+    }
     public static boolean isTablet(Context context) {
         boolean b;
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         main.k = dm.widthPixels;
         main.g = dm.heightPixels;
-        if (main.k > main.g) {
-            b = true;
-        } else {
-            b = false;
-        }
+        b = main.k > main.g;
         return b;
     }
     public static void sc(Object a) {
@@ -122,9 +136,7 @@ public class gj {
                 main.handler.post(() -> new MaterialAlertDialogBuilder(context)
                         .setTitle("更新" + bb)
                         .setMessage(msg+"\n"+"取消后不再提示更新你需要到关于软件手动检测")
-                        .setNegativeButton("取消", (dialogInterface, i) -> {
-                            wj.xrwb(wj.filesdri + "gx.mq", null);
-                        })
+                        .setNegativeButton("取消", (dialogInterface, i) -> wj.xrwb(wj.filesdri + "gx.mq", null))
                         .setPositiveButton("更新", (dialogInterface, i) -> context.startActivity(new Intent(Intent.ACTION_VIEW,
                                 Uri.parse(url))))
 //                                    new ApkDownloader(context).downloadAndInstall(url, wj.filesdri))

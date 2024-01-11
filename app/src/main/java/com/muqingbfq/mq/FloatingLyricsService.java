@@ -31,6 +31,7 @@ import java.lang.reflect.Type;
 public class FloatingLyricsService extends Service implements View.OnClickListener, View.OnTouchListener {
     private WindowManager windowManager;
     private View layout;
+
     public Runnable updateSeekBar = new Runnable() {
         @Override
         public void run() {
@@ -38,12 +39,17 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
                 long position = bfqkz.mt.getCurrentPosition();
                 lrcView.setTimeLrc(position);
             }
+/*            boolean appInForeground = gj.isAppInForeground(FloatingLyricsService.this);
+            if (appInForeground) {
+                layout.setVisibility(View.GONE);
+            } else {
+                layout.setVisibility(View.VISIBLE);
+            }*/
             handler.postDelayed(this, 1000); // 每秒更新一次进度
         }
     };
     @SuppressLint("StaticFieldLeak")
     public static FloatingLyricsService lei;
-
     public static boolean get() {
         File file = new File(wj.filesdri + "FloatingLyricsService.json");
         if (file.exists() && file.isFile()) {
@@ -80,6 +86,8 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
         return WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
     }
+
+
 
     @Override
     public void onCreate() {
@@ -168,6 +176,10 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
                 new Gson().toJson(setup));
     }
     public static void baocun(SETUP setup) {
+        if (setup == null) {
+            return;
+        }
+
         wj.xrwb(new File(wj.filesdri + "FloatingLyricsService.json").toString(),
                 new Gson().toJson(setup));
     }

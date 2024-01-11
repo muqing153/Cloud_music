@@ -25,6 +25,7 @@ import com.muqingbfq.login.user_editing;
 import com.muqingbfq.login.user_logs;
 import com.muqingbfq.login.user_message;
 import com.muqingbfq.main;
+import com.muqingbfq.mq.EditViewDialog;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.XM;
@@ -47,7 +48,7 @@ public class wode extends Fragment {
             {R.drawable.download, "下载音乐", "mp3_xz.json"},
             {R.drawable.like, "喜欢音乐", "mp3_like.json"},
             {R.drawable.icon, "本地搜索", ""},
-            {R.drawable.icon, "我的歌单", ""},
+            {R.drawable.fuwuzhongxing, "更换接口", "API"},
             {R.drawable.icon, "导入歌单", ""},
             {R.drawable.paihangbang, "排行榜", "排行榜"},
             {R.drawable.icon, "开发中", ""}
@@ -112,6 +113,23 @@ public class wode extends Fragment {
                             b.putExtra("name", s);
                             getContext().startActivity(b);
                             break;
+                        case "API":
+                            EditViewDialog editViewDialog = new EditViewDialog(getContext(), "更换接口API")
+                                    .setMessage("当前接口：\n" + main.api);
+                            editViewDialog.setPositive(view1 -> {
+                                String str = editViewDialog.getEditText();
+                                boolean http = str.startsWith("http");
+                                if (str.isEmpty() || !http) {
+                                    gj.ts(getContext(), "请输入正确的api");
+                                } else {
+                                    gj.ts(getContext(), "更换成功");
+                                    main.api = str;
+                                    wj.xrwb(wj.filesdri+"API.mq", main.api);
+                                    editViewDialog.dismiss();
+                                }
+                            }).show();
+                            break;
+
                     }
                 });
             }

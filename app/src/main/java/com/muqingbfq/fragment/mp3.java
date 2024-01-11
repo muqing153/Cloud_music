@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.muqingbfq.MP3;
 import com.muqingbfq.R;
-import com.muqingbfq.XM;
 import com.muqingbfq.api.FileDownloader;
 import com.muqingbfq.api.playlist;
 import com.muqingbfq.api.url;

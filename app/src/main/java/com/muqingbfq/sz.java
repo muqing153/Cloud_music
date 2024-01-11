@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -126,8 +125,15 @@ public class sz extends AppCompatActivity {
         });
     }
 
+
     public static class setlrc extends Fragment implements Slider.OnSliderTouchListener,
             Slider.OnChangeListener {
+        ActivityResultLauncher<Intent> LyricsService =
+                registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (Settings.canDrawOverlays(getContext())) {
+                        getContext().startService(new Intent(getContext(), FloatingLyricsService.class));
+                    }
+                });
         FloatingLyricsService.SETUP setup;
         ActivitySzSetlrcBinding binding;
         public Runnable updateSeekBar = new Runnable() {
@@ -166,6 +172,8 @@ public class sz extends AppCompatActivity {
                 main.handler.postDelayed(this, 1000); // 每秒更新一次进度
             }
         };
+
+
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -203,17 +211,29 @@ public class sz extends AppCompatActivity {
                         .show());
                 binding.textSlide1.setText(String.valueOf(setup.size));
                 binding.textSlide2.setText(String.format(Locale.US,"%.2f",setup.Alpha));
+                if (setup.i != 0) {
+                    binding.switchA1.setChecked(true);
+                }
 
                 main.handler.post(updateSeekBar);
             }
-            if (setup.i != 0) {
-                binding.switchA1.setChecked(true);
-            }
             binding.switchA1.setOnCheckedChangeListener((compoundButton, b) -> {
                 if (b) {
-                    setup.i = 1;
+                    if (setup != null) {
+                        setup.i = 1;
+                    }
+                    if (!Settings.canDrawOverlays(getContext())) {
+                        // 无权限，需要申请权限
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                Uri.parse("package:" + getContext().getPackageName()));
+                        LyricsService.launch(intent);
+                    } else {
+                        getContext().startService(new Intent(getContext(), FloatingLyricsService.class));
+                    }
                 } else {
-                    setup.i = 0;
+                    if (setup != null) {
+                        setup.i = 0;
+                    }
                     home.appCompatActivity
                             .stopService(new Intent(home.appCompatActivity,
                                     FloatingLyricsService.class));
@@ -244,11 +264,18 @@ public class sz extends AppCompatActivity {
 
         @Override
         public void onStopTrackingTouch(@NonNull Slider slider) {
+            if (setup == null) {
+                return;
+            }
             FloatingLyricsService.baocun(setup);
         }
 
         @Override
         public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+            if (setup == null) {
+                return;
+            }
+
             if (slider == binding.slide1) {
                 setup.size = (int) value;
                 binding.lrctext.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,

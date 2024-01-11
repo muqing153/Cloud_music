@@ -3,6 +3,7 @@ package com.muqingbfq.api;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -133,11 +134,14 @@ public class FileDownloader {
                             id3v2Tag.setTitle(x.name);
                             id3v2Tag.setArtist(x.zz);
                             id3v2Tag.setAlbum(x.zz);
-                            id3v2Tag.setLyrics(bfq.lrc);
+                            id3v2Tag.setLyrics(com.muqingbfq.api.url.Lrc(x.id));
                             ByteArrayOutputStream o = new ByteArrayOutputStream();
-                            bfq.bitmap.compress(Bitmap.CompressFormat.JPEG, 100, o);
-                            byte[] imageData = o.toByteArray();
-                            id3v2Tag.setAlbumImage(imageData, "image/jpeg");
+                            Request build = new Request.Builder().url(x.picurl)
+                                    .build();
+                            Response execute = client.newCall(build).execute();
+                            if (execute.isSuccessful()) {
+                                id3v2Tag.setAlbumImage(execute.body().bytes(), "image/jpeg");
+                            }
                             o.close();
                             mp3file.save(wj.mp3 + x.id);
                             outputFile.delete();

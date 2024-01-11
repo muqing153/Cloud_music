@@ -39,7 +39,7 @@ public class playlist extends Thread {
             if (wj.cz(wj.gd + uid)) {
                 hq = wj.dqwb(wj.gd + uid);
             } else {
-                hq = wl.hq(api + uid + "&limit=30");
+                hq = wl.hq(api + uid + "&limit=100" + "&cookie=" + wl.Cookie);
             }
             JSONObject json = new JSONObject(hq);
             JSONArray songs = json.getJSONArray("songs");

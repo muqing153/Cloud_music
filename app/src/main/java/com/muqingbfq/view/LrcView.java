@@ -1,7 +1,6 @@
 package com.muqingbfq.view;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -83,7 +82,6 @@ public class LrcView extends RecyclerView {
     AttributeSet attrs;
     boolean Lrcline;
     LinearLayoutManager linearLayoutManager;
-
     public LrcView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.attrs = attrs;
@@ -167,7 +165,7 @@ public class LrcView extends RecyclerView {
 
         @Override
         protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
-            return 100f / displayMetrics.densityDpi;
+            return 50f / displayMetrics.densityDpi;
         }
     }
 
@@ -236,19 +234,18 @@ public class LrcView extends RecyclerView {
         @Override
         public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View inflate = LayoutInflater.from(getContext()).inflate(R.layout.view_lrc, parent, false);
-            TextView textView = inflate.findViewById(R.id.text);
-            textView.setTextColor(TextColor);
-            textView.setTextSize(
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, size,
-                            getResources().getDisplayMetrics()));
-            textView.setAlpha(alpha);
-            inflate.setOnClickListener(LrcView.this.onClickListener);
-
             return new VH(inflate);
         }
 
         @Override
         public void onBindViewHolder(@NonNull VH holder, int position) {
+            TextView textView = holder.textView;
+            textView.setTextColor(TextColor);
+            textView.setTextSize(
+                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, size,
+                            getResources().getDisplayMetrics()));
+            textView.setAlpha(alpha);
+            holder.itemView.setOnClickListener(LrcView.this.onClickListener);
             if (Lrcline) {
                 if (addOnGlobalLayoutListener) {
                     // 注册布局监听器

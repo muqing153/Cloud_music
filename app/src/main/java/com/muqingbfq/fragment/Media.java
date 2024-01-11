@@ -1,5 +1,7 @@
 package com.muqingbfq.fragment;
 
+import android.graphics.BitmapFactory;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.material.slider.Slider;
@@ -62,12 +64,7 @@ public class Media {
     }
 
     public Media(ActivityBfqBinding binding) {
-        binding.tdt.addOnChangeListener(new Slider.OnChangeListener() {
-            @Override
-            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                setTime_b(bfq_an.getTime((long) value));
-            }
-        });
+        binding.tdt.addOnChangeListener((slider, value, fromUser) -> setTime_b(bfq_an.getTime((long) value)));
         binding.tdt.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @Override
             public void onStartTrackingTouch(@NonNull Slider slider) {
@@ -138,6 +135,9 @@ public class Media {
     public static void setImageBitmap() {
         if (bfq.view == null) {
             return;
+        }
+        if (bfq.bitmap == null) {
+            bfq.bitmap= BitmapFactory.decodeResource(bfq.view.getResources(), R.drawable.icon);
         }
         main.handler.post(() -> bfq.binding.cardview.setImage(com.muqingbfq.bfq.bitmap));
     }

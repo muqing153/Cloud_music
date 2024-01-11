@@ -137,7 +137,6 @@ public class MediaPlayer extends android.media.MediaPlayer {
         Glide.with(main.application)
                 .asBitmap()
                 .load(bfqkz.xm.picurl)
-                .error(R.drawable.icon)
                 .listener(new RequestListener<Bitmap>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model,
@@ -151,9 +150,10 @@ public class MediaPlayer extends android.media.MediaPlayer {
                                 byte[] albumImage = id3v2Tag.getAlbumImage();
                                 bfq.bitmap=
                                         BitmapFactory.decodeByteArray(albumImage, 0, albumImage.length);
+
                             }
                         } catch (Exception a) {
-                            gj.sc("yc:"+a);
+                            gj.sc(getClass() + " yc:" + a);
                         }
                         if (bfqkz.notify != null) {
                             bfqkz.notify.tzl();

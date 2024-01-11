@@ -19,11 +19,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageView
+            <androidx.constraintlayout.utils.widget.ImageFilterView
                 android:id="@+id/imageView"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
-                android:src="@drawable/icon"
+                app:srcCompat="@drawable/ic_launcher_foreground"
+                android:layout_margin="6dp"
+                app:round="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

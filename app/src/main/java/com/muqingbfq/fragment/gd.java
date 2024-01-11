@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.muqingbfq.R;
-import com.muqingbfq.activity_about_software;
+import com.muqingbfq.XM;
 import com.muqingbfq.api.playlist;
 import com.muqingbfq.api.resource;
 import com.muqingbfq.bfq_an;
@@ -32,14 +30,13 @@ import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
 import com.muqingbfq.view.CardImage;
-import com.muqingbfq.XM;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -61,7 +58,6 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
         binding.lb.setLayoutManager(gridLayoutManager);
         binding.lb.setAdapter(adapter);
         String id = intent.getStringExtra("id");
-//        inflate.bfqDb.setBackground(gd.color);
         new start(id);
     }
 
@@ -135,7 +131,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
         @Override
         public void onBindViewHolder(@NonNull VH holder, int position) {
             XM xm = list.get(position);
-            CARD card = new CARD(xm);
+            CARD card = new CARD(position);
             if (bool) {
                 holder.itemView.setOnClickListener(card);
                 holder.itemView.setOnLongClickListener(card);
@@ -152,12 +148,13 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
                     public void run() {
                         super.run();
                         boolean an = playlist.hq(bfqkz.list, xm.id);
+                        if (bfqkz.ms == 2) {
+                            Collections.shuffle(bfqkz.list);
+                        }
                         main.handler.post(() -> {
                             if (an) {
                                 bfq_an.xyq();
                                 tx.setImageResource(R.drawable.bf);
-                                main.edit.putString(main.mp3, xm.id);
-                                main.edit.commit();
                                 gdid = xm.id;
                             }
                             notifyDataSetChanged();
@@ -181,14 +178,16 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
 
         class CARD implements View.OnClickListener
                 , View.OnLongClickListener {
-            XM xm;
+            int position;
 
-            public CARD(XM xm) {
-                this.xm = xm;
+            public CARD(int position) {
+                this.position = position;
             }
+
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
+                XM xm = list.get(position);
                 Intent intent = new Intent(context, mp3.class);
                 intent.putExtra("id", xm.id);
                 intent.putExtra("name", xm.name);
@@ -197,64 +196,58 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
 
             @Override
             public boolean onLongClick(View view) {
+                XM xm = list.get(position);
                 String[] stringArray = view.getResources()
                         .getStringArray(R.array.gd_list);
-                new MaterialAlertDialogBuilder(view.getContext()).setItems(stringArray, (dialog, id) -> {
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            if (id == 0) {
-                                String hq = wl.hq(playlist.api + xm.id + "&limit=100");
-                                if (hq != null) {
-                                    wj.xrwb(wj.gd + xm.id, hq);
-                                    try {
-                                        JSONObject jsonObject = new JSONObject();
-                                        if (wj.cz(wj.gd_xz)) {
-                                            jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
+                if (!wj.cz(wj.gd + xm.id)) {
+                    stringArray = new String[]{"下载歌单"};
+                }
+                new MaterialAlertDialogBuilder(view.getContext()).
+                        setItems(stringArray, (dialog, id) -> {
+                            new Thread() {
+                                @Override
+                                public void run() {
+                                    if (id == 0) {
+                                        String hq = wl.hq(playlist.api + xm.id + "&limit=100");
+                                        if (hq != null) {
+                                            wj.xrwb(wj.gd + xm.id, hq);
+                                            try {
+                                                JSONObject jsonObject = new JSONObject();
+                                                if (wj.cz(wj.gd_xz)) {
+                                                    jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
+                                                }
+                                                XM fh = resource.Playlist_content(xm.id);
+                                                JSONObject json = new JSONObject();
+                                                json.put("name", fh.name);
+                                                json.put("picUrl", fh.picurl);
+                                                jsonObject.put(fh.id, json);
+                                                wj.xrwb(wj.gd_xz, jsonObject.toString());
+                                                main.handler.post(() -> notifyItemChanged(position));
+                                            } catch (JSONException e) {
+                                                gj.sc("list gd onclick thear " + e);
+                                            }
                                         }
-                                        XM fh=resource.Playlist_content(xm.id);
-                                        JSONObject json = new JSONObject();
-                                        json.put("name", fh.name);
-                                        json.put("picUrl", fh.picurl);
-                                        jsonObject.put(fh.id, json);
-                                        wj.xrwb(wj.gd_xz, jsonObject.toString());
-                                        main.handler.post(new sx());
-                                    } catch (JSONException e) {
-                                        gj.sc("list gd onclick thear " + e);
-                                    }
-                                }
 
-                            } else if (id == 2) {
-                                wj.sc(wj.gd + xm.id);
-                                if (xm.id.equals("mp3_xz.json")) {
-                                    wj.sc(new File(wj.mp3));
+                                    } else if (id == 2) {
+                                        wj.sc(wj.gd + xm.id);
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
+                                            jsonObject.remove(xm.id);
+                                            list.remove(xm);
+                                            wj.xrwb(wj.gd_xz, jsonObject.toString());
+                                        } catch (JSONException e) {
+                                            gj.sc(e);
+                                        }
+                                    }
+                                    main.handler.post(() -> notifyItemChanged(position));
                                 }
-                                try {
-                                    JSONObject jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
-                                    jsonObject.remove(xm.id);
-                                    list.remove(xm);
-                                    wj.xrwb(wj.gd_xz, jsonObject.toString());
-                                } catch (JSONException e) {
-                                    gj.sc(e);
-                                }
-                            }
-                            main.handler.post(new sx());
-                        }
-                    }.start();
-                    // 在这里处理菜单项的点击事件
-                    dialog.dismiss();
-                }).show();
+                            }.start();
+                            // 在这里处理菜单项的点击事件
+                            dialog.dismiss();
+                        }).show();
                 return false;
             }
 
-        }
-
-        class sx implements Runnable {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void run() {
-                notifyDataSetChanged();
-            }
         }
 
     }

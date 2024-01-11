@@ -154,36 +154,6 @@ public class home extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        stopService(new Intent(this, FloatingLyricsService.class));
-    }
-
-    ActivityResultLauncher<Intent> LyricsService =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (Settings.canDrawOverlays(this)) {
-                    startService(new Intent(this, FloatingLyricsService.class));
-                }
-            });
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (!FloatingLyricsService.get()) {
-            return;
-        }
-        if (!Settings.canDrawOverlays(this)) {
-            // 无权限，需要申请权限
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + getPackageName()));
-            LyricsService.launch(intent);
-        } else {
-            startService(new Intent(this, FloatingLyricsService.class));
-        }
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
