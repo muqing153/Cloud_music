@@ -46,7 +46,8 @@ public class bfq extends AppCompatActivity {
     public static View view;
     public static String lrc;
     public static com.muqingbfq.view.LrcView lrcView;
-    private void setLrc(){
+
+    private void setLrc() {
         lrcView = binding.lrcView;
         ViewGroup.LayoutParams layoutParams = binding.cardview.getLayoutParams();
         layoutParams.height = main.k - 100;
@@ -67,6 +68,7 @@ public class bfq extends AppCompatActivity {
             lrcView.setOnClickListener(null);
         }
     }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,7 +136,7 @@ public class bfq extends AppCompatActivity {
                 return;
             }
             if (bfqkz.xm != null) {
-                new Thread(){
+                new Thread() {
                     @Override
                     public void run() {
                         super.run();
@@ -206,7 +208,8 @@ public class bfq extends AppCompatActivity {
 
         @SuppressLint("ClickableViewAccessibility")
         @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {LinearLayout root = binding.getRoot();
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            LinearLayout root = binding.getRoot();
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     downY = motionEvent.getRawY();
@@ -217,7 +220,7 @@ public class bfq extends AppCompatActivity {
                     //移动的距离
                     float dy = moveY - downY;
                     //重新设置控件的位置。移动
-                    if (dy <= 0) {
+                    if (dy < 0) {
                         return true;
                     } else if (dy > main.g - main.g / 5.0) {
                         finish();
@@ -244,6 +247,7 @@ public class bfq extends AppCompatActivity {
             return true;
         }
     }
+
     public static void setlike(boolean bool) {
         if (binding == null) {
             return;

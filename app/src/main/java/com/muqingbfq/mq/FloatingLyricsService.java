@@ -8,6 +8,7 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,16 +36,36 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
     public Runnable updateSeekBar = new Runnable() {
         @Override
         public void run() {
-            if (bfqkz.mt.isPlaying() && lrcView != null) {
-                long position = bfqkz.mt.getCurrentPosition();
-                lrcView.setTimeLrc(position);
+            if (bfqkz.mt.isPlaying()) {
+                int index = 0;
+                for (int i = 0; i < LrcView.lrclist.size(); i++) {
+                    LrcView.LRC lineLrc = LrcView.lrclist.get(i);
+                    if (lineLrc.time <= bfqkz.mt.getCurrentPosition()) {
+                        index = i;
+                    } else {
+                        break;
+                    }
+                }
+                if (index < LrcView.lrclist.size()) {
+                    String text;
+                    if (LrcView.lrclist.size() <= 3) {
+                        for (LrcView.LRC a : LrcView.lrclist) {
+                            if (a.time == 5940000 && a.lrc.equals("纯音乐，请欣赏")) {
+                                text = "纯音乐，请欣赏";
+                                binding.lrcView.setText(text);
+                                return;
+                            }
+                        }
+                    }
+                    LrcView.LRC currentLrc = LrcView.lrclist.get(index);
+                    text = currentLrc.lrc;
+                    if (currentLrc.tlyric != null) {
+                        text += "\n" + currentLrc.tlyric;
+                    }
+                    binding.lrcView.setText(text);
+                }
             }
-/*            boolean appInForeground = gj.isAppInForeground(FloatingLyricsService.this);
-            if (appInForeground) {
-                layout.setVisibility(View.GONE);
-            } else {
-                layout.setVisibility(View.VISIBLE);
-            }*/
+//                gj.sc(getClass()+"执行");
             handler.postDelayed(this, 1000); // 每秒更新一次进度
         }
     };
@@ -65,7 +86,7 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
     }
 
     Handler handler = new Handler();
-    LrcView lrcView;
+    FloatLrcviewBinding binding;
     WindowManager.LayoutParams params;
 
     public static class SETUP {
@@ -104,7 +125,7 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
             }
             // 创建悬浮窗歌词的 View
 //        FloatLrcviewBinding
-            FloatLrcviewBinding binding = FloatLrcviewBinding.inflate(LayoutInflater.from(this));
+            binding = FloatLrcviewBinding.inflate(LayoutInflater.from(this));
             layout = binding.getRoot();
             layout.setOnTouchListener(this);
 //        int i = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;FLAG_NOT_TOUCH_MODAL
@@ -120,10 +141,11 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
 
             params.y = setup.Y;
 
-            lrcView = binding.lrcView;
-            lrcView.setTextColor(setup.Color);
-            lrcView.setSize(setup.size);
-            lrcView.setAlpha(setup.Alpha);
+            binding.lrcView.setAlpha(setup.Alpha);
+            binding.lrcView.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
+                    setup.size,
+                    getResources().getDisplayMetrics()));
+            binding.lrcView.setTextColor(Color.parseColor(setup.Color));
 
             bfq_an.kz bfqAn = new bfq_an.kz();
             binding.kg.setOnClickListener(this);
@@ -138,7 +160,7 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
             if (setup.i == 2) {
                 params.flags = lock();
                 layout.setBackground(null);
-                lrcView.setAlpha(setup.Alpha);
+                binding.lrcView.setAlpha(setup.Alpha);
                 layout.findViewById(com.muqingbfq.R.id.controlLayout).setVisibility(View.GONE);
             }
             windowManager.addView(layout, params);
@@ -228,8 +250,6 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
             }
         } else if (id == R.id.lock) {
             setyc();
-        } else if (id == R.id.like) {
-//            bfq
         }
     }
 
@@ -237,7 +257,7 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
         setup.i = 2;
         params.flags = lock();
         layout.setBackground(null);
-        lrcView.setAlpha(setup.Alpha);
+        binding.lrcView.setAlpha(setup.Alpha);
         layout.findViewById(com.muqingbfq.R.id.controlLayout).setVisibility(View.GONE);
         windowManager.updateViewLayout(layout, params);
         baocun();
@@ -247,7 +267,7 @@ public class FloatingLyricsService extends Service implements View.OnClickListen
         setup.i = 1;
         params.flags = lock();
         layout.setBackgroundColor(Color.parseColor("#50000000"));
-        lrcView.setAlpha(1.0f);
+        binding.lrcView.setAlpha(1.0f);
         layout.findViewById(com.muqingbfq.R.id.controlLayout).setVisibility(View.VISIBLE);
         windowManager.updateViewLayout(layout, params);
         baocun();

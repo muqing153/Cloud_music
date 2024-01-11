@@ -81,12 +81,12 @@ public class gd_adapter extends Fragment {
                 MP3 x = listmp3.get(position);
                 holder.binding.wb1.setText(x.name);
                 holder.binding.zz.setText(x.zz);
-                int color = ContextCompat.getColor(getContext(), R.color.text);
+/*                int color = ContextCompat.getColor(getContext(), R.color.text);
                 if (bfqkz.xm != null && x.id.equals(bfqkz.xm.id)) {
                     color = ContextCompat.getColor(getContext(), R.color.text_cz);
                 }
                 holder.binding.wb1.setTextColor(color);
-                holder.binding.zz.setTextColor(color);
+                holder.binding.zz.setTextColor(color);*/
                 holder.itemView.setOnClickListener(view -> {
                     if (bfqkz.xm == null || !bfqkz.xm.id.equals(x.id)) {
                         bfqkz.xm = x;

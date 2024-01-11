@@ -168,7 +168,7 @@ public class sz extends AppCompatActivity {
                         binding.lrctext.setText(text);
                     }
                 }
-                gj.sc(getClass()+"执行");
+//                gj.sc(getClass()+"执行");
                 main.handler.postDelayed(this, 1000); // 每秒更新一次进度
             }
         };
