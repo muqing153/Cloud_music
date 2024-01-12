@@ -39,16 +39,17 @@ public class wl {
         return null;
     }
 
-    public static String post(String str, String[] a, String[] b) {
+    public static String post(String str, String[][] a) {
 
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         FormBody.Builder builder = new FormBody.Builder();
-        for (int i = 0; i < a.length; i++) {
-            builder.add(a[i], b[i]);
+        for (String[] strings : a) {
+//            gj.sc(strings[0] + ":" + strings[1]);
+            builder.add(strings[0], strings[1]);
         }
         Request request = new Request.Builder()
-                .url("https://rust.coldmint.top" + str)
+                .url(main.api + str)
                 .post(builder.build())
                 .build();
         try {
@@ -60,9 +61,9 @@ public class wl {
         return null;
     }
 
-    public static JSONObject jsonpost(String str, String[] a, String[] b) {
+    public static JSONObject jsonpost(String str, String[][] a) {
         try {
-            return new JSONObject(post(str, a, b));
+            return new JSONObject(post(str, a));
         } catch (JSONException e) {
             gj.sc(e);
             return null;

@@ -1,11 +1,15 @@
 package com.muqingbfq.api;
 
+import android.content.Intent;
+
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 import com.muqingbfq.MP3;
 import com.muqingbfq.bfq;
 import com.muqingbfq.fragment.Media;
 import com.muqingbfq.home;
+import com.muqingbfq.login.user_logs;
+import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
@@ -14,16 +18,6 @@ import com.muqingbfq.yc;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class url extends Thread {
     public static String api = "/song/url/v1";
@@ -35,8 +29,6 @@ public class url extends Thread {
     }
 
     public static String hq(MP3 x) {
-        getLrc(x.id);
-        Media.loadLyric();
         try {
             if (wj.cz(wj.mp3 + x.id)) {
                 return wj.mp3 + x.id;
@@ -55,73 +47,23 @@ public class url extends Thread {
                 return null;
             }
             JSONObject json = new JSONObject(hq);
+            gj.sc(json);
             if (json.getInt("code") == -460) {
                 String message = json.getString("message");
-                gj.xcts(home.appCompatActivity, message + "-可能需要登录网易云");
+                main.handler.post(() -> {
+                    gj.ts(home.appCompatActivity, message);
+                    home.appCompatActivity.startActivity(new Intent(home.appCompatActivity
+                            , user_logs.class));
+                });
                 return null;
             }
+            getLrc(x.id);
+            Media.loadLyric();
             JSONArray data = json.getJSONArray("data");
             JSONObject jsonObject = data.getJSONObject(0);
             String url = jsonObject.getString("url");
             if (wiFiConnected) {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        try {
-                            if (new File(wj.filesdri + "hc").isDirectory()) {
-                                File[] aa = new File(wj.filesdri + "hc").listFiles();
-                                if (aa.length >= 30) {
-                                    aa[0].delete();
-                                }
-                            }
-                            OkHttpClient client = new OkHttpClient();
-                            Request request = new Request.Builder()
-                                    //访问路径
-                                    .url(url)
-                                    .build();
-                            Call call = client.newCall(request);
-                            Response response = call.execute();
-                            if (response.isSuccessful()) {
-                                ResponseBody body = response.body();
-                                if (body != null) {
-                                    File file = new File(wj.filesdri + "hc", x.id + ".mp3");
-                                    if (!file.getParentFile().exists()) {
-                                        file.getParentFile().mkdirs();
-                                    }
-                                    File parentFile = file.getParentFile();
-                                    if (!parentFile.isDirectory()) {
-                                        parentFile.mkdirs();
-                                    }
-                                    InputStream inputStream = body.byteStream();
-                                    FileOutputStream fileOutputStream =
-                                            new FileOutputStream(file);
-                                    // 替换为实际要保存的文件路径
-                                    byte[] buffer = new byte[4096];
-                                    int bytesRead;
-                                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                                        fileOutputStream.write(buffer, 0, bytesRead);
-                                    }
-                                    fileOutputStream.close();
-                                    inputStream.close();
-                                    Mp3File mp3file = new Mp3File(file);
-                                    if (mp3file.hasId3v2Tag()) {
-                                        ID3v2 id3v2Tag = mp3file.getId3v2Tag();
-                                        // 设置新的ID值
-                                        id3v2Tag.setTitle(x.name);
-                                        id3v2Tag.setArtist(x.zz);
-                                        id3v2Tag.setAlbum(x.zz);
-                                        mp3file.save(wj.filesdri + "hc/" + x.id);
-                                        file.delete();
-                                        // 保存修改后的音乐文件，删除原来的文件
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            gj.sc("wl xz " + e);
-                        }
-                    }
-                }.start();
+                new FileDownloader(url, x,true);
             }
             return url;
         } catch (JSONException e) {

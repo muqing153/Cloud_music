@@ -39,7 +39,11 @@ public class playlist extends Thread {
             if (wj.cz(wj.gd + uid)) {
                 hq = wj.dqwb(wj.gd + uid);
             } else {
-                hq = wl.hq(api + uid + "&limit=100" + "&cookie=" + wl.Cookie);
+                if (wj.cz(wj.filesdri + "user.mq")) {
+                    hq = wl.hq(api + uid + "&limit=100" + "&cookie=" + wl.Cookie);
+                } else {
+                    hq = wl.hq(api + uid + "&limit=100");
+                }
             }
             JSONObject json = new JSONObject(hq);
             JSONArray songs = json.getJSONArray("songs");

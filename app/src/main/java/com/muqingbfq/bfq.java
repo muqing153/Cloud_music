@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.muqingbfq.api.FileDownloader;
 import com.muqingbfq.api.url;
 import com.muqingbfq.databinding.ActivityBfqBinding;
 import com.muqingbfq.fragment.Media;
+import com.muqingbfq.login.user_logs;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
@@ -50,6 +52,10 @@ public class bfq extends AppCompatActivity {
     private void setLrc() {
         lrcView = binding.lrcView;
         ViewGroup.LayoutParams layoutParams = binding.cardview.getLayoutParams();
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        main.k = dm.widthPixels;
+        main.g = dm.heightPixels;
         layoutParams.height = main.k - 100;
         layoutParams.width = main.k - 100;
         binding.cardview.setLayoutParams(layoutParams);
@@ -148,11 +154,21 @@ public class bfq extends AppCompatActivity {
                         try {
                             JSONObject json = new JSONObject(hq);
                             JSONArray data = json.getJSONArray("data");
+                            if (json.getInt("code") == -460) {
+                                String message = json.getString("message");
+                                main.handler.post(() -> {
+                                    gj.ts(home.appCompatActivity, message);
+                                    home.appCompatActivity.startActivity(new Intent(home.appCompatActivity
+                                            , user_logs.class));
+
+                                });
+                                return;
+                            }
                             JSONObject jsonObject = data.getJSONObject(0);
                             String url = jsonObject.getString("url");
                             new FileDownloader(bfq.this).downloadFile(url, bfqkz.xm);
                         } catch (JSONException e) {
-                            throw new RuntimeException(e);
+                            gj.sc(e);
                         }
                     }
                 }.start();

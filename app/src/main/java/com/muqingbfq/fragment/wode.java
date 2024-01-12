@@ -25,6 +25,7 @@ import com.muqingbfq.R;
 import com.muqingbfq.XM;
 import com.muqingbfq.databinding.FragmentWdBinding;
 import com.muqingbfq.login.user_logs;
+import com.muqingbfq.login.visitor;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.EditViewDialog;
 import com.muqingbfq.mq.gj;
@@ -66,43 +67,21 @@ public class wode extends Fragment {
         jieshao = binding.text2;
         imageView = binding.imageView;
         binding.cardview.setOnClickListener(v -> {
-
-
             File file = new File(wj.filesdri, "user.mq");
-//            user_logs.USER.user;
             if (file.exists()) {
                 String[] a = new String[]{"退出登录"};
                 new MaterialAlertDialogBuilder(getContext())
                         .setItems(a, (dialogInterface, i) -> {
                             file.delete();
+                            setname(getString(R.string.app_name));
+                            setqianming(getString(R.string.app_name));
+                            imageView.setImageResource(R.drawable.ic_launcher_foreground);
+                            new visitor();
                             new com.muqingbfq.login.user_message();
                         }).show();
             } else {
                 startActivity(new Intent(getContext(), user_logs.class));
             }
-            /*
-            v.setEnabled(false);
-            new Thread() {
-                @Override
-                public void run() {
-                    super.run();
-                    String hq = wl.hq("/login/status?cookie=" + wl.Cookie);
-                    if (hq != null) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(hq);
-                            JSONObject jsonObject1 = jsonObject.getJSONObject("data").getJSONObject("profile");
-                            if (TextUtils.isEmpty(jsonObject1.toString())) {
-                            } else {
-                                main.handler.post(() -> {
-                                });
-                            }
-                        } catch (JSONException e) {
-                            gj.sc(e);
-                        }
-                    }
-                    main.handler.post(() -> v.setEnabled(true));
-                }
-            }.start();*/
         });
 //        new user_message();
 //        int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);

@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -49,7 +50,13 @@ public class FileDownloader {
                     .show();
         });
     }
-    public FileDownloader() {
+
+    String file_url = wj.mp3;
+    public FileDownloader(String x,MP3 mp3,boolean hc) {
+        if (hc) {
+            file_url = wj.filesdri + "hc/";
+        }
+        downloadFile(x,mp3);
     }
     public void downloadFile(MP3 x) {
         Request request = new Request.Builder()
@@ -80,6 +87,7 @@ public class FileDownloader {
             }
         });
     }
+
     long fileSizeDownloaded = 0;
     public void downloadFile(String url, MP3 x) {
         Request request = new Request.Builder()
@@ -100,7 +108,7 @@ public class FileDownloader {
                     // 下载失败处理
                     return;
                 }
-                File outputFile = new File(wj.mp3, x.id + ".mp3");
+                File outputFile = new File(file_url, x.id + ".mp3");
                 File parentFile = outputFile.getParentFile();
                 if (!parentFile.isDirectory()) {
                     parentFile.mkdirs();
@@ -143,7 +151,7 @@ public class FileDownloader {
                                 id3v2Tag.setAlbumImage(execute.body().bytes(), "image/jpeg");
                             }
                             o.close();
-                            mp3file.save(wj.mp3 + x.id);
+                            mp3file.save(file_url + x.id);
                             outputFile.delete();
                         }
                         // 保存修改后的音乐文件，删除原来的文件

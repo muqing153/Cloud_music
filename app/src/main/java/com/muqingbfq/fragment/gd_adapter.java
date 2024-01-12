@@ -94,7 +94,7 @@ public class gd_adapter extends Fragment {
                     }
                     bfqkz.list.add(0, x);
 //                    bfqkz.list.addAll(list);
-                    bfq.start(getContext());
+//                    bfq.start(getContext());
                 });
                 Glide.with(getContext()).load(x.picurl)
                         .apply(new RequestOptions().placeholder(R.drawable.ic_launcher_foreground))

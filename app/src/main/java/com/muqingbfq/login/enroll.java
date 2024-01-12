@@ -45,7 +45,6 @@ public class enroll extends FragmentActivity {
         if (null != v) {
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
-        new thread();
     }
 
     private void end() {
@@ -59,41 +58,5 @@ public class enroll extends FragmentActivity {
         // 携带意图返回上一个页面。RESULT_OK表示处理成功
         setResult(Activity.RESULT_OK, intent);
         finish(); // 结束当前的活动页面
-    }
-
-    class thread extends Thread {
-        public thread() {
-            account = edit_account.getText().toString();
-            username = edit_username.getText().toString();
-            password = edit_password.getText().toString();
-            email = edit_email.getText().toString();
-            start();
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            try {
-                JSONObject jsonpost = wl.jsonpost("/php/user.php?action=register",
-                        new String[]{
-                                "account", "userName", "passWord"
-                                , "email", "appID"
-                        }
-                        , new String[]{
-                                account, username, password, email, appID
-                        });
-                if (TextUtils.isEmpty(jsonpost.toString())) {
-                    return;
-                }
-                int code = jsonpost.getInt("code");
-                String message = jsonpost.getString("message");
-                gj.xcts(enroll.this, message);
-                if (code == 0) {
-                    end();
-                }
-            } catch (JSONException e) {
-                gj.sc(e);
-            }
-        }
     }
 }

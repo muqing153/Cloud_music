@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,6 +47,7 @@ public class yc extends AppCompatActivity {
                 + "密度DPI：" + densityDpi + "\n" +
                 "异常信息： " + exception.toString();
         binding.text.setText(wb);
+        binding.button2.setOnClickListener(view -> finish());
     }
 
     public static void start(Object e) {
