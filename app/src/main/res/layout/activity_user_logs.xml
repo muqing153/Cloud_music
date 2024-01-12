@@ -33,7 +33,7 @@
             android:layout_marginEnd="16dp">
             <EditText
                 android:id="@+id/edit_user"
-                android:hint="铁锈助手账号"
+                android:hint="网易云音乐账号/手机号"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
@@ -86,18 +86,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="30dp"
             android:layout_weight="1"
             android:text="@string/login"
             tools:ignore="ButtonStyle,DuplicateSpeakableTextCheck" />
-        <Button
-            android:id="@+id/enroll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/enroll"
-            tools:ignore="ButtonStyle" />
     </LinearLayout>
 </LinearLayout>

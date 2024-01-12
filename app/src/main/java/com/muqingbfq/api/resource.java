@@ -19,9 +19,8 @@ public class resource {
     public static void recommend(List<XM> list) {
         try {
             list.clear();
-            String hq;
             JSONObject json;
-            hq = wl.hq("/recommend/resource?cookie=" + wl.Cookie);
+            String hq = wl.hq("/recommend/resource?cookie=" + wl.Cookie);
             if (hq == null) {
                 hq = wj.dqwb(wj.gd_json);
                 if (hq != null) {

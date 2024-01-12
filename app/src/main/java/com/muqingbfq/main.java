@@ -156,25 +156,4 @@ public class main extends Application {
             }
         });
     }
-
-    public static SharedPreferences getSharedPreferences(String string) {
-        return application.getSharedPreferences(string, MODE_PRIVATE);
-    }
-
-    public static String getToken() {
-        SharedPreferences token1 = getSharedPreferences("token");
-        return token1.getString("token", null);
-    }
-    public static String getAccount() {
-        SharedPreferences token1 = getSharedPreferences("token");
-        return token1.getString("account", null);
-    }
-
-    public static void settoken(String token, String account) {
-        SharedPreferences token1 = getSharedPreferences("token");
-        SharedPreferences.Editor edit1 = token1.edit();
-        edit1.putString("token", token);
-        edit1.putString("account", account);
-        edit1.apply();
-    }
 }

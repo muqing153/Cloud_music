@@ -1,28 +1,26 @@
 package com.muqingbfq.login;
 
-import android.text.TextUtils;
-
+import com.google.gson.Gson;
 import com.muqingbfq.R;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
-import com.muqingbfq.mq.wl;
-
-import org.json.JSONObject;
+import com.muqingbfq.mq.wj;
 
 public class user_message extends Thread {
-    public user_message(String account) {
-        main.account = account;
-        main.token = main.getToken();
+    public String name,qiangming, picurl;
+
+    public user_message() {
+        wj.sc(wj.filesdri + "user.mq");
+    }
+    public user_message(String nickname, String signature, String avatarUrl) {
+        name = nickname;
+        qiangming = signature;
+        picurl = avatarUrl;
+        String s = new Gson().toJson(new user_logs.USER(name, qiangming, picurl));
+        wj.xrwb(wj.filesdri + "user.mq", s);
         start();
     }
 
-    public user_message() {
-        main.account = main.getAccount();
-        main.token = main.getToken();
-        if (!TextUtils.isEmpty(main.account)) {
-            start();
-        }
-    }
     @Override
     public void run() {
         super.run();
@@ -32,10 +30,10 @@ public class user_message extends Thread {
                 com.muqingbfq.fragment.
                         wode.setname(strings.userName());
                 com.muqingbfq.fragment.
-                        wode.setqianming(strings.introduce());
+                        wode.setqianming(strings.qianming());
                 com.bumptech.glide.Glide.with(com.muqingbfq.fragment.
                                 wode.imageView)
-                        .load(strings.headIcon())
+                        .load(strings.picurl())
                         .placeholder(R.drawable.icon)//图片加载出来前，显示的图片
                         .error(R.drawable.icon)//图片加载失败后，显示的图片
                         .into(com.muqingbfq.fragment.
@@ -46,8 +44,8 @@ public class user_message extends Thread {
         }
     }
 
-    public static string get() throws Exception {
-        JSONObject post = wl.jsonpost("/php/user.php?action=getSpaceInfo",
+    public string get() throws Exception {
+/*        JSONObject post = wl.jsonpost("/php/user.php?action=getSpaceInfo",
                 new String[]{
                         "account"
                 },
@@ -69,12 +67,10 @@ public class user_message extends Thread {
             if (cover.startsWith("..")) {
                 cover = "https://rust.coldmint.top" + cover.substring(2);
             }
-            String gender = data.getString("gender");
-            return new string(new String[]{
-                    headIcon, account, userName, introduce, cover, gender
-            });
-        }
-        return null;
+            String gender = data.getString("gender");*/
+        return new string(new String[]{
+                name, qiangming, picurl
+        });
     }
 
     static class string {
@@ -83,27 +79,16 @@ public class user_message extends Thread {
             this.strings = strings;
         }
 
-        public String headIcon() {
-            return strings[0];
+        public String picurl() {
+            return strings[2];
         }
 
-        public String account() {
+        public String qianming() {
             return strings[1];
         }
 
         public String userName() {
-            return strings[2];
-        }
-
-        public String introduce() {
-            return strings[3];
-        }
-
-        public String cover() {
-            return strings[4];
-        }
-        public String gender() {
-            return strings[5];
+            return strings[0];
         }
     }
 }

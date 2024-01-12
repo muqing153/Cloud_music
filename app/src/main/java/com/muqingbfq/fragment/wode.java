@@ -19,19 +19,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.gson.Gson;
 import com.muqingbfq.R;
+import com.muqingbfq.XM;
 import com.muqingbfq.databinding.FragmentWdBinding;
-import com.muqingbfq.login.user_editing;
 import com.muqingbfq.login.user_logs;
-import com.muqingbfq.login.user_message;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.EditViewDialog;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
-import com.muqingbfq.XM;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -57,19 +59,52 @@ public class wode extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         binding = FragmentWdBinding.inflate(inflater, container, false);
         name = binding.text1;
         jieshao = binding.text2;
         imageView = binding.imageView;
         binding.cardview.setOnClickListener(v -> {
-            if (main.getToken() == null) {
-                startActivity(new Intent(getContext(), user_logs.class));
+
+
+            File file = new File(wj.filesdri, "user.mq");
+//            user_logs.USER.user;
+            if (file.exists()) {
+                String[] a = new String[]{"退出登录"};
+                new MaterialAlertDialogBuilder(getContext())
+                        .setItems(a, (dialogInterface, i) -> {
+                            file.delete();
+                            new com.muqingbfq.login.user_message();
+                        }).show();
             } else {
-                startActivity(new Intent(getContext(), user_editing.class));
+                startActivity(new Intent(getContext(), user_logs.class));
             }
+            /*
+            v.setEnabled(false);
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    String hq = wl.hq("/login/status?cookie=" + wl.Cookie);
+                    if (hq != null) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(hq);
+                            JSONObject jsonObject1 = jsonObject.getJSONObject("data").getJSONObject("profile");
+                            if (TextUtils.isEmpty(jsonObject1.toString())) {
+                            } else {
+                                main.handler.post(() -> {
+                                });
+                            }
+                        } catch (JSONException e) {
+                            gj.sc(e);
+                        }
+                    }
+                    main.handler.post(() -> v.setEnabled(true));
+                }
+            }.start();*/
         });
-        new user_message();
+//        new user_message();
 //        int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4) {
             @Override
@@ -78,7 +113,6 @@ public class wode extends Fragment {
             }
         };
         binding.recyclerview1.setLayoutManager(gridLayoutManager);
-
         binding.recyclerview1.setFocusable(false);
         binding.recyclerview1.setAdapter(new RecyclerView.Adapter<VH>() {
             @NonNull
@@ -92,7 +126,7 @@ public class wode extends Fragment {
             public void onBindViewHolder(@NonNull VH holder, int position) {
                 String s = lista[position][1].toString();
                 holder.textView.setText(s);
-                holder.imageView.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(),R.color.text)));
+                holder.imageView.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.text)));
                 Glide.with(getContext())
                         .load(lista[position][0])
                         .into(holder.imageView);
@@ -124,7 +158,7 @@ public class wode extends Fragment {
                                 } else {
                                     gj.ts(getContext(), "更换成功");
                                     main.api = str;
-                                    wj.xrwb(wj.filesdri+"API.mq", main.api);
+                                    wj.xrwb(wj.filesdri + "API.mq", main.api);
                                     editViewDialog.dismiss();
                                 }
                             }).show();
@@ -148,6 +182,7 @@ public class wode extends Fragment {
         binding.recyclerview2.setFocusable(false);
         binding.recyclerview2.setAdapter(new gd.baseadapter(getContext(), list, true));
         sx();
+        denglu();
         return binding.getRoot();
     }
 
@@ -192,5 +227,18 @@ public class wode extends Fragment {
                 jieshao.setText(string);
             }
         });
+    }
+
+    public void denglu() {
+        if (!wj.cz(wj.filesdri + "user.mq")) {
+            return;
+        }
+        String dqwb = wj.dqwb(wj.filesdri + "user.mq");
+        user_logs.USER user = new Gson().fromJson(dqwb, user_logs.USER.class);
+        setname(user.name);
+        setqianming(user.qianming);
+        Glide.with(getContext())
+                .load(user.picUrl)
+                .into(binding.imageView);
     }
 }

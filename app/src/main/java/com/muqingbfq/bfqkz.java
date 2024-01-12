@@ -19,13 +19,10 @@ import androidx.media.MediaBrowserServiceCompat;
 
 import com.muqingbfq.api.url;
 import com.muqingbfq.mq.BluetoothMusicController;
-import com.muqingbfq.mq.FloatingLyricsService;
 import com.muqingbfq.mq.gj;
-import com.muqingbfq.mq.wj;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class bfqkz extends MediaBrowserServiceCompat {
     public static MediaPlayer mt = new MediaPlayer();
@@ -52,6 +49,10 @@ public class bfqkz extends MediaBrowserServiceCompat {
     @SuppressLint("NotifyDataSetChanged")
     public static void mp3(String id) {
         try {
+            if (id == null) {
+                return;
+            }
+
             if (TextUtils.isEmpty(id)) {
                 //针对错误进行相应的处理
                 bfqkz.list.remove(bfqkz.xm);

@@ -98,10 +98,8 @@ public class user_editing extends FragmentActivity {
             public void run() {
                 super.run();
                 try {
-                    user_message.string string = user_message.get();
-                    if (string == null) {
-                        return;
-                    }
+//                    user_message.string string = user_message.get();
+/*
                     main.handler.post(() -> {
                         Glide.with(user_editing.this)
                                 .load(string.headIcon())
@@ -118,7 +116,7 @@ public class user_editing extends FragmentActivity {
                             gender = "女";
                         }
                         binding.autoComplete.setText(gender);
-                    });
+                    });*/
                 } catch (Exception e) {
                     gj.sc(e);
                 }
@@ -151,7 +149,7 @@ public class user_editing extends FragmentActivity {
         imageViewb.setOnClickListener(onClickListener);
         binding.userEnd.setOnClickListener(view ->{
             finish();
-            main.settoken(null, null);
+//            main.settoken(null, null);
             com.muqingbfq.fragment.wode.setname("未登录");
             com.muqingbfq.fragment.wode.setqianming(null);
             com.muqingbfq.fragment.wode.imageView.setImageResource(R.drawable.icon);
@@ -211,7 +209,7 @@ public class user_editing extends FragmentActivity {
                                     break;
                             }
                         } else if (code == 0) {
-                            new user_message();
+//                            new user_message();
                         }
                         gj.xcts(user_editing.this, jsonObject.getString("message"));
                     } catch (JSONException e) {

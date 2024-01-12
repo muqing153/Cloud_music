@@ -5,17 +5,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.session.MediaSessionManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.os.Process;
 import android.support.v4.media.MediaBrowserCompat;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +25,6 @@ import com.muqingbfq.databinding.ActivityHomeBinding;
 import com.muqingbfq.fragment.bfq_db;
 import com.muqingbfq.fragment.gd_adapter;
 import com.muqingbfq.fragment.wode;
-import com.muqingbfq.mq.FloatingLyricsService;
 import com.muqingbfq.mq.gj;
 
 import java.util.ArrayList;
@@ -259,4 +254,15 @@ public class home extends AppCompatActivity {
                     gj.sc("onChildrenLoaded------");
                 }
             };
+
+    @Override
+    public void finish() {
+        super.finish();
+        // 断开连接并释放资源
+        if (mBrowser != null && mBrowser.isConnected()) {
+            mBrowser.disconnect();
+        }
+        int i = Process.myPid();
+        android.os.Process.killProcess(i);
+    }
 }

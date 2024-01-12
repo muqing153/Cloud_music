@@ -5,6 +5,7 @@ import com.mpatric.mp3agic.Mp3File;
 import com.muqingbfq.MP3;
 import com.muqingbfq.bfq;
 import com.muqingbfq.fragment.Media;
+import com.muqingbfq.home;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
@@ -54,6 +55,11 @@ public class url extends Thread {
                 return null;
             }
             JSONObject json = new JSONObject(hq);
+            if (json.getInt("code") == -460) {
+                String message = json.getString("message");
+                gj.xcts(home.appCompatActivity, message + "-可能需要登录网易云");
+                return null;
+            }
             JSONArray data = json.getJSONArray("data");
             JSONObject jsonObject = data.getJSONObject(0);
             String url = jsonObject.getString("url");

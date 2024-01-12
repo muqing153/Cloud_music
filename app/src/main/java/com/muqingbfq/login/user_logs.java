@@ -1,11 +1,9 @@
 package com.muqingbfq.login;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.MenuItem;
@@ -17,9 +15,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import com.muqingbfq.R;
+import com.muqingbfq.databinding.ActivityUserLogsBinding;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.EditViewDialog;
 import com.muqingbfq.mq.gj;
@@ -28,12 +25,20 @@ import com.muqingbfq.mq.wl;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.regex.Pattern;
+
 
 public class user_logs extends AppCompatActivity {
+    public static class USER {
+        public String name, qianming;
+        public Object picUrl;
 
+        public USER(String user, String qianming, Object picUrl) {
+            this.name = user;
+            this.qianming = qianming;
+            this.picUrl = picUrl;
+        }
+    }
     EditText edituser, editpassword;
-    Toolbar toolbar;
     public static String UUID;
 
     ActivityResultLauncher<Intent> enroll =
@@ -50,29 +55,25 @@ public class user_logs extends AppCompatActivity {
                             }
                         }
                     });
-    @SuppressLint("HardwareIds")
+    ActivityUserLogsBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_logs);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        binding = ActivityUserLogsBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        UUID = Settings.Secure.getString(getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-
-        edituser = findViewById(R.id.edit_user);
-        editpassword = findViewById(R.id.edit_password);
-        findViewById(R.id.login).setOnClickListener(view -> new CloudUser(edituser.getText().toString()
-                , editpassword.getText().toString()));
-        findViewById(R.id.enroll).setOnClickListener(view -> {
+//        UUID = Settings.Secure.getString(getContentResolver(),
+//                Settings.Secure.ANDROID_ID);
+        binding.login.setOnClickListener(view -> new CloudUser());
+/*        findViewById(R.id.enroll).setOnClickListener(view -> {
             Intent intent = new Intent(user_logs.this, enroll.class);
             intent.putExtra("user", edituser.getText().toString());
             intent.putExtra("appID", UUID);
             enroll.launch(intent);
-        });
+        });*/
     }
     //some statement
 
@@ -100,22 +101,16 @@ public class user_logs extends AppCompatActivity {
         return bitmap;
     }
 
-    String isEmail="false";
     public String account, password;
     class CloudUser extends Thread {
-
-        public CloudUser(String account, String password) {
+        public CloudUser() {
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             View v = getWindow().peekDecorView();
             if (null != v) {
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
-            user_logs.this.account = account;
-            user_logs.this.password = password;
-            Pattern pattern = Pattern.compile("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$");
-            if (pattern.matcher(account).matches()) {
-                isEmail = "true";
-            }
+            user_logs.this.account = binding.editUser.getText().toString();
+            user_logs.this.password = binding.editPassword.getText().toString();
             start();
         }
 
@@ -123,89 +118,26 @@ public class user_logs extends AppCompatActivity {
         public void run() {
             super.run();
             try {
-                String post = wl.post("/php/user.php?action=login",
-                        new String[]{
-                                "account", "passWord", "appID", "isEmail"
-                        },
-                        new String[]{
-                                account, password, UUID, isEmail
-                        });
-                gj.sc(post);
-                if (TextUtils.isEmpty(post)) {
+                String hq = wl.hq("/login/cellphone?phone=" + account + "&password=" + password);
+                if (TextUtils.isEmpty(hq)) {
                     return;
                 }
-                JSONObject jsonObject = new JSONObject(post);
-                if (jsonObject.getInt("code") == 0) {
-                    JSONObject data = jsonObject.getJSONObject("data");
-                    gj.sc(data);
-                    //用户token
-                    String token = data.getString("token");
-                    //用户名称account
-                    String account = data.getString("account");
-                    main.settoken(token, account);
-                    new user_message(account);
+                JSONObject jsonObject = new JSONObject(hq);
+                int code = jsonObject.getInt("code");
+                if (code == 200) {
+                    JSONObject data = jsonObject.getJSONObject("profile");
+                    String nickname = data.getString("nickname");//用户名
+                    String avatarUrl = data.getString("avatarUrl");//用户头像
+                    String signature = data.getString("signature");//用户签名
+                    String cookie = jsonObject.getString("cookie");
+                    gj.xcts(user_logs.this, "登录成功");
+                    wl.setcookie(cookie);
+                    new user_message(nickname,signature,avatarUrl);
                     user_logs.this.finish();
+                } else if (code == 502) {
+                    gj.xcts(user_logs.this, jsonObject.getString("message"));
                 } else {
-                    String message = jsonObject.getString("message");
-                    gj.xcts(user_logs.this, message);
-                    if (message.equals("请更改登录设备")) {
-                        JSONObject jsonpost = wl.jsonpost("/php/user.php?action=verification",
-                                new String[]{
-                                        "account", "passWord", "appID", "isEmail"
-                                },
-                                new String[]{
-                                        account, password, UUID, isEmail
-                                });
-                        gj.sc(jsonpost);
-                        if (!TextUtils.isEmpty(jsonpost.toString()) &&
-                                jsonpost.getInt("code") != 0) {
-                            return;
-                        }
-                        String message1 = jsonpost.getString("message");
-                        gj.xcts(user_logs.this, message1);
-                        main.handler.post(() -> {
-                            EditViewDialog editViewDialog = new EditViewDialog(user_logs.this,
-                                    "请输入验证码");
-                            editViewDialog.setMessage("验证码在你账号锁绑定的邮箱绘制垃圾桶中请及时查看");
-                            editViewDialog.setPositive(view -> {
-                                new Thread() {
-                                    @Override
-                                    public void run() {
-                                        JSONObject jsonpost = wl.jsonpost("/php/user.php?action=changeAppId",
-                                                new String[]{
-                                                        "account", "key", "appID", "isEmail"
-                                                },
-                                                new String[]{
-                                                        account, editViewDialog.getEditText(), UUID, isEmail
-                                                });
-                                        
-                                        gj.sc(jsonpost.toString());
-                                        if (!TextUtils.isEmpty(jsonpost.toString())) {
-                                            try {
-                                                int code = jsonpost.getInt("code");
-                                                if (code == 0) {
-                                                    gj.xcts(user_logs.this,
-                                                            "验证成功请重新登录");
-                                                    editViewDialog.dismiss();
-                                                } else {
-                                                    gj.xcts(user_logs.this,
-                                                            jsonpost.getString("message"));
-                                                }
-                                            } catch (JSONException e) {
-                                                editViewDialog.dismiss();
-                                                gj.sc(e);
-                                            }
-                                        }
-                                    }
-                                }.start();
-//                                    editViewDialog.dismiss();
-                            });
-                            editViewDialog.setEditinputType("number");
-                            editViewDialog.show();
-                        });
-                    } else if (message.equals("请先激活您的账户")) {
-                        jihuo();
-                    }
+                    gj.xcts(user_logs.this, "找不到此账号");
                 }
             } catch (Exception e) {
                 gj.sc(e);
@@ -213,7 +145,8 @@ public class user_logs extends AppCompatActivity {
         }
     }
 
-    public void jihuo() {
+    @Deprecated
+    private void jihuo() {
         main.handler.post(new Runnable() {
             @Override
             public void run() {
