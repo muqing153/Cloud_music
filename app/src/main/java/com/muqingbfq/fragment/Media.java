@@ -136,9 +136,6 @@ public class Media {
         if (bfq.view == null) {
             return;
         }
-        if (bfq.bitmap == null) {
-            bfq.bitmap= BitmapFactory.decodeResource(bfq.view.getResources(), R.drawable.icon);
-        }
         main.handler.post(() -> bfq.binding.cardview.setImage(com.muqingbfq.bfq.bitmap));
     }
 }

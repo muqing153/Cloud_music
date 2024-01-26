@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -33,6 +35,7 @@ public class gj {
         main.handler.post(() -> Toast.makeText(context, b.toString(), Toast.LENGTH_SHORT).show());
 
     }
+
     public static boolean isAppInForeground(Context context) {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Service.ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfoList = activityManager.getRunningAppProcesses();
@@ -48,6 +51,7 @@ public class gj {
         }
         return false;
     }
+
     public static boolean isTablet(Context context) {
         boolean b;
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
@@ -56,6 +60,7 @@ public class gj {
         b = main.k > main.g;
         return b;
     }
+
     public static void sc(Object a) {
         if (a == null) {
             a = "null";
@@ -74,11 +79,13 @@ public class gj {
         shareIntent.putExtra(Intent.EXTRA_TEXT, str);
         context.startActivity(shareIntent);
     }
+
     /**
      * 复制文字到剪切板
+     *
      * @param text
      */
-    public static void fz(Context context,String text){
+    public static void fz(Context context, String text) {
         ClipboardManager systemService =
                 (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         // 创建能够存入剪贴板的ClipData对象
@@ -86,6 +93,7 @@ public class gj {
         ClipData mClipData = ClipData.newPlainText("Label", text);
         //将ClipData数据复制到剪贴板：
         systemService.setPrimaryClip(mClipData);
+        gj.ts(context, "复制成功");
     }
 
     public static boolean isWiFiConnected() {
@@ -135,7 +143,7 @@ public class gj {
                 String bb = jsonObject.getString("bb");
                 main.handler.post(() -> new MaterialAlertDialogBuilder(context)
                         .setTitle("更新" + bb)
-                        .setMessage(msg+"\n"+"取消后不再提示更新你需要到关于软件手动检测")
+                        .setMessage(msg + "\n" + "取消后不再提示更新你需要到关于软件手动检测")
                         .setNegativeButton("取消", (dialogInterface, i) -> wj.xrwb(wj.filesdri + "gx.mq", null))
                         .setPositiveButton("更新", (dialogInterface, i) -> context.startActivity(new Intent(Intent.ACTION_VIEW,
                                 Uri.parse(url))))
@@ -148,5 +156,21 @@ public class gj {
             sc(e);
         }
         return 400;
+    }
+
+    public static void tcjp(EditText editText) {
+        editText.requestFocus();//获取焦点
+        InputMethodManager imm = (InputMethodManager)
+                editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        gj.sc(imm.isActive());
+        //没有显示键盘，弹出
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+    }
+    public static void ycjp(EditText editText) {
+        InputMethodManager imm = (InputMethodManager)
+                editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) //有显示键盘，隐藏
+            imm.hideSoftInputFromWindow(editText.getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

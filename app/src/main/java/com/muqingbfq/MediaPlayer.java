@@ -21,6 +21,7 @@ import com.mpatric.mp3agic.Mp3File;
 import com.muqingbfq.fragment.Media;
 import com.muqingbfq.fragment.bflb_db;
 import com.muqingbfq.fragment.bfq_db;
+import com.muqingbfq.fragment.mp3;
 import com.muqingbfq.fragment.search;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
@@ -60,7 +61,6 @@ public class MediaPlayer extends android.media.MediaPlayer {
             }
             bfq_an.xyq();
         });
-//        setAudioStreamType(AudioManager.STREAM_MUSIC);
         setAudioAttributes(new AudioAttributes
                 .Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -87,9 +87,6 @@ public class MediaPlayer extends android.media.MediaPlayer {
         super.start();
         Media.setbf(true);
     }
-
-    // 创建 MediaItem 列表
-//    public static List<MediaItem> list = new ArrayList<>();
     @Override
     public void setDataSource(String path) throws IOException {
         reset();
@@ -132,7 +129,6 @@ public class MediaPlayer extends android.media.MediaPlayer {
         prepare();
         setTX();
     }
-
     public void setTX() {
         Glide.with(main.application)
                 .asBitmap()
@@ -171,30 +167,30 @@ public class MediaPlayer extends android.media.MediaPlayer {
                             bfqkz.notify.tzl();
                         }
                         Media.setImageBitmap();
-                        return false;
-                    }
-                })
-                .submit();
+        if (bflb_db.adapter != null) {
+            bflb_db.adapter.notifyDataSetChanged();
+        }
+        return false;
     }
-    @SuppressLint("NotifyDataSetChanged")
-    public void bfui() {
+})
+        .submit();
+        }
+@SuppressLint("NotifyDataSetChanged")
+public void bfui() {
         String name = xm.name, zz = bfqkz.xm.zz;
         setTX();
         if (bfq.view != null) {
-            Media.setProgress(0);
-            bfq.setname(name);
-            bfq.setzz(zz);
-            bfq_an.islike();
+        Media.setProgress(0);
+        bfq.setname(name);
+        bfq.setzz(zz);
+        bfq_an.islike();
         }
         bfq_db.setname(name + "/" + zz);
         if (com.muqingbfq.fragment.mp3.lbspq != null) {
-            com.muqingbfq.fragment.mp3.lbspq.notifyDataSetChanged();
+        new mp3.lbspq_sx();
         }
         if (search.lbspq != null) {
-            search.lbspq.notifyDataSetChanged();
-        }
-        if (bflb_db.adapter != null) {
-            bflb_db.adapter.notifyDataSetChanged();
+        search.lbspq.notifyDataSetChanged();
         }
     }
 }

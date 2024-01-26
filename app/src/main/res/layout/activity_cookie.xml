@@ -85,13 +85,4 @@
             </RelativeLayout>
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:contentDescription="登录模式切换"
-        android:text="二维码"
-        app:icon="@drawable/icon"/>
 </LinearLayout>

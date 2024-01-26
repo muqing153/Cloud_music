@@ -1,6 +1,5 @@
 package com.muqingbfq.login;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -9,22 +8,18 @@ import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.muqingbfq.databinding.ActivityUserLogsBinding;
 import com.muqingbfq.main;
-import com.muqingbfq.mq.EditViewDialog;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wl;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Objects;
 
 
 public class user_logs extends AppCompatActivity {
@@ -38,24 +33,9 @@ public class user_logs extends AppCompatActivity {
             this.picUrl = picUrl;
         }
     }
-    EditText edituser, editpassword;
-    public static String UUID;
 
-    ActivityResultLauncher<Intent> enroll =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                    result -> {
-                        if (result.getResultCode() == RESULT_OK) {
-                            Intent data = result.getData();
-                            if (data != null) {
-                                Bundle bundle = data.getExtras();
-                                String user = bundle.getString("user");
-                                String password = bundle.getString("password");
-                                edituser.setText(user);
-                                editpassword.setText(password);
-                            }
-                        }
-                    });
     ActivityUserLogsBinding binding;
+    erweima thread;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,17 +43,21 @@ public class user_logs extends AppCompatActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-//        UUID = Settings.Secure.getString(getContentResolver(),
-//                Settings.Secure.ANDROID_ID);
         binding.login.setOnClickListener(view -> new CloudUser());
-/*        findViewById(R.id.enroll).setOnClickListener(view -> {
-            Intent intent = new Intent(user_logs.this, enroll.class);
-            intent.putExtra("user", edituser.getText().toString());
-            intent.putExtra("appID", UUID);
-            enroll.launch(intent);
-        });*/
+        binding.button1.setOnClickListener(view -> {
+            if (binding.layout1.getVisibility() == View.VISIBLE) {
+                binding.layout1.setVisibility(View.GONE);
+                binding.layout2.setVisibility(View.VISIBLE);
+                binding.button1.setText("账号");
+                thread = new erweima();
+                thread.start();
+            } else {
+                thread.interrupt();
+                binding.button1.setText("二维码");
+                binding.layout1.setVisibility(View.VISIBLE);
+                binding.layout2.setVisibility(View.GONE);
+            }
+        });
     }
     //some statement
 
@@ -102,6 +86,7 @@ public class user_logs extends AppCompatActivity {
     }
 
     public String account, password;
+
     class CloudUser extends Thread {
         public CloudUser() {
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -132,7 +117,7 @@ public class user_logs extends AppCompatActivity {
                     String cookie = jsonObject.getString("cookie");
                     gj.xcts(user_logs.this, "登录成功");
                     wl.setcookie(cookie);
-                    new user_message(nickname,signature,avatarUrl);
+                    new user_message(nickname, signature, avatarUrl);
                     user_logs.this.finish();
                 } else if (code == 502) {
                     gj.xcts(user_logs.this, jsonObject.getString("message"));
@@ -144,4 +129,79 @@ public class user_logs extends AppCompatActivity {
             }
         }
     }
+
+
+    class erweima extends Thread {
+        int code = 800;
+        String unikey, qrimg, hq;
+        private long time = 0;
+
+        public erweima() {
+            binding.text1.setText("请使用网易云音乐扫码");
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            while (code != 0 && !Thread.currentThread().isInterrupted()) {
+                gj.sc(code);
+                try {
+                    hq = wl.hq("/login/qr/check?key=" + unikey + Time());
+                    if (hq != null) {
+                        JSONObject json = new JSONObject(hq);
+                        code = json.getInt("code");
+                        switch (code) {
+                            case 800:
+                            case 400:
+                                setwb("二维码过期");
+                                hqkey();
+                                break;
+                            case 801:
+                                setwb("等待扫码");
+                                break;
+                            case 802:
+                                setwb("等待确认");
+                                break;
+                            case 803:
+                                setwb("登录成功");
+                                wl.setcookie(json.getString("cookie"));
+                                code = 0;
+                                user_logs.this.finish();
+                                break;
+                            default:
+                                code = 0;
+                                // 默认情况下的操作
+                                break;
+                        }
+                    }
+                    sleep(1000);
+                } catch (Exception e) {
+                    Thread.currentThread().interrupt();
+                    gj.sc(e);
+                }
+            }
+        }
+
+        private void hqkey() throws Exception {
+            unikey = new JSONObject(Objects.requireNonNull(wl.hq("/login/qr/key"))).
+                    getJSONObject("data").getString("unikey");
+            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(wl.hq("/login/qr/create?key=" +
+                    unikey +
+                    "&qrimg=base64")));
+            qrimg = jsonObject.getJSONObject("data").getString("qrimg");
+            main.handler.post(() -> binding.image.setImageBitmap(user_logs.stringToBitmap(qrimg)));
+        }
+
+        private String Time() {
+            if (time < System.currentTimeMillis() - 1000) {
+                time = System.currentTimeMillis();
+            }
+            return "&timestamp" + time;
+        }
+
+        private void setwb(String wb) {
+            main.handler.post(() -> binding.text1.setText(wb));
+        }
+    }
+
 }

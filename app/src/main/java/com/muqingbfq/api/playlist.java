@@ -23,6 +23,14 @@ import java.util.List;
 public class playlist extends Thread {
     public static final String api = "/playlist/track/all?id=";
 
+    public static String gethq(String uid) {
+        if (wj.cz(wj.filesdri + "user.mq")) {
+            return wl.hq(api + uid + "&limit=100" + "&cookie=" + wl.Cookie);
+//            gj.sc(hq);
+        } else {
+            return wl.hq(api + uid + "&limit=100");
+        }
+    }
     @SuppressLint("NotifyDataSetChanged")
     public static boolean hq(List<MP3> list, String uid) {
         switch (uid) {
@@ -39,11 +47,7 @@ public class playlist extends Thread {
             if (wj.cz(wj.gd + uid)) {
                 hq = wj.dqwb(wj.gd + uid);
             } else {
-                if (wj.cz(wj.filesdri + "user.mq")) {
-                    hq = wl.hq(api + uid + "&limit=100" + "&cookie=" + wl.Cookie);
-                } else {
-                    hq = wl.hq(api + uid + "&limit=100");
-                }
+                hq = gethq(uid);
             }
             JSONObject json = new JSONObject(hq);
             JSONArray songs = json.getJSONArray("songs");
@@ -52,7 +56,14 @@ public class playlist extends Thread {
                 JSONObject jsonObject = songs.getJSONObject(i);
                 String id = jsonObject.getString("id");
                 String name = jsonObject.getString("name");
-
+                try {
+                    String tns = jsonObject.getString("tns");
+                    tns = tns.replace("[\"", "(");
+                    tns = tns.replace("\"]", ")");
+                    name += tns;
+                } catch (Exception e) {
+                    gj.sc(e);
+                }
                 JSONObject al = jsonObject.getJSONObject("al");
                 JSONArray ar = jsonObject.getJSONArray("ar");
                 StringBuilder zz = new StringBuilder();
@@ -95,13 +106,15 @@ public class playlist extends Thread {
         try {
             File file = new File(wj.filesdri + "mp3");
             File[] files = file.listFiles();
+            int i = 0;
             for (File value : files) {
                 ID3v2 mp3File = new Mp3File(value).getId3v2Tag();
                 String id = value.getName();
                 String name = mp3File.getTitle();
                 String zz = mp3File.getArtist();
                 String picUrl = mp3File.getUrl();
-                list.add(new MP3(id, name, zz, picUrl));
+                list.add(new MP3(id, name, zz.toString(), picUrl));
+                i++;
             }
             return true;
         } catch (Exception e) {

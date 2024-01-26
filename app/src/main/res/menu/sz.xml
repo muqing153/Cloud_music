@@ -29,8 +29,4 @@
         android:icon="@drawable/app_warning"
         android:title="@string/guanyuruanjiang" />
 
-    <item
-        android:id="@+id/g"
-        android:icon="@drawable/icon"
-        android:title="绑定网易云" />
 </menu>

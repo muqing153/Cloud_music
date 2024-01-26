@@ -1,7 +1,6 @@
 package com.muqingbfq;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -41,7 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class activity_search extends FragmentActivity {
-    private EditText editText;
     private ArrayAdapter<String> adapter;
     private List<String> json_list = new ArrayList<>();
     private final List<String> list = new ArrayList<>();
@@ -63,8 +60,7 @@ public class activity_search extends FragmentActivity {
         binding.listRecycler.setLayoutManager(manager);
         binding.listRecycler.setAdapter(new SearchRecordAdapter());
 
-        editText = findViewById(R.id.editview);
-        editText.setOnEditorActionListener((v, actionId, event) -> {
+        binding.editview.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 String str = v.getText().toString();
                 if (!str.equals("")) {
@@ -93,19 +89,19 @@ public class activity_search extends FragmentActivity {
 
         //设置项点击监听
         listPopupWindow.setOnItemClickListener((adapterView, view, i, l) -> {
-            editText.clearFocus();
+            view.clearFocus();
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             View v = getWindow().peekDecorView();
             if (null != v) {
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
-            editText.setText(list.get(i));//把选择的选项内容展示在EditText上
+            binding.editview.setText(list.get(i));//把选择的选项内容展示在EditText上
             dismiss();//如果已经选择了，隐藏起来
-            start(editText.getText().toString());
+            start(binding.editview.getText().toString());
 
         });
         Object o = new Object();
-        editText.addTextChangedListener(new TextWatcher() {
+        binding.editview.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -147,20 +143,13 @@ public class activity_search extends FragmentActivity {
             public void afterTextChanged(Editable s) {
             }
         });
-
-        binding.editview.requestFocus();//获取焦点
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        //if (!imm.isActive()) //没有显示键盘，弹出
-        imm.showSoftInput(binding.editview, 0);
+        gj.tcjp(binding.editview);
     }
 
     public void dismiss() {
         binding.editview.clearFocus();
         listPopupWindow.setVisibility(View.GONE);
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm.isActive()) //有显示键盘，隐藏
-            imm.hideSoftInputFromWindow(binding.editview.getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
+        gj.ycjp(binding.editview);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -190,7 +179,7 @@ public class activity_search extends FragmentActivity {
         if (itemId == android.R.id.home) {
             finish();
         } else if (itemId == R.id.menu_search) {
-            start(editText.getText().toString());
+            start(binding.editview.getText().toString());
         }
         return super.onOptionsItemSelected(item);
     }
@@ -238,7 +227,7 @@ public class activity_search extends FragmentActivity {
             String keyword = json_list.get(position);
             holder.recordTextView.setText(keyword);
             holder.recordTextView.setOnClickListener(v -> {
-                editText.setText(keyword);
+                binding.editview.setText(keyword);
                 start(keyword);
             });
             holder.recordTextView.setOnLongClickListener(view -> {

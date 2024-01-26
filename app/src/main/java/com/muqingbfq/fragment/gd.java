@@ -25,6 +25,8 @@ import com.muqingbfq.api.resource;
 import com.muqingbfq.bfq_an;
 import com.muqingbfq.bfqkz;
 import com.muqingbfq.databinding.FragmentMp3Binding;
+import com.muqingbfq.databinding.ListGdBBinding;
+import com.muqingbfq.databinding.ListGdBinding;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
@@ -45,6 +47,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
     private final List<XM> list = new ArrayList<>();
     public static RecyclerView.Adapter<VH> adapter;
     int k;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +55,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
         setContentView(binding.getRoot());
         Intent intent = getIntent();
         binding.title.setText(intent.getStringExtra("name"));
-        adapter = new baseadapter(this,list);
+        adapter = new baseadapter(this, list);
         k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, k / 120);
         binding.lb.setLayoutManager(gridLayoutManager);
@@ -64,6 +67,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
     @SuppressLint("NotifyDataSetChanged")
     class start extends Thread {
         String id;
+
         public start(String id) {
             this.id = id;
             list.clear();
@@ -97,7 +101,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
         }
     }
 
-    public static class baseadapter extends RecyclerView.Adapter<VH>{
+    public static class baseadapter extends RecyclerView.Adapter<VH> {
         Context context;
         List<XM> list;
 
@@ -107,6 +111,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
         }
 
         boolean bool = false;
+
         public baseadapter(Context context, List<XM> list, boolean bool) {
             this.context = context;
             this.list = list;
@@ -117,11 +122,11 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
         @Override
         public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             if (bool) {
-                return new VH(LayoutInflater.from(context)
-                        .inflate(R.layout.list_gd_b, parent, false));
+                return new VH(ListGdBBinding.bind(LayoutInflater.from(context)
+                        .inflate(R.layout.list_gd_b, parent, false)));
             }
-            return new VH(LayoutInflater.from(context)
-                    .inflate(R.layout.list_gd, parent, false));
+            return new VH(ListGdBinding.bind(LayoutInflater.from(context)
+                    .inflate(R.layout.list_gd, parent, false)));
         }
 
         public void setList(List<XM> list) {
@@ -134,12 +139,13 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
             CARD card = new CARD(position);
             if (bool) {
                 holder.itemView.setOnClickListener(card);
+                holder.bindingB.text2.setText(xm.message);
                 holder.itemView.setOnLongClickListener(card);
             } else {
-                holder.image.setOnClickListener(card);
-                holder.image.setOnLongClickListener(card);
+                holder.binding.image.setOnClickListener(card);
+                holder.binding.image.setOnLongClickListener(card);
             }
-            holder.textView.setText(xm.name);
+            holder.title.setText(xm.name);
             holder.kg.setOnClickListener(view1 -> {
                 ImageView tx = (ImageView) view1;
                 new Thread() {
@@ -208,7 +214,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
                                 @Override
                                 public void run() {
                                     if (id == 0) {
-                                        String hq = wl.hq(playlist.api + xm.id + "&limit=100");
+                                        String hq = playlist.gethq(xm.id);
                                         if (hq != null) {
                                             wj.xrwb(wj.gd + xm.id, hq);
                                             try {
@@ -235,15 +241,14 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
                                             jsonObject.remove(xm.id);
                                             list.remove(xm);
                                             wj.xrwb(wj.gd_xz, jsonObject.toString());
+                                            main.handler.post(() -> notifyItemChanged(position));
                                         } catch (JSONException e) {
                                             gj.sc(e);
                                         }
                                     }
-                                    main.handler.post(() -> notifyItemChanged(position));
                                 }
                             }.start();
                             // 在这里处理菜单项的点击事件
-                            dialog.dismiss();
                         }).show();
                 return false;
             }
@@ -253,17 +258,29 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
     }
 
     static class VH extends RecyclerView.ViewHolder {
-        TextView textView;
-        ImageView kg;
-        CardImage image;
+        public ListGdBinding binding;
+        public ImageView kg;
+        public CardImage image;
+        public TextView title;
+        public VH(@NonNull ListGdBinding itemView) {
+            super(itemView.getRoot());
+            binding = itemView;
+            title = binding.wb1;
+            kg = binding.kg;
+            image = binding.image;
+        }
 
-        public VH(@NonNull View itemView) {
-            super(itemView);
-            textView = itemView.findViewById(R.id.wb1);
-            image = itemView.findViewById(R.id.image);
-            kg = itemView.findViewById(R.id.kg);
+        ListGdBBinding bindingB;
+
+        public VH(@NonNull ListGdBBinding itemView) {
+            super(itemView.getRoot());
+            bindingB = itemView;
+            title = bindingB.text1;
+            kg = bindingB.kg;
+            image = bindingB.image;
         }
     }
+
     private class lbspq_sx implements Runnable {
         @SuppressLint("NotifyDataSetChanged")
         @Override

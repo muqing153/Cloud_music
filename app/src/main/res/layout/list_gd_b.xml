@@ -4,32 +4,50 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <com.muqingbfq.view.CardImage
+            android:id="@+id/image"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            app:cardUseCompatPadding="true"
+            app:strokeWidth="0dp">
+
+            <ImageView
+                android:id="@+id/kg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:src="@drawable/zt" />
+        </com.muqingbfq.view.CardImage>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.muqingbfq.view.CardImage
-                android:id="@+id/image"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                app:cardUseCompatPadding="true"
-                android:padding="16dp">
-                <ImageView
-                    android:id="@+id/kg"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:alpha="0.5"
-                    android:src="@drawable/zt"/>
-            </com.muqingbfq.view.CardImage>
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical">
             <TextView
-                android:id="@+id/wb1"
+                android:id="@+id/text1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:paddingTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:lines="2"
-                android:maxLines="2"
+                android:maxLines="1"
+                android:textSize="20sp"
                 android:text="@string/name"
                 android:textColor="@color/text" />
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="@string/app_name"
+                android:textColor="@color/text" />
         </LinearLayout>
+
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -122,6 +122,7 @@ public class FileDownloader {
                     outputStream = new FileOutputStream(outputFile);
 
                     int read;
+                    fileSizeDownloaded = 0;
                     while ((read = inputStream.read(buffer)) != -1) {
                         outputStream.write(buffer, 0, read);
                         fileSizeDownloaded += read;

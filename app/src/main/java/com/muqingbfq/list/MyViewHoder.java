@@ -8,13 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.muqingbfq.R;
+import com.muqingbfq.databinding.ListMp3Binding;
 
 public class MyViewHoder extends RecyclerView.ViewHolder {
-    public TextView name, zz;
-    public MyViewHoder(@NonNull View itemView) {
-        super(itemView);
-        name = itemView.findViewById(R.id.wb1);
-        zz = itemView.findViewById(R.id.zz);
+    public ListMp3Binding binding;
+    public MyViewHoder(@NonNull ListMp3Binding itemView) {
+        super(itemView.getRoot());
+        binding = itemView;
     }
     public Context getContext() {
         return itemView.getContext();

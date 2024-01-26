@@ -29,6 +29,8 @@ public class url extends Thread {
     }
 
     public static String hq(MP3 x) {
+        getLrc(x.id);
+        Media.loadLyric();
         try {
             if (wj.cz(wj.mp3 + x.id)) {
                 return wj.mp3 + x.id;
@@ -47,7 +49,7 @@ public class url extends Thread {
                 return null;
             }
             JSONObject json = new JSONObject(hq);
-            gj.sc(json);
+//            gj.sc(json);
             if (json.getInt("code") == -460) {
                 String message = json.getString("message");
                 main.handler.post(() -> {
@@ -57,15 +59,10 @@ public class url extends Thread {
                 });
                 return null;
             }
-            getLrc(x.id);
-            Media.loadLyric();
             JSONArray data = json.getJSONArray("data");
             JSONObject jsonObject = data.getJSONObject(0);
-            String url = jsonObject.getString("url");
-            if (wiFiConnected) {
-                new FileDownloader(url, x,true);
-            }
-            return url;
+            gj.sc(jsonObject.getString("url"));
+            return jsonObject.getString("url");
         } catch (JSONException e) {
             yc.start("url hq :" + e);
         }

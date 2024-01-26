@@ -1,15 +1,15 @@
 package com.muqingbfq.mq;
 
 
-import com.muqingbfq.main;
 import com.muqingbfq.XM;
+import com.muqingbfq.main;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
-import okhttp3.FormBody;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -40,22 +40,29 @@ public class wl {
     }
 
     public static String post(String str, String[][] a) {
-
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
-        FormBody.Builder builder = new FormBody.Builder();
-        for (String[] strings : a) {
-//            gj.sc(strings[0] + ":" + strings[1]);
-            builder.add(strings[0], strings[1]);
+//        MediaType mediaType = MediaType.parse("text/plain");
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        for (String[] b : a) {
+            builder.addFormDataPart(b[0], b[1]);
         }
+        builder.addFormDataPart("cookie", Cookie);
+
         Request request = new Request.Builder()
                 .url(main.api + str)
-                .post(builder.build())
+                .method("POST", builder.build())
+                .addHeader("User-Agent", "Apifox/1.0.0 (https://apifox.com)")
+                .addHeader("Accept", "*/*")
+                .addHeader("Host", "139.196.224.229:3000")
+                .addHeader("Connection", "keep-alive")
                 .build();
         try {
             Response response = client.newCall(request).execute();
-            return response.body().string();
-        } catch (IOException e) {
+            if (response.body() != null) {
+                return response.body().string();
+            }
+        } catch (Exception e) {
             gj.sc(e);
         }
         return null;

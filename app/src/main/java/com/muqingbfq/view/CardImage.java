@@ -42,6 +42,7 @@ public class CardImage extends MaterialCardView {
         Glide.with(this)
                 .load(bitmap)
 //                .apply(new RequestOptions().placeholder(R.drawable.icon))
+                .error(R.drawable.ic_launcher_foreground)
                 .into(imageView);
     }
 

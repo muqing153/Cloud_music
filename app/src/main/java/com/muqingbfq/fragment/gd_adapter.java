@@ -19,12 +19,12 @@ import com.muqingbfq.R;
 import com.muqingbfq.XM;
 import com.muqingbfq.api.resource;
 import com.muqingbfq.api.url;
-import com.muqingbfq.bfq;
 import com.muqingbfq.bfqkz;
 import com.muqingbfq.databinding.FragmentGdBinding;
 import com.muqingbfq.databinding.ListMp3ImageBinding;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
+import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
 
 import org.json.JSONArray;
@@ -91,8 +91,12 @@ public class gd_adapter extends Fragment {
                         bfqkz.xm = x;
                         new url(x);
                         notifyDataSetChanged();
+                    } else if (!bfqkz.mt.isPlaying()) {
+                        bfqkz.mt.start();
                     }
-                    bfqkz.list.add(0, x);
+                    if (!bfqkz.list.contains(x)) {
+                        bfqkz.list.add(0, x);
+                    }
 //                    bfqkz.list.addAll(list);
 //                    bfq.start(getContext());
                 });
@@ -134,6 +138,9 @@ public class gd_adapter extends Fragment {
             public void run() {
                 super.run();
                 String hq = wl.hq("/recommend/songs" + "?cookie=" + wl.Cookie);
+                if (hq == null) {
+                    hq = wj.dqwb(wj.filesdri + "songs.josn");
+                }
                 try {
                     JSONObject jsonObject = new JSONObject(hq);
                     JSONObject data = jsonObject.getJSONObject("data");
@@ -151,6 +158,7 @@ public class gd_adapter extends Fragment {
                         String picUrl = al.getString("picUrl");
                         listmp3.add(new MP3(id, name, zz.toString(), picUrl));
                     }
+                    wj.xrwb(wj.filesdri + "songs.josn", hq);
                     main.handler.post(() -> binding.recyclerview2.getAdapter().notifyDataSetChanged());
                 } catch (Exception e) {
                     gj.sc(e);

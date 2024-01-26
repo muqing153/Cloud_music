@@ -5,20 +5,17 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.muqingbfq.login.visitor;
 import com.muqingbfq.mq.FloatingLyricsService;
-import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
 
@@ -33,10 +30,8 @@ public class main extends Application {
     public static int k, g;
     public static SharedPreferences sp;
     public static SharedPreferences.Editor edit;
-
-    public static String account,token;
-
     public int count = 0;
+    public static long item = System.currentTimeMillis();
     @SuppressLint("HardwareIds")
     @Override
     public void onCreate() {
@@ -56,7 +51,6 @@ public class main extends Application {
             wj.xrwb(file.toString(), main.api);
         }
         application = this;
-//        UUID.randomUUID().toString();
         sp = getSharedPreferences("Set_up", MODE_PRIVATE);
         edit = sp.edit();
         boolean bj = false;
@@ -95,13 +89,12 @@ public class main extends Application {
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            public void onActivityCreated(@NonNull Activity activity, Bundle savedInstanceState) {
             }
 
             @Override
-            public void onActivityStarted(Activity activity) {
+            public void onActivityStarted(@NonNull Activity activity) {
                 if (count == 0) { //后台切换到前台
-                    gj.sc(">>>>>>>>>>>>>>>>>>>App切到前台");
                     if (FloatingLyricsService.lei != null) {
                         stopService(new Intent(main.this, FloatingLyricsService.class));
                     }
@@ -110,19 +103,19 @@ public class main extends Application {
             }
 
             @Override
-            public void onActivityResumed(Activity activity) {
+            public void onActivityResumed(@NonNull Activity activity) {
             }
 
             @Override
-            public void onActivityPaused(Activity activity) {
+            public void onActivityPaused(@NonNull Activity activity) {
 
             }
 
             @Override
-            public void onActivityStopped(Activity activity) {
+            public void onActivityStopped(@NonNull Activity activity) {
                 count--;
                 if (count == 0) { //后台切换到前台
-                    gj.sc(">>>>>>>>>>>>>>>>>>>App切到后台");
+//                    gj.sc(">>>>>>>>>>>>>>>>>>>App切到后台");
                     new Thread(){
                         @Override
                         public void run() {
@@ -148,11 +141,11 @@ public class main extends Application {
             }
 
             @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+            public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
             }
 
             @Override
-            public void onActivityDestroyed(Activity activity) {
+            public void onActivityDestroyed(@NonNull Activity activity) {
             }
         });
     }

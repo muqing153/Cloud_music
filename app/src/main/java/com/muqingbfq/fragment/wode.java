@@ -2,7 +2,6 @@ package com.muqingbfq.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +21,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.muqingbfq.R;
 import com.muqingbfq.XM;
+import com.muqingbfq.api.playlist;
+import com.muqingbfq.api.resource;
 import com.muqingbfq.databinding.FragmentWdBinding;
 import com.muqingbfq.login.user_logs;
 import com.muqingbfq.login.visitor;
@@ -31,13 +31,16 @@ import com.muqingbfq.mq.EditViewDialog;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class wode extends Fragment {
 
@@ -52,7 +55,7 @@ public class wode extends Fragment {
             {R.drawable.like, "喜欢音乐", "mp3_like.json"},
             {R.drawable.icon, "本地搜索", ""},
             {R.drawable.fuwuzhongxing, "更换接口", "API"},
-            {R.drawable.icon, "导入歌单", ""},
+            {R.drawable.gd, "导入歌单", "gd"},
             {R.drawable.paihangbang, "排行榜", "排行榜"},
             {R.drawable.icon, "开发中", ""}
     };
@@ -83,8 +86,6 @@ public class wode extends Fragment {
                 startActivity(new Intent(getContext(), user_logs.class));
             }
         });
-//        new user_message();
-//        int k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4) {
             @Override
             public boolean canScrollVertically() {
@@ -105,10 +106,7 @@ public class wode extends Fragment {
             public void onBindViewHolder(@NonNull VH holder, int position) {
                 String s = lista[position][1].toString();
                 holder.textView.setText(s);
-                holder.imageView.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.text)));
-                Glide.with(getContext())
-                        .load(lista[position][0])
-                        .into(holder.imageView);
+                holder.imageView.setImageResource((Integer) lista[position][0]);
                 String data = lista[position][2].toString();
                 holder.itemView.setOnClickListener(view -> {
                     switch (data) {
@@ -140,6 +138,53 @@ public class wode extends Fragment {
                                     wj.xrwb(wj.filesdri + "API.mq", main.api);
                                     editViewDialog.dismiss();
                                 }
+                            }).show();
+                            break;
+                        case "gd":
+                            EditViewDialog editViewDialog1 = new EditViewDialog(getContext(),
+                                    "导入歌单")
+                                    .setMessage("请用网易云https链接来进行导入或者歌单id");
+                            editViewDialog1.setPositive(view1 -> {
+                                String str = editViewDialog1.getEditText();
+                                // 使用正则表达式提取链接
+                                Pattern pattern = Pattern.compile("https?://[\\w./?=&]+");
+                                Matcher matcher = pattern.matcher(str);
+                                if (matcher.find())
+                                    str = matcher.group();
+                                if (!str.isEmpty()) {
+                                    // 使用截取方法获取歌单 ID
+                                    str = str.substring(str.indexOf("id=") + 3, str.indexOf("&"));
+                                }
+                                String finalStr = str;
+                                gj.ts(getContext(), "导入中");
+                                new Thread(){
+                                    @Override
+                                    public void run() {
+                                        super.run();
+                                        String hq = playlist.gethq(finalStr);
+                                        if (hq != null) {
+                                            wj.xrwb(wj.gd + finalStr, hq);
+                                            try {
+                                                JSONObject jsonObject = new JSONObject();
+                                                if (wj.cz(wj.gd_xz)) {
+                                                    jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
+                                                }
+                                                XM fh = resource.Playlist_content(finalStr);
+                                                JSONObject json = new JSONObject();
+                                                json.put("name", fh.name);
+                                                json.put("picUrl", fh.picurl);
+                                                jsonObject.put(fh.id, json);
+                                                wj.xrwb(wj.gd_xz, jsonObject.toString());
+                                                sx();
+                                                gj.xcts(getContext(), "成功");
+                                            } catch (JSONException e) {
+                                                gj.sc("list gd onclick thear " + e);
+                                                gj.xcts(getContext(), "失败");
+                                            }
+                                        }
+                                    }
+                                }.start();
+                                editViewDialog1.dismiss();
                             }).show();
                             break;
 
@@ -218,6 +263,7 @@ public class wode extends Fragment {
         setqianming(user.qianming);
         Glide.with(getContext())
                 .load(user.picUrl)
+                .error(R.drawable.ic_launcher_foreground)
                 .into(binding.imageView);
     }
 }

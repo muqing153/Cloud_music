@@ -250,7 +250,6 @@ public class home extends AppCompatActivity {
                 @Override
                 public void onChildrenLoaded(@NonNull String parentId,
                                              @NonNull List<MediaBrowserCompat.MediaItem> children) {
-
                     gj.sc("onChildrenLoaded------");
                 }
             };
@@ -262,7 +261,7 @@ public class home extends AppCompatActivity {
         if (mBrowser != null && mBrowser.isConnected()) {
             mBrowser.disconnect();
         }
-        int i = Process.myPid();
-        android.os.Process.killProcess(i);
+//        int i = Process.myPid();
+//        android.os.Process.killProcess(i);
     }
 }

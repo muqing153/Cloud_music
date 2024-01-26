@@ -3,7 +3,6 @@ package com.muqingbfq.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Handler;
@@ -112,33 +111,35 @@ public class LrcView extends RecyclerView {
     public void setLrcline(boolean lrcline) {
         Lrcline = lrcline;
         if (lrcline) {
-            addItemDecoration(new ItemDecoration() {
+            removeItemDecoration(ItemDecoration);
+/*            addItemDecoration(new ItemDecoration() {
                 @Override
                 public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull State state) {
                     super.onDraw(c, parent, state);
                 }
-            });
+            });*/
         } else {
-            addItemDecoration(new RecyclerView.ItemDecoration() {
-                @Override
-                public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                    super.getItemOffsets(outRect, view, parent, state);
-                    view.setOnClickListener(onClickListener);
-
-                    int parentHeight = parent.getHeight();
-                    int childHeight = view.getHeight();
-
-                    int topMargin = (parentHeight - childHeight) / 2;
-
-                    // 设置第一项的顶部间距
-                    if (parent.getChildAdapterPosition(view) == 0) {
-                        outRect.top = topMargin;
-                    }
-                }
-            });
+            addItemDecoration(ItemDecoration);
         }
     }
 
+    private final RecyclerView.ItemDecoration ItemDecoration = new ItemDecoration() {
+        @Override
+        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            view.setOnClickListener(onClickListener);
+
+            int parentHeight = parent.getHeight();
+            int childHeight = view.getHeight();
+
+            int topMargin = (parentHeight - childHeight) / 2;
+
+            // 设置第一项的顶部间距
+            if (parent.getChildAdapterPosition(view) == 0) {
+                outRect.top = topMargin;
+            }
+        }
+    };
     public android.os.Handler handler = new Handler(Looper.getMainLooper());
 
     @SuppressLint("ClickableViewAccessibility")

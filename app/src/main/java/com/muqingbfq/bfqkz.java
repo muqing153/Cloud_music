@@ -27,7 +27,6 @@ import java.util.List;
 public class bfqkz extends MediaBrowserServiceCompat {
     public static MediaPlayer mt = new MediaPlayer();
     public static List<MP3> list = new ArrayList<>();
-
     //保存原始list顺序
     public static List<MP3> list_baocun = new ArrayList<>();
     public static List<MP3> lishi_list = new ArrayList<>();
@@ -52,7 +51,6 @@ public class bfqkz extends MediaBrowserServiceCompat {
             if (id == null) {
                 return;
             }
-
             if (TextUtils.isEmpty(id)) {
                 //针对错误进行相应的处理
                 bfqkz.list.remove(bfqkz.xm);

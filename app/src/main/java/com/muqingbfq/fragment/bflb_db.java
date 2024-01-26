@@ -19,6 +19,7 @@ import com.muqingbfq.R;
 import com.muqingbfq.api.url;
 import com.muqingbfq.bfqkz;
 import com.muqingbfq.databinding.FragmentBflbDbBinding;
+import com.muqingbfq.databinding.ListMp3Binding;
 import com.muqingbfq.list.MyViewHoder;
 import com.muqingbfq.main;
 import com.muqingbfq.yc;
@@ -82,21 +83,22 @@ public class bflb_db extends BottomSheetDialog {
         @NonNull
         @Override
         public MyViewHoder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_mp3, parent, false);
-            return new MyViewHoder(view);
+//            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_mp3, parent, false);
+            return new MyViewHoder(ListMp3Binding.
+                    inflate(getLayoutInflater(),parent,false));
         }
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHoder holder, int position) {
             MP3 x = bfqkz.list.get(position);
-            holder.name.setText(x.name);
-            holder.zz.setText(x.zz);
+            holder.binding.name.setText(x.name);
+            holder.binding.zz.setText(x.zz);
             int color = ContextCompat.getColor(holder.getContext(), R.color.text);
             if (bfqkz.xm != null && x.id.equals(bfqkz.xm.id)) {
                 color = ContextCompat.getColor(holder.getContext(), R.color.text_cz);
             }
-            holder.name.setTextColor(color);
-            holder.zz.setTextColor(color);
+            holder.binding.name.setTextColor(color);
+            holder.binding.zz.setTextColor(color);
             holder.itemView.setOnClickListener(view -> {
                 if (bfqkz.xm != x) {
                     bfqkz.xm = x;

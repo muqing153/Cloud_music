@@ -47,9 +47,6 @@ public class sz {
         } else if (id == R.id.f) {
             context.startActivity(new Intent(context, activity_about_software.class));
 //                    关于软件
-        } else if (id == R.id.g) {
-            context.startActivity(new Intent(context, cookie.class));
-            //绑定网易云
         }
     }
 }
