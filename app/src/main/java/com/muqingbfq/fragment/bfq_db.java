@@ -118,6 +118,12 @@ public class bfq_db extends Fragment implements GestureDetector.OnGestureListene
             textView.setText(str);
         }
     }
+    public static TextView getname() {
+        if (view != null) {
+            return findViewById(R.id.name);
+        }
+        return null;
+    }
 
     @Override
     public boolean onDown(@NonNull MotionEvent motionEvent) {
@@ -140,6 +146,7 @@ public class bfq_db extends Fragment implements GestureDetector.OnGestureListene
     @Override
     public boolean onScroll(@Nullable MotionEvent motionEvent, @NonNull MotionEvent motionEvent1,
                             float v, float v1) {
+        getname().setTranslationX(view.getTranslationX() - v);
         view.setBackgroundColor(ContextCompat.getColor(getContext(),R.color.bj));
         return false;
     }
@@ -165,6 +172,8 @@ public class bfq_db extends Fragment implements GestureDetector.OnGestureListene
             // 在这里添加你的逻辑代码
             bfq_an.syq();
         }
+        getname().setTranslationX(0);
+
         return true;
     }
 }

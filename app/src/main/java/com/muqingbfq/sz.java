@@ -22,15 +22,14 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
+import com.colorpicker.ColorPickerView;
+import com.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.slider.Slider;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.muqingbfq.databinding.ActivitySzSetlrcBinding;
 import com.muqingbfq.mq.FloatingLyricsService;
-import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.view.LrcView;
 
@@ -198,7 +197,7 @@ public class sz extends AppCompatActivity {
                         .setTitle("调色盘")
                         .initialColor(Color.parseColor(setup.Color))
                         .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
-                        .density(12)
+                        .density(6)
                         .setOnColorSelectedListener(selectedColor -> {
                         })
                         .setPositiveButton("确定", (dialog, selectedColor, allColors) -> {

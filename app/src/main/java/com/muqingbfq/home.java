@@ -149,6 +149,7 @@ public class home extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -168,23 +169,9 @@ public class home extends AppCompatActivity {
                 .replace(R.id.bfq_db, new bfq_db())
                 .commit();
     }
-
-    private long time;
-
     @Override
     public void onBackPressed() {
-        if (bfqkz.mt.isPlaying()) {
-            Intent home = new Intent(Intent.ACTION_MAIN);
-            home.addCategory(Intent.CATEGORY_HOME);
-            startActivity(home);
-        } else {
-            if (time < System.currentTimeMillis() - 1000) {
-                time = System.currentTimeMillis();
-                gj.ts(this, "再按一次退出软件");
-            } else {
-                finish();
-            }
-        }
+        moveTaskToBack(true);
     }
 
     @Override
@@ -201,8 +188,6 @@ public class home extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
     /**
      * 连接状态的回调接口，连接成功时会调用onConnected()方法
      */

@@ -18,7 +18,7 @@ android {
         //noinspection OldTargetApi
         targetSdk 31
         versionCode 1
-        versionName "1.9.5"
+        versionName "1.9.6"
 
     }
     compileOptions {
@@ -44,6 +44,7 @@ android {
 }
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
+
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
@@ -60,5 +61,5 @@ dependencies {
 //修改音乐标签库
     implementation 'com.mpatric:mp3agic:0.9.1'
 
-    implementation 'com.github.QuadFlask:colorpicker:0.0.15'
+//    implementation 'com.github.QuadFlask:colorpicker:0.0.15'
 }
