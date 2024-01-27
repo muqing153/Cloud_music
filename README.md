@@ -34,10 +34,32 @@
 
 开发者说 :  
 在兴趣的驱动下,写一个`免费`的东西，有欣喜，也还有汗水，希望你喜欢我的作品，同时也能支持一下。
+
+导入的包
 ```javascript
-var jieshao = {
-  name  "云音乐"
-  versionCode 1
-  versionName "1.8.0"
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    implementation 'com.google.code.gson:gson:2.9.1'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+//    废弃的歌词组件
+//    implementation 'com.github.wangchenyan:lrcview:2.2.1'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+//修改音乐标签库
+    implementation 'com.mpatric:mp3agic:0.9.1'
 }
 ```
+
+修改JAR的包
+```javascript
+com.github.QuadFlask:colorpicker:0.0.15
+//主要修改内容MD3化
+...
