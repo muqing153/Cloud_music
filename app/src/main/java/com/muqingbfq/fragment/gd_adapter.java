@@ -1,13 +1,20 @@
 package com.muqingbfq.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,11 +24,13 @@ import com.bumptech.glide.request.RequestOptions;
 import com.muqingbfq.MP3;
 import com.muqingbfq.R;
 import com.muqingbfq.XM;
+import com.muqingbfq.activity_search;
 import com.muqingbfq.api.resource;
 import com.muqingbfq.api.url;
 import com.muqingbfq.bfqkz;
 import com.muqingbfq.databinding.FragmentGdBinding;
 import com.muqingbfq.databinding.ListMp3ImageBinding;
+import com.muqingbfq.home;
 import com.muqingbfq.main;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
@@ -38,12 +47,27 @@ public class gd_adapter extends Fragment {
     List<MP3> listmp3 = new ArrayList<>();
 
     FragmentGdBinding binding;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
+        // 其他初始化代码...
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentGdBinding.inflate(getLayoutInflater(), container, false);
 
+        //初始化工具栏
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(binding.toolbar);
+        DrawerLayout drawerLayout = home.appCompatActivity.findViewById(R.id.chct);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                getActivity(), drawerLayout, binding.toolbar, R.string.app_name, R.string.app_name);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        binding.toolbar.setPadding(0, gj.getztl(getContext()), 0, 0);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         binding.recyclerview1.setHasFixedSize(true);
@@ -129,6 +153,21 @@ public class gd_adapter extends Fragment {
         public void run() {
             binding.recyclerview1.getAdapter().notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.home, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_search) {
+            Intent intent = new Intent(getContext(), activity_search.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void mp3list() {

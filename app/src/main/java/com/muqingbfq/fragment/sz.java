@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.muqingbfq.R;
 import com.muqingbfq.activity_about_software;
 import com.muqingbfq.clean.fragment_clean;
-import com.muqingbfq.login.cookie;
 import com.muqingbfq.mq.gj;
 
 public class sz {

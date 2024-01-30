@@ -1,10 +1,12 @@
 package com.muqingbfq;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.flexbox.AlignItems;
@@ -31,6 +34,7 @@ import com.muqingbfq.mq.FragmentActivity;
 import com.muqingbfq.mq.gj;
 import com.muqingbfq.mq.wj;
 import com.muqingbfq.mq.wl;
+import com.muqingbfq.view.Edit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -101,13 +105,14 @@ public class activity_search extends FragmentActivity {
 
         });
         Object o = new Object();
-        binding.editview.addTextChangedListener(new TextWatcher() {
+        binding.editview.addTextChangedListener(new Edit.TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.editview.iskong();
                 if (TextUtils.isEmpty(s)) {
                     listPopupWindow.setVisibility(View.GONE);
                     return;
@@ -143,13 +148,13 @@ public class activity_search extends FragmentActivity {
             public void afterTextChanged(Editable s) {
             }
         });
-        gj.tcjp(binding.editview);
+        gj.tcjp(binding.editview.editText);
     }
 
     public void dismiss() {
         binding.editview.clearFocus();
         listPopupWindow.setVisibility(View.GONE);
-        gj.ycjp(binding.editview);
+        gj.ycjp(binding.editview.editText);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -169,7 +174,8 @@ public class activity_search extends FragmentActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.home, menu);
+        MenuItem sousuo = menu.add("搜索");
+        sousuo.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -178,7 +184,7 @@ public class activity_search extends FragmentActivity {
         int itemId = item.getItemId();
         if (itemId == android.R.id.home) {
             finish();
-        } else if (itemId == R.id.menu_search) {
+        } else if (itemId == 0) {
             start(binding.editview.getText().toString());
         }
         return super.onOptionsItemSelected(item);
@@ -213,6 +219,23 @@ public class activity_search extends FragmentActivity {
             if (json_list.isEmpty()) {
                 binding.xxbj1.setVisibility(View.INVISIBLE);
             }
+            RecyclerView.ItemAnimator animator = new DefaultItemAnimator(){
+                @Override
+                public boolean animateRemove(RecyclerView.ViewHolder holder) {
+                    ObjectAnimator fadeAnimator = ObjectAnimator.ofFloat(holder.itemView, "alpha", 1f, 0f);
+                    fadeAnimator.setDuration(getRemoveDuration());
+                    fadeAnimator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            dispatchRemoveFinished(holder);
+                            holder.itemView.setAlpha(1f);
+                        }
+                    });
+                    fadeAnimator.start();
+                    return false;
+                }
+            };
+            binding.listRecycler.setItemAnimator(animator);
         }
 
         @NonNull
@@ -236,7 +259,7 @@ public class activity_search extends FragmentActivity {
                         .setPositiveButton("确定", (dialogInterface, i) -> {
                             json_list.remove(keyword);
                             wj.xrwb(wj.filesdri + wj.lishi_json, new Gson().toJson(json_list));
-                            notifyItemChanged(position);
+                            notifyItemRemoved(position);
                         })
                         .setNegativeButton("取消", null)
                         .show();

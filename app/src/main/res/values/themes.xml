@@ -4,22 +4,28 @@
         <!--        <item name="colorOnPrimary">@color/text</item>-->
         <!--        <item name="colorOnSecondary">@color/text</item>-->
         <item name="android:windowLightStatusBar">true</item>
-
     </style>
 
     <style name="Theme.start" parent="Theme.Material3.DayNight">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">@color/bj</item>
+
+        <!-- 添加主题属性以启用沉浸式状态栏 -->
+        <item name="android:windowTranslucentStatus">true</item>
+
+<!--        <item name="android:statusBarColor">@color/ztl</item>-->
         <!-- 控件选中时的颜色,默认使用colorAccent -->
         <!--        <item name="android:colorControlActivated">#FF7F50</item>-->
         <!-- 设置文本颜色 -->
+<!--
         <item name="android:textColorPrimary">@color/text</item>
         <item name="android:colorPrimary">@color/bj</item>
         <item name="colorPrimaryDark">@color/bj</item>
+-->
 
+<!--
         <item name="tabStyle">@style/Widget.App.TabLayout</item>
-        <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
+        <item name="toolbarStyle">@style/Widget.App.Toolbar</item>-->
     </style>
 
     <style name="ThemeOverlay.App.Toolbar" parent="">

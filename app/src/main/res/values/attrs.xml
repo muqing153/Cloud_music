@@ -28,4 +28,9 @@
     <declare-styleable name="AbsCustomSlider">
         <attr name="inVerticalOrientation" format="boolean"/>
     </declare-styleable>
+
+
+    <declare-styleable name="Edit">
+        <attr name="Enabled" format="boolean" />
+    </declare-styleable>
 </resources>

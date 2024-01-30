@@ -7,5 +7,6 @@
         &lt;!&ndash; Secondary brand color. &ndash;&gt;
         <item name="colorOnSecondary">@color/text</item>-->
         <item name="android:windowLightStatusBar">false</item>
+
     </style>
 </resources>

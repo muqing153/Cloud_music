@@ -92,7 +92,9 @@ public class search extends Fragment {
         } else if (i == 1) {
             k = (int) (main.k / getResources().getDisplayMetrics().density + 0.5f) / 120;
             inflate.recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
-            inflate.recyclerview.setAdapter(new gd.baseadapter(getContext(), xmList, true));
+            inflate.recyclerview.setAdapter(new gd.baseadapter(getContext(),
+                    xmList, true, inflate.recyclerview));
+
         }
         new start(name);
     }

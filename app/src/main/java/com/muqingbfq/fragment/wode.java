@@ -2,8 +2,12 @@ package com.muqingbfq.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -11,19 +15,28 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.muqingbfq.R;
 import com.muqingbfq.XM;
+import com.muqingbfq.activity_search;
 import com.muqingbfq.api.playlist;
 import com.muqingbfq.api.resource;
+import com.muqingbfq.bfqkz;
 import com.muqingbfq.databinding.FragmentWdBinding;
+import com.muqingbfq.databinding.ListGdBBinding;
+import com.muqingbfq.home;
 import com.muqingbfq.login.user_logs;
 import com.muqingbfq.login.visitor;
 import com.muqingbfq.main;
@@ -36,6 +49,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -59,14 +73,55 @@ public class wode extends Fragment {
             {R.drawable.paihangbang, "排行榜", "排行榜"},
             {R.drawable.icon, "开发中", ""}
     };
-    private final List<XM> list = new ArrayList<>();
+    @SuppressLint("StaticFieldLeak")
+    public static baseadapter adaper;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
+        // 其他初始化代码...
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentWdBinding.inflate(inflater, container, false);
+        //初始化工具栏
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(binding.toolbar);
+        DrawerLayout drawerLayout = home.appCompatActivity.findViewById(R.id.chct);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                getActivity(), drawerLayout, binding.toolbar, R.string.app_name, R.string.app_name);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        binding.appbar.setPadding(0, gj.getztl(getContext()), 0, 0);
         name = binding.text1;
+        binding.toolbar.setTitle("");
+        binding.appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isCollapsed = false; // 标记是否处于折叠状态
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
+                    // 完全折叠时的逻辑
+                    if (!isCollapsed) {
+                        // 处理完全折叠时的操作
+                        isCollapsed = true;
+                        binding.aaa.setVisibility(View.VISIBLE);
+                        binding.aaa.setText(name.getText());
+                    }
+                } else {
+                    // 非折叠状态的逻辑
+                    if (isCollapsed) {
+                        // 处理非折叠状态的操作
+                        isCollapsed = false;
+                        binding.aaa.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
         jieshao = binding.text2;
         imageView = binding.imageView;
         binding.cardview.setOnClickListener(v -> {
@@ -157,7 +212,7 @@ public class wode extends Fragment {
                                 }
                                 String finalStr = str;
                                 gj.ts(getContext(), "导入中");
-                                new Thread(){
+                                new Thread() {
                                     @Override
                                     public void run() {
                                         super.run();
@@ -204,11 +259,13 @@ public class wode extends Fragment {
             }
         });
         binding.recyclerview2.setFocusable(false);
-        binding.recyclerview2.setAdapter(new gd.baseadapter(getContext(), list, true));
+        adaper = new baseadapter();
+        binding.recyclerview2.setAdapter(adaper);
         sx();
         denglu();
         return binding.getRoot();
     }
+
 
     class VH extends RecyclerView.ViewHolder {
         public ImageView imageView;
@@ -224,18 +281,34 @@ public class wode extends Fragment {
     @SuppressLint("NotifyDataSetChanged")
     public void sx() {
         try {
-            list.clear();
+            adaper.list.clear();
             JSONObject date = new JSONObject(wj.dqwb(wj.gd_xz));
             for (Iterator<String> it = date.keys(); it.hasNext(); ) {
                 String id = it.next();
                 JSONObject jsonObject = date.getJSONObject(id);
                 String name = jsonObject.getString("name");
                 String picUrl = jsonObject.getString("picUrl");
-                list.add(new XM(id, name, picUrl));
+                adaper.list.add(new XM(id, name, picUrl));
             }
             main.handler.post(() -> binding.recyclerview2.getAdapter().notifyDataSetChanged());
         } catch (Exception e) {
             gj.sc(e);
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public static void addlist(XM xm) {
+        if (adaper != null&&!adaper.list.contains(xm)) {
+            adaper.list.add(xm);
+            adaper.notifyDataSetChanged();
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public static void removelist(XM xm) {
+        if (adaper != null) {
+            adaper.list.remove(xm);
+            adaper.notifyDataSetChanged();
         }
     }
 
@@ -266,4 +339,135 @@ public class wode extends Fragment {
                 .error(R.drawable.ic_launcher_foreground)
                 .into(binding.imageView);
     }
+
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.home, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_search) {
+            Intent intent = new Intent(getContext(), activity_search.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    class baseadapter extends RecyclerView.Adapter<gd.VH> {
+        public List<XM> list = new ArrayList<>();
+        @NonNull
+        @Override
+        public gd.VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                return new gd.VH(ListGdBBinding.bind(LayoutInflater.from(getContext())
+                        .inflate(R.layout.list_gd_b, parent, false)));
+        }
+
+        public void setList(List<XM> list) {
+            this.list = list;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull gd.VH holder, @SuppressLint("RecyclerView") int position) {
+            XM xm = list.get(position);
+                holder.itemView.setOnClickListener(v -> {
+                    XM xm1 = list.get(position);
+                    Intent intent = new Intent(getContext(), mp3.class);
+                    intent.putExtra("id", xm1.id);
+                    intent.putExtra("name", xm1.name);
+                    getContext().startActivity(intent);
+                });
+                holder.itemView.setOnLongClickListener(v -> {
+                    String[] stringArray = {"下载歌单", "删除歌单"};
+                    new MaterialAlertDialogBuilder(getContext()).
+                            setItems(stringArray, (dialog, id) -> {
+                                switch (stringArray[id]) {
+                                    case "下载歌单":
+                                        new Thread() {
+                                            @SuppressLint("NotifyDataSetChanged")
+                                            @Override
+                                            public void run() {
+                                                super.run();
+                                                String hq = playlist.gethq(xm.id);
+                                                if (hq != null) {
+                                                    wj.xrwb(wj.gd + xm.id, hq);
+                                                    try {
+                                                        JSONObject jsonObject = new JSONObject();
+                                                        if (wj.cz(wj.gd_xz)) {
+                                                            jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
+                                                        }
+                                                        XM fh = resource.Playlist_content(xm.id);
+                                                        JSONObject json = new JSONObject();
+                                                        json.put("name", fh.name);
+                                                        json.put("picUrl", fh.picurl);
+                                                        jsonObject.put(fh.id, json);
+                                                        wj.xrwb(wj.gd_xz, jsonObject.toString());
+                                                        main.handler.post(() -> notifyItemChanged(position));
+                                                    } catch (JSONException e) {
+                                                        gj.sc("list gd onclick thear " + e);
+                                                    }
+                                                }
+                                            }
+                                        }.start();
+                                        break;
+                                    case "删除歌单":
+//                                        删除项目
+                                        try {
+                                            wj.sc(wj.gd + xm.id);
+                                            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
+                                            jsonObject.remove(xm.id);
+                                            list.remove(xm);
+                                            wj.xrwb(wj.gd_xz, jsonObject.toString());
+                                            notifyItemRemoved(position);
+                                        } catch (JSONException e) {
+                                            gj.sc(e);
+                                        }
+                                        break;
+                                }
+                                // 在这里处理菜单项的点击事件
+                            }).show();
+                    return false;
+                });
+
+                holder.bindingB.text2.setText(xm.message);
+            holder.title.setText(xm.name);
+            holder.kg.setOnClickListener(view1 -> {
+                ImageView tx = (ImageView) view1;
+                new Thread() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void run() {
+                        super.run();
+                        boolean an = playlist.hq(bfqkz.list, xm.id);
+                        if (bfqkz.ms == 2) {
+                            Collections.shuffle(bfqkz.list);
+                        }
+                        main.handler.post(() -> {
+                            if (an) {
+                                com.muqingbfq.bfq_an.xyq();
+                                tx.setImageResource(R.drawable.bf);
+                                com.muqingbfq.fragment.gd.gdid = xm.id;
+                            }
+                            notifyDataSetChanged();
+                        });
+                    }
+                }.start();
+            });
+            Drawable color_kg = ContextCompat.getDrawable(getContext(), R.drawable.zt);
+            if (xm.id.equals(com.muqingbfq.fragment.gd.gdid)) {
+                color_kg = ContextCompat.getDrawable(getContext(), R.drawable.bf);
+            }
+            holder.kg.setImageDrawable(color_kg);
+//            xm.picurl
+            holder.image.setImageapply(xm.picurl);
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+    }
+
 }

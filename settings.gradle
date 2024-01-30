@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Cloud_music"
 include ':app'
+include(':StatusBarUtil')

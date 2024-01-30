@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -53,6 +55,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
         super.onCreate(savedInstanceState);
         FragmentMp3Binding binding = FragmentMp3Binding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         Intent intent = getIntent();
         binding.title.setText(intent.getStringExtra("name"));
         adapter = new baseadapter(this, list);
@@ -79,7 +82,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
         public void run() {
             super.run();
             if (id.equals("排行榜")) {
-                resource.排行榜(list);
+                resource.leaderboard(list);
             } else {
                 String hq = wl.hq("/search?keywords=" + id + "&limit=" + (k * 3) + "&type=1000");
                 try {
@@ -103,7 +106,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
 
     public static class baseadapter extends RecyclerView.Adapter<VH> {
         Context context;
-        List<XM> list;
+        public List<XM> list;
 
         public baseadapter(Context context, List<XM> list) {
             this.context = context;
@@ -112,10 +115,108 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
 
         boolean bool = false;
 
-        public baseadapter(Context context, List<XM> list, boolean bool) {
+        public baseadapter(Context context, List<XM> list, boolean bool, RecyclerView recyclerView) {
             this.context = context;
             this.list = list;
             this.bool = bool;
+            setrecycle(recyclerView);
+        }
+
+        public void setrecycle(RecyclerView recyclerView) {
+
+            recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+                final GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public void onLongPress(@NonNull MotionEvent motionEvent) {
+                        View childView = recyclerView.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+                        if (childView != null) {
+                            int position = recyclerView.getChildAdapterPosition(childView);
+                            setonlong(position);
+                            // 处理长按事件，使用正确的位置position
+                            // ...
+
+                        }
+                    }
+                });
+
+                @Override
+                public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                    return gestureDetector.onTouchEvent(e);
+                }
+
+                @Override
+                public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
+                }
+
+                @Override
+                public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+                }
+
+            });
+        }
+
+        @SuppressLint("NotifyDataSetChanged")
+        public void setonlong(int position) {
+            XM xm = list.get(position);
+            gj.sc(xm.name);
+            String[] stringArray = context.getResources()
+                    .getStringArray(R.array.gd_list);
+            if (!wj.cz(wj.gd + xm.id)) {
+                stringArray = new String[]{"下载歌单"};
+            }
+            String[] finalStringArray = stringArray;
+            new MaterialAlertDialogBuilder(context).
+                    setItems(stringArray, (dialog, id) -> {
+                        switch (finalStringArray[id]) {
+                            case "下载歌单":
+                                new Thread() {
+                                    @SuppressLint("NotifyDataSetChanged")
+                                    @Override
+                                    public void run() {
+                                        super.run();
+                                        String hq = playlist.gethq(xm.id);
+                                        if (hq != null) {
+                                            wj.xrwb(wj.gd + xm.id, hq);
+                                            try {
+                                                JSONObject jsonObject = new JSONObject();
+                                                if (wj.cz(wj.gd_xz)) {
+                                                    jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
+                                                }
+                                                XM fh = resource.Playlist_content(xm.id);
+                                                JSONObject json = new JSONObject();
+                                                json.put("name", fh.name);
+                                                json.put("picUrl", fh.picurl);
+                                                jsonObject.put(fh.id, json);
+                                                wj.xrwb(wj.gd_xz, jsonObject.toString());
+                                                main.handler.post(() -> {
+                                                    notifyItemChanged(position);
+                                                    wode.addlist(xm);
+                                                });
+                                            } catch (JSONException e) {
+                                                gj.sc("list gd onclick thear " + e);
+                                            }
+                                        }
+                                    }
+                                }.start();
+                                break;
+                            case "删除歌单":
+//                                        删除项目
+                                try {
+                                    wj.sc(wj.gd + xm.id);
+                                    JSONObject jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
+                                    jsonObject.remove(xm.id);
+                                    list.remove(xm);
+                                    wj.xrwb(wj.gd_xz, jsonObject.toString());
+                                    wode.removelist(xm);
+                                } catch (JSONException e) {
+                                    gj.sc(e);
+                                }
+                                break;
+                        }
+                        // 在这里处理菜单项的点击事件
+                    }).show();
         }
 
         @NonNull
@@ -140,10 +241,12 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
             if (bool) {
                 holder.itemView.setOnClickListener(card);
                 holder.bindingB.text2.setText(xm.message);
-                holder.itemView.setOnLongClickListener(card);
             } else {
                 holder.binding.image.setOnClickListener(card);
-                holder.binding.image.setOnLongClickListener(card);
+                holder.binding.image.setOnLongClickListener(v -> {
+                    setonlong(position);
+                    return false;
+                });
             }
             holder.title.setText(xm.name);
             holder.kg.setOnClickListener(view1 -> {
@@ -182,8 +285,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
             return list.size();
         }
 
-        class CARD implements View.OnClickListener
-                , View.OnLongClickListener {
+        class CARD implements View.OnClickListener {
             int position;
 
             public CARD(int position) {
@@ -199,60 +301,6 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
                 intent.putExtra("name", xm.name);
                 context.startActivity(intent);
             }
-
-            @Override
-            public boolean onLongClick(View view) {
-                XM xm = list.get(position);
-                String[] stringArray = view.getResources()
-                        .getStringArray(R.array.gd_list);
-                if (!wj.cz(wj.gd + xm.id)) {
-                    stringArray = new String[]{"下载歌单"};
-                }
-                new MaterialAlertDialogBuilder(view.getContext()).
-                        setItems(stringArray, (dialog, id) -> {
-                            new Thread() {
-                                @Override
-                                public void run() {
-                                    if (id == 0) {
-                                        String hq = playlist.gethq(xm.id);
-                                        if (hq != null) {
-                                            wj.xrwb(wj.gd + xm.id, hq);
-                                            try {
-                                                JSONObject jsonObject = new JSONObject();
-                                                if (wj.cz(wj.gd_xz)) {
-                                                    jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
-                                                }
-                                                XM fh = resource.Playlist_content(xm.id);
-                                                JSONObject json = new JSONObject();
-                                                json.put("name", fh.name);
-                                                json.put("picUrl", fh.picurl);
-                                                jsonObject.put(fh.id, json);
-                                                wj.xrwb(wj.gd_xz, jsonObject.toString());
-                                                main.handler.post(() -> notifyItemChanged(position));
-                                            } catch (JSONException e) {
-                                                gj.sc("list gd onclick thear " + e);
-                                            }
-                                        }
-
-                                    } else if (id == 2) {
-                                        wj.sc(wj.gd + xm.id);
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(Objects.requireNonNull(wj.dqwb(wj.gd_xz)));
-                                            jsonObject.remove(xm.id);
-                                            list.remove(xm);
-                                            wj.xrwb(wj.gd_xz, jsonObject.toString());
-                                            main.handler.post(() -> notifyItemChanged(position));
-                                        } catch (JSONException e) {
-                                            gj.sc(e);
-                                        }
-                                    }
-                                }
-                            }.start();
-                            // 在这里处理菜单项的点击事件
-                        }).show();
-                return false;
-            }
-
         }
 
     }
@@ -262,6 +310,7 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
         public ImageView kg;
         public CardImage image;
         public TextView title;
+
         public VH(@NonNull ListGdBinding itemView) {
             super(itemView.getRoot());
             binding = itemView;
@@ -288,4 +337,6 @@ public class gd extends com.muqingbfq.mq.FragmentActivity {
             adapter.notifyDataSetChanged();
         }
     }
+
+
 }

@@ -62,7 +62,8 @@ public class resource {
         return new XM(id, name, coverImgUrl);
     }
 
-    public static void 排行榜(List<XM> list) {
+//    排行榜
+    public static void leaderboard(List<XM> list) {
         String hq;
         try {
             if (wj.cz(wj.gd_phb)) {

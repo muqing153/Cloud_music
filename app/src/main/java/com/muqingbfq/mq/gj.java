@@ -1,9 +1,8 @@
 package com.muqingbfq.mq;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Service;
-import android.app.usage.UsageStats;
-import android.app.usage.UsageStatsManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -83,7 +82,6 @@ public class gj {
     /**
      * 复制文字到剪切板
      *
-     * @param text
      */
     public static void fz(Context context, String text) {
         ClipboardManager systemService =
@@ -172,5 +170,13 @@ public class gj {
         if (imm.isActive()) //有显示键盘，隐藏
             imm.hideSoftInputFromWindow(editText.getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    public static int getztl(Context context) {
+        // 获得状态栏高度
+        @SuppressLint({"InternalInsetResource", "DiscouragedApi"}) int resourceId =
+                context.getResources().
+                getIdentifier("status_bar_height", "dimen", "android");
+        return context.getResources().getDimensionPixelSize(resourceId);
     }
 }
